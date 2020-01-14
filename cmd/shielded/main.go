@@ -1,89 +1,99 @@
 package main
 
 import (
+	"database/sql"
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 
-	"github.com/google/go-github/v28/github"
+	"github.com/ShieldedDotDev/shieldeddotdev"
+	"github.com/ShieldedDotDev/shieldeddotdev/model"
+
+	"github.com/davecgh/go-spew/spew"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/mholt/certmagic"
-	"golang.org/x/oauth2"
-	githuboauth "golang.org/x/oauth2/github"
 )
 
+type Subdomains struct {
+	root string
+	api  string
+	img  string
+}
+
 var (
+	dsn          = flag.String("dsn", "admin:password@tcp(127.0.0.1:3306)/shielded?parseTime=true", "MySQL DSN")
 	clientID     = flag.String("client-id", "", "GitHub Oauth ClientID")
 	clientSecret = flag.String("client-secret", "", "GitHub Oauth ClientSecret")
+
+	// cookieSecret = flag.String("cookie-secret", "", "Secret used to hash cookies")
+
+	runLocal = flag.Bool("local", false, "Run as local dev setup")
+
+	subdomains = Subdomains{
+		root: "shielded.dev",
+		api:  "api.shielded.dev",
+		img:  "img.shielded.dev",
+	}
 )
 
 func init() {
 	flag.Parse()
+
+	if *runLocal {
+		subdomains = Subdomains{
+			root: "local.shielded.dev",
+			api:  "local.api.shielded.dev",
+			img:  "local.img.shielded.dev",
+		}
+	}
 }
 
 func main() {
+	spew.Dump(subdomains)
 
-	oauthConf := &oauth2.Config{
-		ClientID:     *clientID,
-		ClientSecret: *clientSecret,
-		Scopes:       []string{"user:email"},
-		Endpoint:     githuboauth.Endpoint,
-	}
-	// random string for oauth2 API calls to protect against CSRF
-	oauthStateString := "thisshouldberandom"
-
-	ro := mux.NewRouter()
-	ro.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("api"))
-	}).Host("api.shielded.dev")
-
-	ro.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("img"))
-	}).Host("img.shielded.dev")
-
-	wo := mux.NewRouter()
-	ro.PathPrefix("/").Handler(wo)
-
-	wo.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("www"))
-	})
-
-	wo.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
-		url := oauthConf.AuthCodeURL(oauthStateString, oauth2.AccessTypeOnline)
-		http.Redirect(w, r, url, http.StatusTemporaryRedirect)
-	})
-
-	wo.HandleFunc("/github/callback", func(w http.ResponseWriter, r *http.Request) {
-		state := r.FormValue("state")
-		if state != oauthStateString {
-			fmt.Printf("invalid oauth state, expected '%s', got '%s'\n", oauthStateString, state)
-			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-			return
-		}
-
-		code := r.FormValue("code")
-		token, err := oauthConf.Exchange(oauth2.NoContext, code)
-		if err != nil {
-			fmt.Printf("oauthConf.Exchange() failed with '%s'\n", err)
-			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-			return
-		}
-
-		oauthClient := oauthConf.Client(oauth2.NoContext, token)
-		client := github.NewClient(oauthClient)
-		user, _, err := client.Users.Get(oauth2.NoContext, "")
-		if err != nil {
-			fmt.Printf("client.Users.Get() failed with '%s'\n", err)
-			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-			return
-		}
-		fmt.Printf("Logged in as GitHub user: %s\n", *user.Login)
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-	})
-
-	err := certmagic.HTTPS([]string{"shielded.dev", "www.shielded.dev", "api.shielded.dev", "img.shielded.dev"}, ro)
+	db, err := sql.Open("mysql", *dsn)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	um := model.NewUserMapper(db)
+	sm := model.NewShieldMapper(db)
+
+	ro := mux.NewRouter()
+	ro.PathPrefix("/").Host("www." + subdomains.root).Handler(
+		http.RedirectHandler("https://"+subdomains.root, http.StatusPermanentRedirect))
+
+	ao := ro.Host(subdomains.api).Subrouter()
+	ao.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("api"))
+	})
+
+	io := ro.Host(subdomains.img).Subrouter()
+	io.Handle("/s/{id:[0-9]+}", shieldeddotdev.NewShieldHandler(sm))
+
+	wo := ro.Host(subdomains.root).Subrouter()
+
+	wo.HandleFunc("/funk", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("fresh"))
+	})
+
+	ah := shieldeddotdev.NewGitHubAuthHandler(um, *clientID, *clientSecret)
+	wo.HandleFunc("/github/login", ah.LoginHandler)
+	wo.HandleFunc("/github/callback", ah.CallbackHandler)
+
+	wo.PathPrefix("/").Handler(http.FileServer(shieldeddotdev.AssetFile()))
+
+	if *runLocal {
+		err = http.ListenAndServe(":8686", ro)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		err = certmagic.HTTPS([]string{subdomains.root, "www." + subdomains.root, subdomains.api, subdomains.img}, ro)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 }

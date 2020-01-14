@@ -1,0 +1,24 @@
+pre, code {
+	background: $shade; //#DFDDDD;
+	font-family: Consolas,"Courier New",Courier,monospace;
+	@include border-radius(3px);
+}
+
+pre {
+	line-height: 1.4em;
+	font-family: Menlo, Monaco, Courier New, monospace;
+	@include force-wrap();
+	// background-color: alabaster;
+	font-size: .8rem;
+	padding: 1.125em;
+
+	> code {
+		white-space: pre;
+		background: transparent; 
+	}
+}
+
+
+code {
+	font-family: Menlo, Monaco, Courier New, monospace;
+}
