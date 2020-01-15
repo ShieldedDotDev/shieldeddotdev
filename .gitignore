@@ -1,3 +1,4 @@
 /shielded
 /.sass-cache
+/node_modules
 *.pem
