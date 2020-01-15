@@ -5,12 +5,15 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/ShieldedDotDev/shieldeddotdev"
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
 
 	"github.com/davecgh/go-spew/spew"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gofrs/uuid"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/mholt/certmagic"
 )
@@ -70,18 +73,32 @@ func main() {
 	})
 
 	io := ro.Host(subdomains.img).Subrouter()
-	io.Handle("/s/{id:[0-9]+}", shieldeddotdev.NewShieldHandler(sm))
+	io.Handle("/s/{id:[0-9]+}", handlers.CompressHandler(shieldeddotdev.NewShieldHandler(sm)))
 
 	wo := ro.Host(subdomains.root).Subrouter()
 
-	jwta := &shieldeddotdev.JwtAuth{[]byte("itsasecrettoeveryone")}
+	uuu, err := uuid.NewV4()
+	if err != nil {
+		panic(err)
+	}
+	jwta := &shieldeddotdev.JwtAuth{uuu.Bytes()}
 
-	dh := shieldeddotdev.NewDashboardHandler(sm, jwta)
-	wo.HandleFunc("/api/shields", dh.HandleGET).Methods("GET")
+	wo.HandleFunc("/api/authed", func(w http.ResponseWriter, r *http.Request) {
+		i := jwta.GetAuth(r)
+		if i == nil {
+			http.Error(w, "forbidden", http.StatusForbidden)
+		}
 
-	wo.HandleFunc("/funk", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("funk", *jwta.GetAuth(r))
+		w.Write([]byte(strconv.FormatInt(*i, 10)))
 	})
+
+	dh := shieldeddotdev.NewShieldApiIndexHandler(sm, jwta)
+	wo.HandleFunc("/api/shields", dh.HandleGET).Methods("GET")
+	wo.HandleFunc("/api/shields", dh.HandlePOST).Methods("POST")
+
+	sah := shieldeddotdev.NewShieldApiHandler(sm, jwta)
+	wo.HandleFunc("/api/shield/{id:[0-9]+}", sah.HandlePUT).Methods("PUT")
+	wo.HandleFunc("/api/shield/{id:[0-9]+}", sah.HandleDELETE).Methods("DELETE")
 
 	ah := shieldeddotdev.NewGitHubAuthHandler(um, *clientID, *clientSecret, jwta)
 	wo.HandleFunc("/github/login", ah.LoginHandler)
