@@ -87,6 +87,7 @@ func main() {
 		i := jwta.GetAuth(r)
 		if i == nil {
 			http.Error(w, "forbidden", http.StatusForbidden)
+			return
 		}
 
 		w.Write([]byte(strconv.FormatInt(*i, 10)))
