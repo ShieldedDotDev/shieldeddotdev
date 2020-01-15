@@ -15,4 +15,4 @@ $(shell find static -name "*.css"): $(shell find scss -name "*.scss")
 	compass compile
 
 static/main.js: $(shell find ts -name "*.ts")
-	tsc
+	./node_modules/.bin/tsc
