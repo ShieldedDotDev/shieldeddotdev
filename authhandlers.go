@@ -2,11 +2,14 @@ package shieldeddotdev
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gofrs/uuid"
 	"github.com/google/go-github/v28/github"
 	"golang.org/x/oauth2"
@@ -16,9 +19,11 @@ import (
 type GitHubAuthHandler struct {
 	um     *model.UserMapper
 	config *oauth2.Config
+
+	jwtAuth *JwtAuth
 }
 
-func NewGitHubAuthHandler(um *model.UserMapper, clientID string, clientSecret string) *GitHubAuthHandler {
+func NewGitHubAuthHandler(um *model.UserMapper, clientID string, clientSecret string, jwtAuth *JwtAuth) *GitHubAuthHandler {
 	conf := &oauth2.Config{
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
@@ -29,6 +34,8 @@ func NewGitHubAuthHandler(um *model.UserMapper, clientID string, clientSecret st
 	return &GitHubAuthHandler{
 		um:     um,
 		config: conf,
+
+		jwtAuth: jwtAuth,
 	}
 }
 
@@ -86,11 +93,75 @@ func (ah *GitHubAuthHandler) CallbackHandler(w http.ResponseWriter, r *http.Requ
 		Login:  *user.Login,
 		Email:  *user.Email,
 	})
+
 	if err != nil {
 		log.Printf("Failed to record credentials: %s\n", err)
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
-	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	err = ah.jwtAuth.Authorize(w, *user.ID)
+	if err != nil {
+		log.Printf("Failed to sign jwt: %s\n", err)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+
+	http.Redirect(w, r, "/dashboard.html", http.StatusTemporaryRedirect)
+}
+
+type JwtAuth struct {
+	Secret []byte
+}
+
+func (j *JwtAuth) Authorize(w http.ResponseWriter, uid int64) error {
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
+		Id: strconv.FormatInt(uid, 10),
+	})
+
+	tokenString, err := jwtToken.SignedString(j.Secret)
+	if err != nil {
+		return err
+	}
+
+	cookie := &http.Cookie{
+		Expires: time.Now().Add(36 * time.Hour),
+		Name:    "auth",
+		Value:   tokenString,
+		Path:    "/",
+
+		Secure:   true,
+		HttpOnly: true,
+	}
+
+	http.SetCookie(w, cookie)
+
+	return nil
+}
+
+func (j *JwtAuth) GetAuth(r *http.Request) *int64 {
+	c, err := r.Cookie("auth")
+	if err != nil {
+		return nil
+	}
+
+	token, err := jwt.ParseWithClaims(c.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return j.Secret, nil
+	})
+	if err != nil {
+		log.Printf("failed to read JWT: %s\n", err)
+		return nil
+	}
+
+	if claims, ok := token.Claims.(*jwt.StandardClaims); ok && token.Valid {
+		if id, _ := strconv.ParseInt(claims.Id, 10, 64); id > 0 {
+			return &id
+		}
+	}
+
+	return nil
 }

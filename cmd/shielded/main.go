@@ -74,11 +74,16 @@ func main() {
 
 	wo := ro.Host(subdomains.root).Subrouter()
 
+	jwta := &shieldeddotdev.JwtAuth{[]byte("itsasecrettoeveryone")}
+
+	dh := shieldeddotdev.NewDashboardHandler(sm, jwta)
+	wo.HandleFunc("/api/shields", dh.HandleGET).Methods("GET")
+
 	wo.HandleFunc("/funk", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("fresh"))
+		log.Println("funk", *jwta.GetAuth(r))
 	})
 
-	ah := shieldeddotdev.NewGitHubAuthHandler(um, *clientID, *clientSecret)
+	ah := shieldeddotdev.NewGitHubAuthHandler(um, *clientID, *clientSecret, jwta)
 	wo.HandleFunc("/github/login", ah.LoginHandler)
 	wo.HandleFunc("/github/callback", ah.CallbackHandler)
 
