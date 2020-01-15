@@ -1,0 +1,20 @@
+> .add-button {
+	display: block;
+	margin: 0 auto;
+	border-radius: 1000px;
+	font-size: 2em;
+	width: 2em;
+	height: 2em;
+}
+
+> .shield--controller {
+	@extend %shaded-box;
+
+	> input {
+		font-size: 1.2em;
+	}
+
+	> img {
+
+	}
+}
