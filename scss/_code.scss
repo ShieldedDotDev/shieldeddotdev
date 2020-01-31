@@ -1,5 +1,7 @@
 pre, code {
-	background: $shade; //#DFDDDD;
+	background: $darkBg;
+	color: $darkBgText;
+
 	font-family: Consolas,"Courier New",Courier,monospace;
 	@include border-radius(3px);
 }
@@ -13,7 +15,7 @@ pre {
 	padding: 1.125em;
 
 	> code {
-		white-space: pre;
+		white-space: pre-wrap;
 		background: transparent; 
 	}
 }

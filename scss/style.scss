@@ -2,117 +2,138 @@
 @import "compass/reset";
 @import "compass/typography/text/force-wrap";
 
-$hot: #F24236;
+$pageWidth: 600px;
+
+$hot: #f24236;
 
 $selected: $hot;
 $lightSpace: darken(#fafafa, 8%);
 $hover: lighten($selected, 20%);
 
-$control: #2a2a2a;
+$control: #555;
 $controlHover: mix(lighten($control, 20%), #0f0);
 $controlActive: mix(lighten($control, 20%), $hot);
 
-$shade: rgba(0,0,0,.065);
+$darkBg: #555;
+$darkBgText: white;
+
+$shade: rgba(0, 0, 0, 0.065);
 
 * {
 	@include box-sizing(border-box);
 }
-
-@import "code";
 
 strong {
 	font-weight: bold;
 }
 
 body {
+	min-height: 100vh;
+	display: grid;
+	grid-template-rows: min-content auto min-content;
+
 	color: #2a2a2a;
 	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
 		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
 	> header {
-		text-align: center;
-		font-size: 1.2em;
+		font-size: 2em;
 		font-weight: bold;
-		padding: 3em;
-		background: #777;
+
+		background: $darkBg;
+		color: $darkBgText;
+
+		display: grid;
+
+		@media screen and (min-width: #{$pageWidth}) {
+			grid-template-rows: 100%;
+			grid-template-areas: "title subtitle";
+			grid-template-columns: minmax(260px, calc(calc(100% - #{$pageWidth}) / 2));
+		}
+
+		@media screen and (max-width: #{$pageWidth - 1}) {
+			grid-template-areas: "title" "subtitle";
+		}
+	
+		> * {
+			padding: 1em;
+			height: 100%;
+			text-align: center;
+		}
 
 		> h1 {
-			color: white;
-			font-size: 2em;
-			margin-bottom: 0.5em;
-		}
-	}
-
-	> section {
-		padding: 1em 0;
-
-		&:nth-child(odd) {
-			background: $shade;
-		}
-
-		> main {
-
-			> h3 {
-				font-size: 3em;
-				padding: 0 0 .5em 0;
-				text-align: center;
-			}
+			grid-area: title;
 			
-			max-width: 1000px;
-			margin: 0 auto;
+			@media screen and (min-width: #{$pageWidth}) {
+				text-align: right;
+			}
+		}
 
-			> .getting-started {
-				margin: 1em auto;
-				border-radius: 0.2em;
+		> h2 {
+			grid-area: subtitle;
+			background: #5c72a6;
 
-				> h3 {
-					font-weight: bold;
-					margin-bottom: 1em;
-				}
-				display: inline-block;
-				padding: 2em;
-				text-align: center;
-				background: #eee;
+			@media screen and (min-width: #{$pageWidth}) {
+				text-align: left;
+			}
+
+			@media screen and (max-width: #{$pageWidth - 1}) {
+				font-size: .7em;
 			}
 		}
 	}
+
+	> main {
+		// min-height: 100vw;
+
+		$minHorizWs: 11px;
+		> section {
+			padding: 1em 0;
+			@media screen and (max-width: #{$pageWidth + $minHorizWs}) {
+				padding-left: $minHorizWs;
+				padding-right: $minHorizWs;
+			}
+
+			&:nth-child(odd) {
+				background: $shade;
+			}
+
+			> article {
+				> h3 {
+					font-size: 2em;
+					padding: 0 0 0.5em 0;
+					text-align: center;
+				}
+
+				max-width: $pageWidth;
+				margin: 0 auto;
+			}
+		}
+	}
+
+	> footer {
+		background: $darkBg;
+		padding: 20px;
+		color: white;
+	}
+}
+
+p {
+	line-height: 1.4em;
+}
+
+%shaded-box {
+	background: $shade;
+	box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+	padding: 1em;
 }
 
 .dashboard--controller {
 	@import "dashboard";
 }
 
-%shaded-box {
-	background: $shade;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-	padding: 1em;
-}
-
-.github-login {
-	display: inline-block;
-	color: white;
-	text-decoration: none;
-
-	padding: 1em;
-	padding-left: 2.5em;
-	font-size: 1.2em;
-	border-radius: 0.2em;
-	background: $control url("/img/github.svg");
-	background-size: 1.5em;
-	background-repeat: no-repeat;
-	background-position: 0.5em center;
-
-	transition: background-color cubic-bezier(0, 0.5, 0, 1) 1s;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-
-	&:hover {
-		background-color: $controlHover;
-		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
-	}
-
-	&:active {
-		background-color: $controlActive;
-	}
+.home--app {
+	@import "home";
 }
 
 ::selection {
@@ -120,3 +141,5 @@ body {
 	color: white;
 	@include text-shadow(none);
 }
+
+@import "code";

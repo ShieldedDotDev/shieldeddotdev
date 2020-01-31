@@ -1,0 +1,51 @@
+.getting-started {
+	@extend %shaded-box;
+	margin: 1em auto;
+
+	display: inline-block;
+	padding: 2em;
+	text-align: center;
+	max-width: 300px;
+	// border-radius: 0.2em;
+
+	> h3 {
+		font-weight: bold;
+		margin-bottom: 1em;
+	}
+
+	> p {
+		margin: 1em 0;
+		font-size: .9em;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
+.github-login {
+	display: inline-block;
+	color: white;
+	text-decoration: none;
+
+	padding: 1em;
+	padding-left: 2.5em;
+	font-size: 1.2em;
+	border-radius: 0.2em;
+	background: $control url("/img/github.svg");
+	background-size: 1.5em;
+	background-repeat: no-repeat;
+	background-position: 0.5em center;
+
+	transition: background-color cubic-bezier(0, 0.5, 0, 1) 1s;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+
+	&:hover {
+		background-color: $controlHover;
+		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+	}
+
+	&:active {
+		background-color: $controlActive;
+	}
+}

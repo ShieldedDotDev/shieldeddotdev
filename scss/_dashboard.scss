@@ -7,14 +7,16 @@
 	height: 2em;
 }
 
-> .shield--controller {
+.shield--controller {
 	@extend %shaded-box;
+	margin-bottom: 1em;
 
 	> input {
 		font-size: 1.2em;
+		padding: .3em;
 	}
 
 	> img {
-
+		float: right;
 	}
 }
