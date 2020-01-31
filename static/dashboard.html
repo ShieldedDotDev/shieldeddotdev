@@ -1,44 +1,7 @@
-<!doctype html>
-<html>
-
-<head>
-	<meta charset="utf-8" />
-	<link rel="dns-prefetch" href="//api.noteof.app">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-	<meta name="theme-color" content="#ff5e86" />
-	<!-- <link rel="icon" sizes="192x192" href="icon.png"> -->
-	<link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
-	<title>Shielded.dev</title>
-	<link rel="stylesheet" href="style/style.css" type="text/css" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"
-		integrity="sha256-1fEPhSsRKlFKGfK3eO710tEweHh1fwokU5wFGDHO+vg=" crossorigin="anonymous"></script>
-	<script src="main.js"></script>
-	<!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      System.import('index');
-    });
-  </script> -->
-</head>
-
-<body>
-	<header>
-		<h1>Shielded.dev</h1>
-		<h2>API Driven README Shield Badges</h2>
-	</header>
-	<section>
-		<article id="dashboard">
-			<h3>Dashboard</h3>
-		</article>
-	</section>
-	<script>
-		document.addEventListener('DOMContentLoaded', function () {
+<!doctype html> <html> <head> <meta charset="utf-8"> <link rel="dns-prefetch" href="//api.shielded.dev"> <link rel="dns-prefetch" href="//img.shielded.dev"> <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"> <meta name="theme-color" content="#ff5e86"> <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon"> <title>Shielded.dev</title> <link rel="stylesheet" href="style/style.css" type="text/css"> <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha256-1fEPhSsRKlFKGfK3eO710tEweHh1fwokU5wFGDHO+vg=" crossorigin="anonymous"></script> <script src="main.js"></script> </head> <body class="dashboard--app"> <header> <h1>Shielded.dev</h1> <h2>API Driven README Shield Badges</h2> </header> <section> <article id="dashboard"> <h3>Dashboard</h3> </article> </section> <script> document.addEventListener('DOMContentLoaded', function () {
 			require(['dashboard'], function(d){
 				d.Dashboard(
 					document.getElementById("dashboard")
 				);
 			});
-		});
-	</script>
-</body>
-
-</html>
+		}); </script> <footer> <a href="https://github.com/shieldedDotDev/">Shielded.dev on GitHub</a> </footer> </body> </html>
