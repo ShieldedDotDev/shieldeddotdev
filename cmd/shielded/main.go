@@ -68,9 +68,8 @@ func main() {
 		http.RedirectHandler("https://"+subdomains.root, http.StatusPermanentRedirect))
 
 	ao := ro.Host(subdomains.api).Subrouter()
-	ao.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("api"))
-	})
+	apih := shieldeddotdev.NewApiHandler(sm)
+	ao.HandleFunc("/", apih.HandlePOST)
 
 	io := ro.Host(subdomains.img).Subrouter()
 	io.Handle("/s/{id:[0-9]+}", handlers.CompressHandler(shieldeddotdev.NewShieldHandler(sm)))
@@ -93,11 +92,11 @@ func main() {
 		w.Write([]byte(strconv.FormatInt(*i, 10)))
 	})
 
-	dh := shieldeddotdev.NewShieldApiIndexHandler(sm, jwta)
+	dh := shieldeddotdev.NewDashboardShieldApiIndexHandler(sm, jwta)
 	wo.HandleFunc("/api/shields", dh.HandleGET).Methods("GET")
 	wo.HandleFunc("/api/shields", dh.HandlePOST).Methods("POST")
 
-	sah := shieldeddotdev.NewShieldApiHandler(sm, jwta)
+	sah := shieldeddotdev.NewDashboardShieldApiHandler(sm, jwta)
 	wo.HandleFunc("/api/shield/{id:[0-9]+}", sah.HandlePUT).Methods("PUT")
 	wo.HandleFunc("/api/shield/{id:[0-9]+}", sah.HandleDELETE).Methods("DELETE")
 

@@ -12,19 +12,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type ShieldApiIndexHandler struct {
+type DashboardShieldApiIndexHandler struct {
 	sm      *model.ShieldMapper
 	jwtAuth *JwtAuth
 }
 
-func NewShieldApiIndexHandler(sm *model.ShieldMapper, jwtAuth *JwtAuth) *ShieldApiIndexHandler {
-	return &ShieldApiIndexHandler{
+func NewDashboardShieldApiIndexHandler(sm *model.ShieldMapper, jwtAuth *JwtAuth) *DashboardShieldApiIndexHandler {
+	return &DashboardShieldApiIndexHandler{
 		sm:      sm,
 		jwtAuth: jwtAuth,
 	}
 }
 
-func (sh *ShieldApiIndexHandler) HandleGET(w http.ResponseWriter, r *http.Request) {
+func (sh *DashboardShieldApiIndexHandler) HandleGET(w http.ResponseWriter, r *http.Request) {
 	id := sh.jwtAuth.GetAuth(r)
 	if id == nil {
 		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
@@ -47,7 +47,7 @@ func (sh *ShieldApiIndexHandler) HandleGET(w http.ResponseWriter, r *http.Reques
 	}
 }
 
-func (sh *ShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
+func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 	id := sh.jwtAuth.GetAuth(r)
 	if id == nil {
 		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
@@ -95,19 +95,19 @@ func (sh *ShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *http.Reque
 	x.Encode(cleanShield)
 }
 
-type ShieldApiHandler struct {
+type DashboardShieldApiHandler struct {
 	sm      *model.ShieldMapper
 	jwtAuth *JwtAuth
 }
 
-func NewShieldApiHandler(sm *model.ShieldMapper, jwtAuth *JwtAuth) *ShieldApiHandler {
-	return &ShieldApiHandler{
+func NewDashboardShieldApiHandler(sm *model.ShieldMapper, jwtAuth *JwtAuth) *DashboardShieldApiHandler {
+	return &DashboardShieldApiHandler{
 		sm:      sm,
 		jwtAuth: jwtAuth,
 	}
 }
 
-func (dh *ShieldApiHandler) shieldSetup(w http.ResponseWriter, r *http.Request) *model.Shield {
+func (dh *DashboardShieldApiHandler) shieldSetup(w http.ResponseWriter, r *http.Request) *model.Shield {
 	uid := dh.jwtAuth.GetAuth(r)
 	if uid == nil {
 		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
@@ -141,7 +141,7 @@ func (dh *ShieldApiHandler) shieldSetup(w http.ResponseWriter, r *http.Request) 
 	return shield
 }
 
-func (dh *ShieldApiHandler) HandlePUT(w http.ResponseWriter, r *http.Request) {
+func (dh *DashboardShieldApiHandler) HandlePUT(w http.ResponseWriter, r *http.Request) {
 	shield := dh.shieldSetup(w, r)
 	if shield == nil {
 		return
@@ -172,7 +172,7 @@ func (dh *ShieldApiHandler) HandlePUT(w http.ResponseWriter, r *http.Request) {
 	x.Encode(shield)
 }
 
-func (sah *ShieldApiHandler) HandleDELETE(w http.ResponseWriter, r *http.Request) {
+func (sah *DashboardShieldApiHandler) HandleDELETE(w http.ResponseWriter, r *http.Request) {
 	shield := sah.shieldSetup(w, r)
 	if shield == nil {
 		return
