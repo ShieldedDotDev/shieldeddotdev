@@ -10,19 +10,12 @@ import (
 	"github.com/ShieldedDotDev/shieldeddotdev"
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
 
-	"github.com/davecgh/go-spew/spew"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/mholt/certmagic"
 )
-
-type Subdomains struct {
-	root string
-	api  string
-	img  string
-}
 
 var (
 	dsn          = flag.String("dsn", "admin:password@tcp(127.0.0.1:3306)/shielded?parseTime=true", "MySQL DSN")
@@ -31,30 +24,17 @@ var (
 
 	// cookieSecret = flag.String("cookie-secret", "", "Secret used to hash cookies")
 
-	runLocal = flag.Bool("local", false, "Run as local dev setup")
-
-	subdomains = Subdomains{
-		root: "shielded.dev",
-		api:  "api.shielded.dev",
-		img:  "img.shielded.dev",
-	}
+	runLocal = flag.Bool("letsencrypt", true, "Use LetsEncrypt AutoSSL")
 )
 
 func init() {
-	flag.Parse()
+	log.Println(buildString)
+	log.Println(hostString)
 
-	if *runLocal {
-		subdomains = Subdomains{
-			root: "local.shielded.dev",
-			api:  "local.api.shielded.dev",
-			img:  "local.img.shielded.dev",
-		}
-	}
+	flag.Parse()
 }
 
 func main() {
-	spew.Dump(subdomains)
-
 	db, err := sql.Open("mysql", *dsn)
 	if err != nil {
 		log.Fatal(err)
@@ -64,17 +44,17 @@ func main() {
 	sm := model.NewShieldMapper(db)
 
 	ro := mux.NewRouter()
-	ro.PathPrefix("/").Host("www." + subdomains.root).Handler(
-		http.RedirectHandler("https://"+subdomains.root, http.StatusPermanentRedirect))
+	ro.PathPrefix("/").Host("www." + rootHost).Handler(
+		http.RedirectHandler("https://"+rootHost, http.StatusPermanentRedirect))
 
-	ao := ro.Host(subdomains.api).Subrouter()
+	ao := ro.Host(apiHost).Subrouter()
 	apih := shieldeddotdev.NewApiHandler(sm)
 	ao.HandleFunc("/", apih.HandlePOST)
 
-	io := ro.Host(subdomains.img).Subrouter()
+	io := ro.Host(imgHost).Subrouter()
 	io.Handle("/s/{id:[0-9]+}", handlers.CompressHandler(shieldeddotdev.NewShieldHandler(sm)))
 
-	wo := ro.Host(subdomains.root).Subrouter()
+	wo := ro.Host(rootHost).Subrouter()
 
 	uuu, err := uuid.NewV4()
 	if err != nil {
@@ -106,13 +86,13 @@ func main() {
 
 	wo.PathPrefix("/").Handler(http.FileServer(shieldeddotdev.AssetFile()))
 
-	if *runLocal {
+	if !*runLocal {
 		err = http.ListenAndServe(":8686", ro)
 		if err != nil {
 			log.Fatal(err)
 		}
 	} else {
-		err = certmagic.HTTPS([]string{subdomains.root, "www." + subdomains.root, subdomains.api, subdomains.img}, ro)
+		err = certmagic.HTTPS([]string{rootHost, "www." + rootHost, apiHost, imgHost}, ro)
 		if err != nil {
 			log.Fatal(err)
 		}
