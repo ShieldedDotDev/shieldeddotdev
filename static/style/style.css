@@ -90,7 +90,7 @@ body {
           text-align: left; } }
       @media screen and (max-width: 599px) {
         body > header > h2 {
-          font-size: .7em; } }
+          font-size: 0.7em; } }
   body > main > section {
     padding: 1em 0; }
     @media screen and (max-width: 611px) {
@@ -104,7 +104,7 @@ body {
       margin: 0 auto; }
       body > main > section > article > h3 {
         font-size: 2em;
-        padding: 0 0 0.5em 0;
+        padding: 0 0 0.5em;
         text-align: center; }
   body > footer {
     background: #555;
@@ -130,7 +130,7 @@ p {
   margin-bottom: 1em; }
   .dashboard--controller .shield--controller > input {
     font-size: 1.2em;
-    padding: .3em; }
+    padding: 0.3em; }
   .dashboard--controller .shield--controller > img {
     float: right; }
 
@@ -145,7 +145,7 @@ p {
     margin-bottom: 1em; }
   .home--app .getting-started > p {
     margin: 1em 0;
-    font-size: .9em; }
+    font-size: 0.9em; }
     .home--app .getting-started > p:last-child {
       margin-bottom: 0; }
 .home--app .github-login {
@@ -192,7 +192,7 @@ pre {
   white-space: -moz-pre-wrap;
   white-space: -hp-pre-wrap;
   word-wrap: break-word;
-  font-size: .8rem;
+  font-size: 0.8rem;
   padding: 1.125em; }
   pre > code {
     white-space: pre-wrap;

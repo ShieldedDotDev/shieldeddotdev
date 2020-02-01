@@ -78,7 +78,7 @@ body {
 			}
 
 			@media screen and (max-width: #{$pageWidth - 1}) {
-				font-size: .7em;
+				font-size: 0.7em;
 			}
 		}
 	}
@@ -101,7 +101,7 @@ body {
 			> article {
 				> h3 {
 					font-size: 2em;
-					padding: 0 0 0.5em 0;
+					padding: 0 0 0.5em;
 					text-align: center;
 				}
 
