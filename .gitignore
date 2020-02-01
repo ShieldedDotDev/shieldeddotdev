@@ -1,4 +1,5 @@
 /shielded
+/shielded-debug
 /.sass-cache
 /node_modules
 *.pem
