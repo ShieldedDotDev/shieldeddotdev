@@ -12,7 +12,9 @@ TEMPLATES_DIR = ./pages
 STATIC_DIR = ./static
 
 .PHONY: build
-build: bindata.go
+build: $(BIN)
+
+$(BIN): bindata.go
 	echo $(LDFLAGS)
 	go build -ldflags $(LDFLAGS) -o $(BIN) ./cmd/shielded
 
