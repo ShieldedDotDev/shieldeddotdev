@@ -23,48 +23,48 @@ export class ShieldsModel {
 
 	private timeouts: { [s: number]: { timeout: number, resolves: Array<() => void> } } = {};
 
-	public updateShield(note: ShieldInterface, debounce: number = 2000) {
-		const noteId = note.ShieldID;
-		if (!noteId) {
-			throw Error("Attempting to update unpersisted note");
+	public updateShield(shield: ShieldInterface, debounce: number = 2000) {
+		const shieldId = shield.ShieldID;
+		if (!shieldId) {
+			throw Error("Attempting to update unpersisted shield");
 		}
 
 		let updated = false;
 		this.shields.map((n) => {
-			if (n.ShieldID == noteId) {
+			if (n.ShieldID == shieldId) {
 				updated = true;
-				return note;
+				return shield;
 			}
 
 			return n;
 		});
 
 		if (!updated) {
-			throw Error("Failed to update note");
+			throw Error("Failed to update shield");
 		}
 
-		if (this.timeouts[noteId]) {
-			clearTimeout(this.timeouts[noteId].timeout);
+		if (this.timeouts[shieldId]) {
+			clearTimeout(this.timeouts[shieldId].timeout);
 		}
 
-		this.shieldEventEmitter.trigger({ shield: note, event: "changed" });
+		this.shieldEventEmitter.trigger({ shield, event: "changed" });
 
 		return new Promise<void>((resolve) => {
 			let resolves : Array<() => void> = [resolve];
-			if(this.timeouts[noteId]) {
-				resolves = [...this.timeouts[noteId].resolves, ...resolves];
+			if(this.timeouts[shieldId]) {
+				resolves = [...this.timeouts[shieldId].resolves, ...resolves];
 			}
 
-			this.timeouts[noteId] = {
+			this.timeouts[shieldId] = {
 				timeout: setTimeout(async () => {
-					this.shieldEventEmitter.trigger({ shield: note, event: "updating" });
-					await this.shieldsApi.saveShield(note);
-					this.shieldEventEmitter.trigger({ shield: note, event: "updated" });
+					this.shieldEventEmitter.trigger({ shield, event: "updating" });
+					await this.shieldsApi.saveShield(shield);
+					this.shieldEventEmitter.trigger({ shield, event: "updated" });
 
-					for (const r of this.timeouts[noteId].resolves) {
+					for (const r of this.timeouts[shieldId].resolves) {
 						r();
 					}
-					this.timeouts[noteId].resolves = [];
+					this.timeouts[shieldId].resolves = [];
 				}, debounce),
 
 				resolves,
