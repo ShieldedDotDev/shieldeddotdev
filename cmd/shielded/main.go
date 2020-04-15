@@ -10,11 +10,11 @@ import (
 	"github.com/ShieldedDotDev/shieldeddotdev"
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
 
+	"github.com/caddyserver/certmagic"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofrs/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"github.com/mholt/certmagic"
 )
 
 var (
