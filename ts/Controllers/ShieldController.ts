@@ -23,7 +23,7 @@ export class ShieldController extends AbstractBaseController {
 			shield.Name = this.nameInput.value;
 		});
 
-		this.shieldImg.src = `https://img.shielded.dev/s/${shield.ShieldID}`;
+		this.shieldImg.src = `https://img.local.shielded.dev/s/${shield.ShieldID}`;
 		this.container.appendChild(this.shieldImg);
 
 		this.container.appendChild(this.updateBtn);
