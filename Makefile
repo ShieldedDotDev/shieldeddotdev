@@ -25,7 +25,7 @@ lint:
 .PHONY: debug
 debug: bindata.go
 	go-bindata -debug -fs -pkg shieldeddotdev -prefix "$(STATIC_DIR)/" $(STATIC_DIR)/...
-	$(MAKE) BIN="shielded-debug" LDADDIT="-X main.rootHost=local.shielded.dev -X main.apiHost=local.api.shielded.dev -X main.imgHost=local.img.shielded.dev" build
+	$(MAKE) BIN="shielded-debug" LDADDIT="-X main.rootHost=local.shielded.dev -X main.apiHost=api.local.shielded.dev -X main.imgHost=img.local.shielded.dev" build
 	./shielded-debug -letsencrypt=false
 
 bindata.go: $(shell find $(STATIC_DIR) -type f)
