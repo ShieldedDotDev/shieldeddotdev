@@ -12,7 +12,12 @@
   "homepage": "https://github.com/ShieldedDotDev/shieldeddotdev#readme",
   "dependencies": {
     "html-minifier": "^4.0.0",
+    "ts-loader": "^6.2.1",
     "tslint": "^6.1.1",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "webpack": "^4.41.5"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.10"
   }
 }

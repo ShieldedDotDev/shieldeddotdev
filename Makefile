@@ -34,8 +34,11 @@ bindata.go: $(shell find $(STATIC_DIR) -type f)
 $(shell find $(STATIC_DIR) -name "*.css"): $(shell find scss -name "*.scss")
 	compass compile
 
-$(STATIC_DIR)/main.js: $(shell find ts -name "*.ts")
-	./node_modules/.bin/tsc
+$(STATIC_DIR)/main.js: $(shell find ts -name "*.ts") webpack.config.js tsconfig.json
+	./node_modules/.bin/webpack --mode=production
+
+$(STATIC_DIR)/min.js: require.min.js $(STATIC_DIR)/main.js
+	cat require.min.js $(STATIC_DIR)/main.js > $(STATIC_DIR)/min.js
 
 $(shell find $(STATIC_DIR) -name "*.html"): $(shell find $(TEMPLATES_DIR) -name "*.php")
 	$(foreach file, $(wildcard $(TEMPLATES_DIR)/*.html.php), php $(file) > $(STATIC_DIR)/$$(basename $(file) | sed 's/\.[^.]*$$//'); )
