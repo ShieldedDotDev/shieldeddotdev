@@ -8,6 +8,9 @@ jobs:
         platform: [ubuntu-latest]
     runs-on: ${{ matrix.platform }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Install Go
         uses: actions/setup-go@v1
         with:
@@ -17,10 +20,7 @@ jobs:
         uses: actions/setup-node@v1
 
       - name: Install Dependencies
-        run: cat Makefile && make deps
-
-      - name: Checkout
-        uses: actions/checkout@v2
+        run: make deps
 
       - name: Build
         run: make build
