@@ -16,8 +16,7 @@ build: $(BIN)
 
 .PHONY: deps
 deps:
-	GO111MODULE=off go get github.com/jteeuwen/go-bindata/go-bindata
-	GO111MODULE=off go install github.com/jteeuwen/go-bindata/go-bindata
+	GO111MODULE=off go install github.com/go-bindata/go-bindata/go-bindata
 	npm install
 
 $(BIN): bindata.go
