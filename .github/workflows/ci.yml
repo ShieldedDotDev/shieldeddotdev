@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-node@v1
 
       - name: Install Build Tools
-        run: go get -u github.com/jteeuwen/go-bindata/...
+        run: go install github.com/jteeuwen/go-bindata/...
 
       - name: Checkout
         uses: actions/checkout@v2
