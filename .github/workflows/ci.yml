@@ -22,6 +22,9 @@ jobs:
       - name: Install Dependencies
         run: make deps
 
+      - name: Lint
+        run: make lint
+
       - name: Build
         run: make build
 
