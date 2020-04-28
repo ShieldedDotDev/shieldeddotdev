@@ -16,8 +16,8 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v1
 
-      - name: Install Build Tools
-        run: go install github.com/jteeuwen/go-bindata/...
+      - name: Install Dependencies
+        run: make deps
 
       - name: Checkout
         uses: actions/checkout@v2
