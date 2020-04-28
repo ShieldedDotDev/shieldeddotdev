@@ -14,6 +14,11 @@ STATIC_DIR = ./static
 .PHONY: build
 build: $(BIN)
 
+.PHONY: deps
+deps:
+	GO111MODULE=off go get github.com/go-bindata/go-bindata/go-bindata
+	npm install
+
 $(BIN): bindata.go
 	echo $(LDFLAGS)
 	go build -ldflags $(LDFLAGS) -o $(BIN) ./cmd/shielded
