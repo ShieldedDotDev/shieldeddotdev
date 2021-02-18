@@ -1,10 +1,12 @@
 BIN=shielded
+BIN_DEBUG=$(BIN)-debug
 
 USER=$(shell whoami)
 HEAD=$(shell ([ -n "$${CI_TAG}" ] && echo "$$CI_TAG" || exit 1) || git describe --tags 2> /dev/null || git rev-parse --short HEAD)
 STAMP=$(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
 DIRTY=$(shell test $(shell git status --porcelain | wc -l) -eq 0 || echo '(dirty)')
 
+BUILDTAGS=""
 LDADDIT=""
 LDFLAGS="-X main.buildStamp=$(STAMP) -X main.buildUser=$(USER) -X main.buildHash=$(HEAD) -X main.buildDirty=$(DIRTY) $(LDADDIT)"
 
@@ -21,20 +23,19 @@ deps:
 
 .PHONY: clean
 clean:
-	-rm $(BIN)
+	-rm $(BIN) $(BIN_DEBUG)
 
 $(BIN): go.mod go.sum $(STATIC_SOURCES)
 	echo $(LDFLAGS)
-	go build -ldflags $(LDFLAGS) -o $(BIN) ./cmd/shielded
+	go build -tags $(BUILDTAGS) -ldflags $(LDFLAGS) -o $(BIN) ./cmd/shielded
 
 .PHONY: lint
 lint:
 	./node_modules/.bin/tslint -c tslint.json ts/**/*.ts --fix 
 
 .PHONY: debug
-debug:
-	# go-bindata -debug -fs -pkg shieldeddotdev -prefix "$(STATIC_DIR)/" $(STATIC_DIR)/...
-	$(MAKE) BIN="shielded-debug" LDADDIT="-X main.rootHost=local.shielded.dev -X main.apiHost=api.local.shielded.dev -X main.imgHost=img.local.shielded.dev" build
+debug: clean
+	$(MAKE) BIN=$(BIN_DEBUG) BUILDTAGS="debug" LDADDIT="-X main.rootHost=local.shielded.dev -X main.apiHost=api.local.shielded.dev -X main.imgHost=img.local.shielded.dev" build
 	./shielded-debug -letsencrypt=false
 
 $(shell find $(STATIC_DIR) -name "*.css"): $(shell find scss -name "*.scss")

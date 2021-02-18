@@ -1,3 +1,5 @@
+// +build !debug
+
 package shieldeddotdev
 
 import (
@@ -7,9 +9,6 @@ import (
 
 //go:embed static
 var static embed.FS
-
-// StaticAssets is a static site asset filesystem
-var StaticAssets fs.FS
 
 func init() {
 	sa, err := fs.Sub(static, "static")
