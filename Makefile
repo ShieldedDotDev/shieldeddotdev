@@ -10,16 +10,20 @@ LDFLAGS="-X main.buildStamp=$(STAMP) -X main.buildUser=$(USER) -X main.buildHash
 
 TEMPLATES_DIR = ./pages
 STATIC_DIR = ./static
+STATIC_SOURCES = $(shell find $(STATIC_DIR) -type f)
 
 .PHONY: build
 build: $(BIN)
 
 .PHONY: deps
 deps:
-	GO111MODULE=off go get github.com/go-bindata/go-bindata/go-bindata
 	npm install
 
-$(BIN): bindata.go
+.PHONY: clean
+clean:
+	-rm $(BIN)
+
+$(BIN): go.mod go.sum $(STATIC_SOURCES)
 	echo $(LDFLAGS)
 	go build -ldflags $(LDFLAGS) -o $(BIN) ./cmd/shielded
 
@@ -28,13 +32,10 @@ lint:
 	./node_modules/.bin/tslint -c tslint.json ts/**/*.ts --fix 
 
 .PHONY: debug
-debug: bindata.go
-	go-bindata -debug -fs -pkg shieldeddotdev -prefix "$(STATIC_DIR)/" $(STATIC_DIR)/...
+debug:
+	# go-bindata -debug -fs -pkg shieldeddotdev -prefix "$(STATIC_DIR)/" $(STATIC_DIR)/...
 	$(MAKE) BIN="shielded-debug" LDADDIT="-X main.rootHost=local.shielded.dev -X main.apiHost=api.local.shielded.dev -X main.imgHost=img.local.shielded.dev" build
 	./shielded-debug -letsencrypt=false
-
-bindata.go: $(shell find $(STATIC_DIR) -type f)
-	go-bindata -fs -pkg shieldeddotdev -prefix "$(STATIC_DIR)/" $(STATIC_DIR)/...
 
 $(shell find $(STATIC_DIR) -name "*.css"): $(shell find scss -name "*.scss")
 	compass compile

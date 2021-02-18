@@ -84,7 +84,7 @@ func main() {
 	wo.HandleFunc("/github/login", ah.LoginHandler)
 	wo.HandleFunc("/github/callback", ah.CallbackHandler)
 
-	wo.PathPrefix("/").Handler(http.FileServer(shieldeddotdev.AssetFile()))
+	wo.PathPrefix("/").Handler(http.FileServer(http.FS(shieldeddotdev.StaticAssets)))
 
 	if !*runLocal {
 		err = http.ListenAndServe(":8686", ro)
