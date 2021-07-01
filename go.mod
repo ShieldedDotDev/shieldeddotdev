@@ -3,7 +3,7 @@ module github.com/ShieldedDotDev/shieldeddotdev
 go 1.16
 
 require (
-	github.com/caddyserver/certmagic v0.13.1
+	github.com/caddyserver/certmagic v0.14.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofrs/uuid v3.4.0+incompatible
@@ -14,6 +14,4 @@ require (
 	github.com/narqo/go-badge v0.0.0-20190124110329-d9415e4e1e9f
 	golang.org/x/image v0.0.0-20191214001246-9130b4cfad52 // indirect
 	golang.org/x/oauth2 v0.0.0-20210218202405-ba52d332ba99
-	golang.org/x/sys v0.0.0-20210218155724-8ebf48af031b // indirect
-	golang.org/x/text v0.3.5 // indirect
 )
