@@ -3,7 +3,7 @@ module github.com/ShieldedDotDev/shieldeddotdev
 go 1.17
 
 require (
-	github.com/caddyserver/certmagic v0.14.4
+	github.com/caddyserver/certmagic v0.15.2
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/golang-jwt/jwt v3.2.2+incompatible
@@ -20,10 +20,10 @@ require (
 	github.com/felixge/httpsnoop v1.0.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/klauspost/cpuid/v2 v2.0.6 // indirect
+	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/libdns/libdns v0.2.1 // indirect
-	github.com/mholt/acmez v1.0.0 // indirect
-	github.com/miekg/dns v1.1.42 // indirect
+	github.com/mholt/acmez v1.0.1 // indirect
+	github.com/miekg/dns v1.1.43 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.17.0 // indirect
