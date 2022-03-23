@@ -16,109 +16,144 @@ time, mark, audio, video {
   border: 0;
   font: inherit;
   font-size: 100%;
-  vertical-align: baseline; }
+  vertical-align: baseline;
+}
 
 html {
-  line-height: 1; }
+  line-height: 1;
+}
 
 ol, ul {
-  list-style: none; }
+  list-style: none;
+}
 
 table {
   border-collapse: collapse;
-  border-spacing: 0; }
+  border-spacing: 0;
+}
 
 caption, th, td {
   text-align: left;
   font-weight: normal;
-  vertical-align: middle; }
+  vertical-align: middle;
+}
 
 q, blockquote {
-  quotes: none; }
+  quotes: none;
+}
 
 q:before, q:after, blockquote:before, blockquote:after {
   content: "";
-  content: none; }
+  content: none;
+}
 
 a img {
-  border: none; }
+  border: none;
+}
 
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
-  display: block; }
+  display: block;
+}
 
 * {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+}
 
 strong {
-  font-weight: bold; }
+  font-weight: bold;
+}
 
 body {
   min-height: 100vh;
   display: grid;
   grid-template-rows: min-content auto min-content;
   color: #2a2a2a;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; }
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+body > header {
+  font-size: 2em;
+  font-weight: bold;
+  background: #555;
+  color: white;
+  display: grid;
+}
+@media screen and (min-width: 600px) {
   body > header {
-    font-size: 2em;
-    font-weight: bold;
-    background: #555;
-    color: white;
-    display: grid; }
-    @media screen and (min-width: 600px) {
-      body > header {
-        grid-template-rows: 100%;
-        grid-template-areas: "title subtitle";
-        grid-template-columns: minmax(260px, calc(calc(100% - 600px) / 2)); } }
-    @media screen and (max-width: 599px) {
-      body > header {
-        grid-template-areas: "title" "subtitle"; } }
-    body > header > * {
-      padding: 1em;
-      height: 100%;
-      text-align: center; }
-    body > header > h1 {
-      grid-area: title; }
-      @media screen and (min-width: 600px) {
-        body > header > h1 {
-          text-align: right; } }
-    body > header > h2 {
-      grid-area: subtitle;
-      background: #5c72a6; }
-      @media screen and (min-width: 600px) {
-        body > header > h2 {
-          text-align: left; } }
-      @media screen and (max-width: 599px) {
-        body > header > h2 {
-          font-size: 0.7em; } }
+    grid-template-rows: 100%;
+    grid-template-areas: "title subtitle";
+    grid-template-columns: minmax(260px, calc((100% - 600px) / 2));
+  }
+}
+@media screen and (max-width: 599px) {
+  body > header {
+    grid-template-areas: "title" "subtitle";
+  }
+}
+body > header > * {
+  padding: 1em;
+  height: 100%;
+  text-align: center;
+}
+body > header > h1 {
+  grid-area: title;
+}
+@media screen and (min-width: 600px) {
+  body > header > h1 {
+    text-align: right;
+  }
+}
+body > header > h2 {
+  grid-area: subtitle;
+  background: #5c72a6;
+}
+@media screen and (min-width: 600px) {
+  body > header > h2 {
+    text-align: left;
+  }
+}
+@media screen and (max-width: 599px) {
+  body > header > h2 {
+    font-size: 0.7em;
+  }
+}
+body > main > section {
+  padding: 1em 0;
+}
+@media screen and (max-width: 611px) {
   body > main > section {
-    padding: 1em 0; }
-    @media screen and (max-width: 611px) {
-      body > main > section {
-        padding-left: 11px;
-        padding-right: 11px; } }
-    body > main > section:nth-child(odd) {
-      background: rgba(0, 0, 0, 0.065); }
-    body > main > section > article {
-      max-width: 600px;
-      margin: 0 auto; }
-      body > main > section > article > h3 {
-        font-size: 2em;
-        padding: 0 0 0.5em;
-        text-align: center; }
-  body > footer {
-    background: #555;
-    padding: 20px;
-    color: white; }
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+}
+body > main > section:nth-child(odd) {
+  background: rgba(0, 0, 0, 0.065);
+}
+body > main > section > article {
+  max-width: 600px;
+  margin: 0 auto;
+}
+body > main > section > article > h3 {
+  font-size: 2em;
+  padding: 0 0 0.5em;
+  text-align: center;
+}
+body > footer {
+  background: #555;
+  padding: 20px;
+  color: white;
+}
 
 p {
-  line-height: 1.4em; }
+  line-height: 1.4em;
+}
 
-.dashboard--controller .shield--controller, .home--app .getting-started {
+.home--app .getting-started, .dashboard--controller .shield--controller {
   background: rgba(0, 0, 0, 0.065);
   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
-  padding: 1em; }
+  padding: 1em;
+}
 
 .dashboard--controller > .add-button {
   display: block;
@@ -126,29 +161,37 @@ p {
   border-radius: 1000px;
   font-size: 2em;
   width: 2em;
-  height: 2em; }
+  height: 2em;
+}
 .dashboard--controller .shield--controller {
-  margin-bottom: 1em; }
-  .dashboard--controller .shield--controller > input {
-    font-size: 1.2em;
-    padding: 0.3em; }
-  .dashboard--controller .shield--controller > img {
-    float: right; }
+  margin-bottom: 1em;
+}
+.dashboard--controller .shield--controller > input {
+  font-size: 1.2em;
+  padding: 0.3em;
+}
+.dashboard--controller .shield--controller > img {
+  float: right;
+}
 
 .home--app .getting-started {
   margin: 1em auto;
   display: inline-block;
   padding: 2em;
   text-align: center;
-  max-width: 300px; }
-  .home--app .getting-started > h3 {
-    font-weight: bold;
-    margin-bottom: 1em; }
-  .home--app .getting-started > p {
-    margin: 1em 0;
-    font-size: 0.9em; }
-    .home--app .getting-started > p:last-child {
-      margin-bottom: 0; }
+  max-width: 300px;
+}
+.home--app .getting-started > h3 {
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+.home--app .getting-started > p {
+  margin: 1em 0;
+  font-size: 0.9em;
+}
+.home--app .getting-started > p:last-child {
+  margin-bottom: 0;
+}
 .home--app .github-login {
   display: inline-block;
   color: white;
@@ -162,23 +205,28 @@ p {
   background-repeat: no-repeat;
   background-position: 0.5em center;
   transition: background-color cubic-bezier(0, 0.5, 0, 1) 1s;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); }
-  .home--app .github-login:hover {
-    background-color: #44c444;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8); }
-  .home--app .github-login:active {
-    background-color: #bd655f; }
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+.home--app .github-login:hover {
+  background-color: #44c444;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+}
+.home--app .github-login:active {
+  background-color: #bd655f;
+}
 
 ::selection {
   background: #f24236;
   color: white;
-  text-shadow: none; }
+  text-shadow: none;
+}
 
 pre, code {
   background: #555;
   color: white;
-  font-family: Consolas,"Courier New",Courier,monospace;
-  border-radius: 3px; }
+  font-family: Consolas, "Courier New", Courier, monospace;
+  border-radius: 3px;
+}
 
 pre {
   line-height: 1.4em;
@@ -192,10 +240,15 @@ pre {
   white-space: -hp-pre-wrap;
   word-wrap: break-word;
   font-size: 0.8rem;
-  padding: 1.125em; }
-  pre > code {
-    white-space: pre-wrap;
-    background: transparent; }
+  padding: 1.125em;
+}
+pre > code {
+  white-space: pre-wrap;
+  background: transparent;
+}
 
 code {
-  font-family: Menlo, Monaco, Courier New, monospace; }
+  font-family: Menlo, Monaco, Courier New, monospace;
+}
+
+/*# sourceMappingURL=style.css.map */

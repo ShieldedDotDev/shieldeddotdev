@@ -39,7 +39,7 @@ debug: clean
 	./$(BIN_DEBUG) -letsencrypt=false
 
 $(shell find $(STATIC_DIR) -name "*.css"): $(shell find scss -name "*.scss")
-	compass compile
+	npx sass scss:static/style
 
 $(STATIC_DIR)/main.js: $(shell find ts -name "*.ts") webpack.config.js tsconfig.json
 	./node_modules/.bin/webpack --mode=production
