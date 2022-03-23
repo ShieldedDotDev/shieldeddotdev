@@ -1,0 +1,17 @@
+@mixin force-wrap {
+	white-space: pre;
+	white-space: pre-wrap;
+	white-space: pre-line;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	white-space: -moz-pre-wrap;
+	white-space: -hp-pre-wrap;
+	word-wrap: break-word;
+}
+
+
+@mixin box-sizing($box-sizing) {
+	-moz-box-sizing: $box-sizing;
+	-webkit-box-sizing: $box-sizing;
+	box-sizing: $box-sizing;
+}

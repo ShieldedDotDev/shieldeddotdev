@@ -3,7 +3,7 @@ pre, code {
 	color: $darkBgText;
 
 	font-family: Consolas,"Courier New",Courier,monospace;
-	@include border-radius(3px);
+	border-radius: 3px;
 }
 
 pre {

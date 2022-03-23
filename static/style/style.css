@@ -35,9 +35,10 @@ caption, th, td {
 
 q, blockquote {
   quotes: none; }
-  q:before, q:after, blockquote:before, blockquote:after {
-    content: "";
-    content: none; }
+
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none; }
 
 a img {
   border: none; }
@@ -177,8 +178,6 @@ pre, code {
   background: #555;
   color: white;
   font-family: Consolas,"Courier New",Courier,monospace;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
   border-radius: 3px; }
 
 pre {
