@@ -36,7 +36,7 @@ lint:
 .PHONY: debug
 debug: clean
 	$(MAKE) BIN=$(BIN_DEBUG) BUILDTAGS="debug" LDADDIT="-X main.rootHost=local.shielded.dev -X main.apiHost=api.local.shielded.dev -X main.imgHost=img.local.shielded.dev" build
-	./$(BIN_DEBUG) -letsencrypt=false
+	./$(BIN_DEBUG) -run-local=true
 
 $(shell find $(STATIC_DIR) -name "*.css"): $(shell find scss -name "*.scss")
 	npx sass scss:static/style

@@ -24,7 +24,7 @@ var (
 
 	// cookieSecret = flag.String("cookie-secret", "", "Secret used to hash cookies")
 
-	runLocal = flag.Bool("letsencrypt", true, "Use LetsEncrypt AutoSSL")
+	runLocal = flag.Bool("run-local", true, "Run in local development mode")
 )
 
 func init() {
@@ -86,7 +86,7 @@ func main() {
 
 	wo.PathPrefix("/").Handler(http.FileServer(http.FS(shieldeddotdev.StaticAssets)))
 
-	if !*runLocal {
+	if *runLocal {
 		err = http.ListenAndServe(":8686", ro)
 		if err != nil {
 			log.Fatal(err)
