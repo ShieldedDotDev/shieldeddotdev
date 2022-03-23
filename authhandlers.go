@@ -11,7 +11,7 @@ import (
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
 	"github.com/gofrs/uuid"
 	"github.com/golang-jwt/jwt"
-	"github.com/google/go-github/v28/github"
+	"github.com/google/go-github/v43/github"
 	"golang.org/x/oauth2"
 	goauth "golang.org/x/oauth2/github"
 )
