@@ -1,5 +1,14 @@
 type RequestModInterface = (mods: XMLHttpRequest) => void;
 
+interface RequestErrorInterface {
+	ctx: XMLHttpRequest;
+	event: ProgressEvent;
+}
+
+export function isRequestError(e: any): e is RequestErrorInterface {
+	return e.ctx && e.event;
+}
+
 export async function doRequest<T>(
 	endpoint: string,
 	method: string = 'GET',
@@ -29,14 +38,14 @@ export function doRawRequest(
 			if (this.status >= 200 && this.status < 400) {
 				resolve(this.responseText);
 			} else {
-				reject({ ctx: this, event: e });
+				reject(<RequestErrorInterface>{ ctx: this, event: e });
 			}
 		});
 
 		request.withCredentials = true;
 
 		request.addEventListener('error', function(e) {
-			reject({ ctx: this, event: e });
+			reject(<RequestErrorInterface>{ ctx: this, event: e });
 		});
 		if (body) {
 			request.send(body);
