@@ -83,7 +83,8 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 
 	err = sh.sm.Save(cleanShield)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Println(err)
+		http.Error(w, "database error", http.StatusInternalServerError)
 		return
 	}
 
