@@ -23,7 +23,8 @@ deps:
 
 .PHONY: clean
 clean:
-	-rm $(BIN) $(BIN_DEBUG)
+	-rm $(BIN) $(BIN_DEBUG) 
+	-rm $(STATIC_DIR)/min.js
 
 $(BIN): go.mod go.sum $(STATIC_SOURCES)
 	echo $(LDFLAGS)
@@ -42,11 +43,11 @@ $(shell find $(STATIC_DIR) -name "*.css"): $(shell find scss -name "*.scss")
 	npx sass scss:static/style
 
 $(STATIC_DIR)/main.js: $(shell find ts -name "*.ts") webpack.config.js tsconfig.json
-	./node_modules/.bin/webpack --mode=production
+	npx webpack --mode=production
 
-$(STATIC_DIR)/min.js: require.min.js $(STATIC_DIR)/main.js
-	cat require.min.js $(STATIC_DIR)/main.js > $(STATIC_DIR)/min.js
+$(STATIC_DIR)/min.js: $(STATIC_DIR)/require.min.js $(STATIC_DIR)/main.js
+	cat $(STATIC_DIR)/require.min.js $(STATIC_DIR)/main.js > $(STATIC_DIR)/min.js
 
 $(shell find $(STATIC_DIR) -name "*.html"): $(shell find $(TEMPLATES_DIR) -name "*.php")
 	$(foreach file, $(wildcard $(TEMPLATES_DIR)/*.html.php), php $(file) > $(STATIC_DIR)/$$(basename $(file) | sed 's/\.[^.]*$$//'); )
-	./node_modules/.bin/html-minifier --input-dir static --output-dir static --file-ext html --collapse-whitespace --conservative-collapse
+	npx html-minifier --input-dir static --output-dir static --file-ext html --collapse-whitespace --conservative-collapse
