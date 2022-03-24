@@ -24,7 +24,7 @@ deps:
 .PHONY: clean
 clean:
 	-rm $(BIN) $(BIN_DEBUG) 
-	-rm $(STATIC_DIR)/min.js
+	-rm $(STATIC_DIR)/main.js
 
 $(BIN): go.mod go.sum $(STATIC_SOURCES)
 	echo $(LDFLAGS)
@@ -35,7 +35,7 @@ lint:
 	./node_modules/.bin/tslint -c tslint.json ts/**/*.ts --fix 
 
 .PHONY: debug
-debug: clean $(STATIC_SOURCES) $(STATIC_DIR)/min.js
+debug: clean $(STATIC_SOURCES) $(STATIC_DIR)/main.js
 	$(MAKE) BIN=$(BIN_DEBUG) BUILDTAGS="debug" LDADDIT="-X main.rootHost=local.shielded.dev -X main.apiHost=api.local.shielded.dev -X main.imgHost=img.local.shielded.dev" build
 	./$(BIN_DEBUG) -run-local=true
 
@@ -44,9 +44,6 @@ $(shell find $(STATIC_DIR) -name "*.css"): $(shell find scss -name "*.scss")
 
 $(STATIC_DIR)/main.js: $(shell find ts -name "*.ts") webpack.config.js tsconfig.json
 	npx webpack --mode=production
-
-$(STATIC_DIR)/min.js: $(STATIC_DIR)/require.min.js $(STATIC_DIR)/main.js
-	cat $(STATIC_DIR)/require.min.js $(STATIC_DIR)/main.js > $(STATIC_DIR)/min.js
 
 $(shell find $(STATIC_DIR) -name "*.html"): $(shell find $(TEMPLATES_DIR) -name "*.php")
 	$(foreach file, $(wildcard $(TEMPLATES_DIR)/*.html.php), php $(file) > $(STATIC_DIR)/$$(basename $(file) | sed 's/\.[^.]*$$//'); )

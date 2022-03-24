@@ -7,7 +7,8 @@
 
 <body class="dashboard--app">
 	<?php require('_header.php') ?>
-	<script src="min.js"></script>
+	<script src="/require.min.js"></script>
+	<script src="/main.js"></script>
 
 	<section>
 		<article id="dashboard">
