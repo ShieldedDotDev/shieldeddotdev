@@ -34,7 +34,7 @@ lint:
 	./node_modules/.bin/tslint -c tslint.json ts/**/*.ts --fix 
 
 .PHONY: debug
-debug: clean
+debug: clean $(STATIC_SOURCES) $(STATIC_DIR)/min.js
 	$(MAKE) BIN=$(BIN_DEBUG) BUILDTAGS="debug" LDADDIT="-X main.rootHost=local.shielded.dev -X main.apiHost=api.local.shielded.dev -X main.imgHost=img.local.shielded.dev" build
 	./$(BIN_DEBUG) -run-local=true
 
