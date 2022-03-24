@@ -10,7 +10,9 @@ export class ShieldController extends AbstractBaseController {
 
 	private updateBtn = document.createElement('button');
 
-	public readonly events = new EventEmitter<'updated'>();
+	private deleteBtn = document.createElement('button');
+
+	public readonly events = new EventEmitter<'updated'|'deleted'>();
 
 	constructor(public readonly shield: ShieldInterface) {
 		super(document.createElement("div"), "shield");
@@ -29,6 +31,14 @@ export class ShieldController extends AbstractBaseController {
 		this.container.appendChild(this.updateBtn);
 		this.updateBtn.addEventListener('click', () => {
 			this.events.trigger('updated');
+		});
+
+		this.deleteBtn.innerText = 'Delete';
+		this.container.appendChild(this.deleteBtn);
+		this.deleteBtn.addEventListener('click', () => {
+			if( confirm('Are you sure you want to delete this shield?') ) {
+				this.events.trigger('deleted');
+			}
 		});
 	}
 }

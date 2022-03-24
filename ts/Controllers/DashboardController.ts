@@ -37,6 +37,8 @@ export class DashboardController extends AbstractBaseController {
 					case "updated":
 						this.model.updateShield(sc.shield);
 						break;
+					case "deleted":
+						this.model.deleteShield(sc.shield);
 				}
 
 			});

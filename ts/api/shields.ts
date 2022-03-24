@@ -1,4 +1,4 @@
-import { doRequest } from "./request";
+import { doRawRequest, doRequest } from "./request";
 
 export interface ShieldInterface {
 	ShieldID?: number;
@@ -21,5 +21,9 @@ export class ShieldsApi {
 		} else {
 			return doRequest<ShieldInterface>('api/shields', 'POST', JSON.stringify(n));
 		}
+	}
+
+	public deleteShield(n: ShieldInterface) {
+		return doRawRequest(`api/shield/${n.ShieldID}`, 'DELETE', JSON.stringify(n));
 	}
 }
