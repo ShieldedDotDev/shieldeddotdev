@@ -24,3 +24,11 @@ func (um *UserMapper) Save(u *User) error {
 
 	return nil
 }
+
+func (um *UserMapper) GetDebugUser() *User {
+	return &User{
+		UserID: 1,
+		Login:  "debug",
+		Email:  "fake@example.com",
+	}
+}

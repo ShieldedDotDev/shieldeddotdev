@@ -16,6 +16,28 @@ import (
 	goauth "golang.org/x/oauth2/github"
 )
 
+type DebugAuthHandler struct {
+	um      *model.UserMapper
+	jwtAuth *JwtAuth
+}
+
+func NewDebugAuthHandler(um *model.UserMapper, jwtAuth *JwtAuth) *DebugAuthHandler {
+	return &DebugAuthHandler{um, jwtAuth}
+}
+
+func (ah *DebugAuthHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
+	user := ah.um.GetDebugUser()
+
+	err := ah.jwtAuth.Authorize(w, user.UserID)
+	if err != nil {
+		log.Printf("Failed to sign jwt: %s\n", err)
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+
+	http.Redirect(w, r, "/dashboard.html", http.StatusTemporaryRedirect)
+}
+
 type GitHubAuthHandler struct {
 	um     *model.UserMapper
 	config *oauth2.Config

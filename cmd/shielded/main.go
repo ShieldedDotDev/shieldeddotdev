@@ -24,7 +24,8 @@ var (
 
 	// cookieSecret = flag.String("cookie-secret", "", "Secret used to hash cookies")
 
-	runLocal = flag.Bool("run-local", true, "Run in local development mode")
+	runLocal  = flag.Bool("run-local", true, "Run in local development mode")
+	localAddr = flag.String("local-addr", ":8686", "Local address to listen on")
 )
 
 func init() {
@@ -60,7 +61,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	jwta := &shieldeddotdev.JwtAuth{uuu.Bytes()}
+	jwta := &shieldeddotdev.JwtAuth{Secret: uuu.Bytes()}
 
 	wo.HandleFunc("/api/authed", func(w http.ResponseWriter, r *http.Request) {
 		i := jwta.GetAuth(r)
@@ -80,14 +81,19 @@ func main() {
 	wo.HandleFunc("/api/shield/{id:[0-9]+}", sah.HandlePUT).Methods("PUT")
 	wo.HandleFunc("/api/shield/{id:[0-9]+}", sah.HandleDELETE).Methods("DELETE")
 
-	ah := shieldeddotdev.NewGitHubAuthHandler(um, *clientID, *clientSecret, jwta)
-	wo.HandleFunc("/github/login", ah.LoginHandler)
-	wo.HandleFunc("/github/callback", ah.CallbackHandler)
+	if *runLocal {
+		ah := shieldeddotdev.NewDebugAuthHandler(um, jwta)
+		wo.HandleFunc("/github/login", ah.LoginHandler)
+	} else {
+		ah := shieldeddotdev.NewGitHubAuthHandler(um, *clientID, *clientSecret, jwta)
+		wo.HandleFunc("/github/login", ah.LoginHandler)
+		wo.HandleFunc("/github/callback", ah.CallbackHandler)
+	}
 
 	wo.PathPrefix("/").Handler(http.FileServer(http.FS(shieldeddotdev.StaticAssets)))
 
 	if *runLocal {
-		err = http.ListenAndServe(":8686", ro)
+		err = http.ListenAndServe(*localAddr, ro)
 		if err != nil {
 			log.Fatal(err)
 		}
