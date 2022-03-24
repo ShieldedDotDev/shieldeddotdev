@@ -84,13 +84,15 @@ func main() {
 	if *runLocal {
 		ah := shieldeddotdev.NewDebugAuthHandler(um, jwta)
 		wo.HandleFunc("/github/login", ah.LoginHandler)
+
+		wo.PathPrefix("/").Handler(http.FileServer(http.Dir("static")))
 	} else {
 		ah := shieldeddotdev.NewGitHubAuthHandler(um, *clientID, *clientSecret, jwta)
 		wo.HandleFunc("/github/login", ah.LoginHandler)
 		wo.HandleFunc("/github/callback", ah.CallbackHandler)
-	}
 
-	wo.PathPrefix("/").Handler(http.FileServer(http.FS(shieldeddotdev.StaticAssets)))
+		wo.PathPrefix("/").Handler(http.FileServer(http.FS(shieldeddotdev.StaticAssets)))
+	}
 
 	if *runLocal {
 		err = http.ListenAndServe(*localAddr, ro)
