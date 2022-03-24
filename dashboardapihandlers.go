@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
-	"github.com/gofrs/uuid"
 	"github.com/gorilla/mux"
 )
 
@@ -63,11 +64,7 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 		return
 	}
 
-	uu, err := uuid.NewV4()
-	if err != nil {
-		http.Error(w, "failed to generate secret", http.StatusInternalServerError)
-		return
-	}
+	uu := stringWithCharset(40, "abcdefghjkmnpqrstuvwxyz23456789")
 
 	cleanShield := &model.Shield{
 		UserID: *id,
@@ -78,7 +75,7 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 		Text:  postShield.Text,
 		Color: postShield.Color,
 
-		Secret: uu.String(),
+		Secret: uu,
 	}
 
 	err = sh.sm.Save(cleanShield)
@@ -94,6 +91,16 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 
 	x := json.NewEncoder(w)
 	x.Encode(cleanShield)
+}
+
+var seededRand *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
+
+func stringWithCharset(length int, charset string) string {
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[seededRand.Intn(len(charset))]
+	}
+	return string(b)
 }
 
 type DashboardShieldApiHandler struct {
