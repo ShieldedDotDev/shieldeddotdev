@@ -1,7 +1,7 @@
 import { ShieldInterface, ShieldsApi } from "../api/shields";
 import { EventEmitter } from "../EventEmitter";
 
-export type ShieldActions = "created" | "deleted" | "changed" | "deleted" | "updating" | "updated" | "activated";
+export type ShieldActions = "created" | "deleted" | "changed" | "updating" | "updated" | "activated";
 
 export interface ShieldEvent { shield: ShieldInterface; event: ShieldActions; }
 
@@ -22,6 +22,18 @@ export class ShieldsModel {
 	}
 
 	private timeouts: { [s: number]: { timeout: number, resolves: Array<() => void> } } = {};
+
+	public async deleteShield(shield: ShieldInterface) {
+		const shieldId = shield.ShieldID;
+		if (!shieldId) {
+			throw Error("Attempting to delete unpersisted shield");
+		}
+
+		await this.shieldsApi.deleteShield(shield);
+		this.shields = this.shields.filter((n) => shield !== n);
+
+		this.shieldEventEmitter.trigger({ shield, event: "deleted" });
+	}
 
 	public updateShield(shield: ShieldInterface, debounce: number = 2000) {
 		const shieldId = shield.ShieldID;
