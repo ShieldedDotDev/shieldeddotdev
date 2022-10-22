@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"flag"
 	"log"
 	"net/http"
@@ -80,6 +81,14 @@ func main() {
 	sah := shieldeddotdev.NewDashboardShieldApiHandler(sm, jwta)
 	wo.HandleFunc("/api/shield/{id:[0-9]+}", sah.HandlePUT).Methods("PUT")
 	wo.HandleFunc("/api/shield/{id:[0-9]+}", sah.HandleDELETE).Methods("DELETE")
+
+	wo.HandleFunc("/env", func(w http.ResponseWriter, r *http.Request) {
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"RootHost": rootHost,
+			"ApiHost":  apiHost,
+			"ImgHost":  imgHost,
+		})
+	})
 
 	if *runLocal {
 		ah := shieldeddotdev.NewDebugAuthHandler(um, jwta)
