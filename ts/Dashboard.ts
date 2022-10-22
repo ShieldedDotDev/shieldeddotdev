@@ -1,6 +1,8 @@
 import { AuthedApi } from "./api/authed";
+import { EnvApi } from "./api/env";
 import { ShieldsApi } from "./api/shields";
 import { DashboardController } from "./Controllers/DashboardController";
+import { ShieldImgRouter } from "./Controllers/ShieldController";
 import { ShieldsModel } from "./model/ShieldsModel";
 
 export async function Dashboard(elm: HTMLElement) {
@@ -9,9 +11,13 @@ export async function Dashboard(elm: HTMLElement) {
 		window.location.href = '/';
 	}
 
+	const envApi = new EnvApi();
+	const env = await envApi.getEnv();
+	const imgr = new ShieldImgRouter(env);
+
 	const sapi = new ShieldsApi();
 	const sm = new ShieldsModel(sapi);
-	const dc = new DashboardController(sm);
+	const dc = new DashboardController(sm, imgr);
 	dc.attach(elm);
 
 	sm.shieldEventEmitter.add(() => {

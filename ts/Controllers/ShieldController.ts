@@ -1,4 +1,5 @@
 import { AbstractBaseController } from "../AbstractController";
+import { EnvInterface } from "../api/env";
 import { ShieldInterface } from "../api/shields";
 import { ShieldsModel } from "../model/ShieldsModel";
 import { MarkdownInputController } from "./MarkdownInputController";
@@ -15,7 +16,7 @@ export class ShieldController extends AbstractBaseController<HTMLFormElement> {
 	private updateBtn = document.createElement('button');
 	private deleteBtn = document.createElement('button');
 
-	constructor(public readonly shield: ShieldInterface, model: ShieldsModel) {
+	constructor(public readonly shield: ShieldInterface, model: ShieldsModel, private imgr: ShieldImgRouter) {
 		super(document.createElement("form"), "shield");
 		this.updateBtn.type = 'button';
 		this.deleteBtn.type = 'button';
@@ -89,7 +90,7 @@ export class ShieldController extends AbstractBaseController<HTMLFormElement> {
 		const markdownLabel = document.createElement('label');
 		markdownLabel.innerText = 'Markdown';
 		fancyInputs.appendChild(markdownLabel);
-		(new MarkdownInputController(shield)).attach(fancyInputs);
+		(new MarkdownInputController(shield, this.imgr)).attach(fancyInputs);
 
 		const apiTokenLabel = document.createElement('label');
 		apiTokenLabel.innerText = 'API Token';
@@ -113,14 +114,20 @@ export class ShieldController extends AbstractBaseController<HTMLFormElement> {
 
 	private setImageWithCachebreaker() {
 		const ts = (new Date()).getTime();
-		this.shieldImg.src = `${ShieldURL(this.shield)}?break=${ts}`;
+		this.shieldImg.src = `${this.imgr.shieldURL(this.shield)}?break=${ts}`;
+	}
+
+}
+
+export class ShieldImgRouter {
+	public constructor(private readonly env: EnvInterface) { }
+
+	public shieldURL(shield: ShieldInterface) {
+		return `https://${this.env.ImgHost}/s/${shield.PublicID}`;
+	}
+	
+	public shieldMarkdown(shield: ShieldInterface) {
+		return `![${shield.Name}](${this.shieldURL(shield)})`;
 	}
 }
 
-export function ShieldURL(shield: ShieldInterface) {
-	return `https://img.local.shielded.dev/s/${shield.ShieldID}`;
-}
-
-export function ShieldMarkdown(shield: ShieldInterface) {
-	return `![${shield.Name}](${ShieldURL(shield)})`;
-}

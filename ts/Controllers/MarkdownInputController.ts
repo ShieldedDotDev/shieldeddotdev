@@ -1,16 +1,16 @@
 import { AbstractBaseController } from "../AbstractController";
 import { ShieldInterface } from "../api/shields";
-import { ShieldMarkdown } from "./ShieldController";
+import { ShieldImgRouter } from "./ShieldController";
 
 export class MarkdownInputController extends AbstractBaseController<HTMLDivElement> {
 
 	private input = document.createElement('input');
 	private secretCopyButton = document.createElement('button');
 
-	constructor(shield: ShieldInterface) {
+	constructor(shield: ShieldInterface, imgr: ShieldImgRouter) {
 		super(document.createElement("div"), "markdown-input");
 
-		this.input.value = ShieldMarkdown(shield);
+		this.input.value = imgr.shieldMarkdown(shield);
 		this.input.readOnly = true;
 
 		this.input.addEventListener('click', () => {

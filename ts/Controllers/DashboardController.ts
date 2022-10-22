@@ -1,12 +1,12 @@
 import { AbstractBaseController } from "../AbstractController";
 import { ShieldsModel } from "../model/ShieldsModel";
-import { ShieldController } from "./ShieldController";
+import { ShieldController, ShieldImgRouter } from "./ShieldController";
 
 export class DashboardController extends AbstractBaseController {
 
 	private addBtn = document.createElement('button');
 
-	constructor(private model: ShieldsModel) {
+	constructor(private model: ShieldsModel, private imgr : ShieldImgRouter) {
 		super(document.createElement('div'), 'dashboard');
 
 		this.container.appendChild(this.shieldsElm);
@@ -29,7 +29,7 @@ export class DashboardController extends AbstractBaseController {
 
 		const shields = await this.model.getShields();
 		for (const shield of shields) {
-			const sc = new ShieldController(shield, this.model);
+			const sc = new ShieldController(shield, this.model, this.imgr);
 			sc.attach(this.shieldsElm);
 		}
 	}
