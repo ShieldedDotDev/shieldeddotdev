@@ -42,7 +42,7 @@ func (sh *ShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "image/svg+xml")
 	w.Header().Set("Cache-Control", "no-cache")
 
-	err = badge.Render(s.Title, s.Text, "#5272B4", w)
+	err = badge.Render(s.Title, s.Text, badge.Color("#"+s.Color), w)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
