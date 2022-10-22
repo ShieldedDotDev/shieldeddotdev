@@ -17,7 +17,7 @@ export async function Dashboard(elm: HTMLElement) {
 
 	const sapi = new ShieldsApi();
 	const sm = new ShieldsModel(sapi);
-	const dc = new DashboardController(sm, imgr);
+	const dc = new DashboardController(sm, env, imgr);
 	dc.attach(elm);
 
 	sm.shieldEventEmitter.add(() => {

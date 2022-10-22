@@ -2,6 +2,7 @@ import { AbstractBaseController } from "../AbstractController";
 import { EnvInterface } from "../api/env";
 import { ShieldInterface } from "../api/shields";
 import { ShieldsModel } from "../model/ShieldsModel";
+import { ApiExampleController } from "./ApiExampleController";
 import { MarkdownInputController } from "./MarkdownInputController";
 import { SecretInputController } from "./SecretInputContoller";
 
@@ -16,7 +17,7 @@ export class ShieldController extends AbstractBaseController<HTMLFormElement> {
 	private updateBtn = document.createElement('button');
 	private deleteBtn = document.createElement('button');
 
-	constructor(public readonly shield: ShieldInterface, model: ShieldsModel, private imgr: ShieldImgRouter) {
+	constructor(public readonly shield: ShieldInterface, model: ShieldsModel, env: EnvInterface, private imgr: ShieldImgRouter) {
 		super(document.createElement("form"), "shield");
 		this.updateBtn.type = 'button';
 		this.deleteBtn.type = 'button';
@@ -50,6 +51,21 @@ export class ShieldController extends AbstractBaseController<HTMLFormElement> {
 		mainInputs.appendChild(this.createInputContainer("Text", this.textInput));
 		mainInputs.appendChild(this.createInputContainer("Color", this.colorInput));
 
+		const apiExample = document.createElement('section');
+		apiExample.classList.add('api-example');
+		this.container.appendChild(apiExample);
+
+		function renderExample(){
+			apiExample.innerHTML = '';
+			const ec = new ApiExampleController(env, shield);
+			const apiLabel = document.createElement('label')
+			apiLabel.innerText = 'API Example';
+			apiExample.appendChild(apiLabel);
+			ec.attach(apiExample);
+		}
+
+		renderExample();
+		
 		this.container.addEventListener('input', () => {
 			shield.Name = this.nameInput.value;
 			shield.Title = this.titleInput.value;
@@ -59,6 +75,8 @@ export class ShieldController extends AbstractBaseController<HTMLFormElement> {
 			} else {
 				shield.Color = this.colorInput.value;
 			}
+
+			renderExample();
 		});
 
 		const buttonContainer = document.createElement('section');
@@ -97,7 +115,6 @@ export class ShieldController extends AbstractBaseController<HTMLFormElement> {
 		apiTokenLabel.innerText = 'API Token';
 		fancyInputs.appendChild(apiTokenLabel);
 		(new SecretInputController(shield)).attach(fancyInputs);
-
 
 		this.setImageWithCachebreaker();
 	}

@@ -14,7 +14,7 @@
 
 .shield--controller {
 	display: grid;
-	grid-template-areas: "ni img" "mi fi" "bc bc";
+	grid-template-areas: "ni img" "mi fi" "api api" "bc bc";
 	grid-template-columns: 2fr 3fr;
 
 	%left {
@@ -50,6 +50,10 @@
 		@extend %right;
 		grid-area: img;
 	}
+
+	> .api-example {
+		grid-area: api;
+	}
 }
 
 .shield--controller {
@@ -72,6 +76,15 @@
 		padding: 0.3em;
 		border-radius: 0.3em;
 		border: 1px solid #ccc;
+
+		&:focus, &:active {
+			box-shadow: color.scale($hot, $alpha: -40%) 0 0 0 3px;
+			outline: none;
+		}
+
+		&:active {
+			box-shadow: color.scale($hot, $alpha: -10%) 0 0 0 3px;
+		}
 	}
 
 	button {
@@ -95,11 +108,14 @@
 
 	.button-container {
 		display: flex;
+		> * {
+			flex-grow: 1;
+		}
+
 		justify-content: flex-end;
 		padding: 5px;
 
 		> button {
-			flex-grow: 1;
 			margin: .1em;
 			border-radius: 0;
 
@@ -126,6 +142,11 @@
 			padding-left: 0.5em;
 			padding-right: 0.5em;
 			border-radius: 0;
+			white-space: nowrap;
+		}
+
+		> input, button {
+			font-size: .85em;
 		}
 	
 		> button:last-of-type {
@@ -141,6 +162,12 @@
 
 		> .markdown-input--controller {
 			margin-bottom: .3em;
+		}
+	}
+
+	.main-inputs {
+		> .input-container {
+			margin-bottom: 5px;
 		}
 	}
 

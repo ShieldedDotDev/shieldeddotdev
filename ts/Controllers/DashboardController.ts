@@ -1,4 +1,5 @@
 import { AbstractBaseController } from "../AbstractController";
+import { EnvInterface } from "../api/env";
 import { ShieldsModel } from "../model/ShieldsModel";
 import { ShieldController, ShieldImgRouter } from "./ShieldController";
 
@@ -6,7 +7,7 @@ export class DashboardController extends AbstractBaseController {
 
 	private addBtn = document.createElement('button');
 
-	constructor(private model: ShieldsModel, private imgr : ShieldImgRouter) {
+	constructor(private model: ShieldsModel, private env: EnvInterface, private imgr : ShieldImgRouter) {
 		super(document.createElement('div'), 'dashboard');
 
 		this.container.appendChild(this.shieldsElm);
@@ -29,7 +30,7 @@ export class DashboardController extends AbstractBaseController {
 
 		const shields = await this.model.getShields();
 		for (const shield of shields) {
-			const sc = new ShieldController(shield, this.model, this.imgr);
+			const sc = new ShieldController(shield, this.model, this.env, this.imgr);
 			sc.attach(this.shieldsElm);
 		}
 	}
