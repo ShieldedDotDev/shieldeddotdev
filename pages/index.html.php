@@ -29,7 +29,7 @@
 			<article>
 				<h3>API Examples</h3>
 				<pre><code>curl -X "POST" "https://api.shielded.dev/" \
-	-H 'Authorization: token <strong>secret</strong>' \
+	-H 'Authorization: token <strong>&lt;secret&gt;</strong>' \
 	-H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' \
 	--data-urlencode "title=funk" \
 	--data-urlencode "value=fresh"</code></pre>
