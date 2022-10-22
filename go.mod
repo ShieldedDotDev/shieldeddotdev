@@ -8,17 +8,18 @@ require (
 	github.com/gofrs/uuid v4.3.0+incompatible
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
-	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
 	github.com/narqo/go-badge v0.0.0-20220127184443-140af28a266e
 	golang.org/x/image v0.1.0 // indirect
 	golang.org/x/oauth2 v0.1.0
 )
 
-require github.com/google/go-github/v43 v43.0.0
+require (
+	github.com/NYTimes/gziphandler v1.1.1
+	github.com/google/go-github/v43 v43.0.0
+)
 
 require (
-	github.com/felixge/httpsnoop v1.0.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.1.1 // indirect

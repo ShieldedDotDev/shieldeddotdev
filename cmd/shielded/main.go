@@ -8,13 +8,13 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/NYTimes/gziphandler"
 	"github.com/ShieldedDotDev/shieldeddotdev"
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
 
 	"github.com/caddyserver/certmagic"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofrs/uuid"
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -54,7 +54,7 @@ func main() {
 	ao.HandleFunc("/", apih.HandlePOST)
 
 	io := ro.Host(imgHost).Subrouter()
-	io.Handle("/s/{pid:[a-z0-9]{3,128}}", handlers.CompressHandler(shieldeddotdev.NewShieldHandler(sm)))
+	io.Handle("/s/{pid:[a-z0-9]{3,128}}", shieldeddotdev.NewShieldHandler(sm))
 
 	wo := ro.Host(rootHost).Subrouter()
 
@@ -109,7 +109,7 @@ func main() {
 			log.Fatal(err)
 		}
 	} else {
-		err = certmagic.HTTPS([]string{rootHost, "www." + rootHost, apiHost, imgHost}, ro)
+		err = certmagic.HTTPS([]string{rootHost, "www." + rootHost, apiHost, imgHost}, gziphandler.GzipHandler(ro))
 		if err != nil {
 			log.Fatal(err)
 		}
