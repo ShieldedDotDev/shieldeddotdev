@@ -25,10 +25,11 @@ export class ShieldController extends AbstractBaseController<HTMLFormElement> {
 
 		this.titleInput.value = shield.Title;
 		this.textInput.value = shield.Text;
-		this.colorInput.value = shield.Color;
+		this.colorInput.value = '#' + shield.Color.replace(/^#/, '');
 
 		this.colorInput.pattern = "^#?([0-9a-fA-F]{3}){1,2}$";
 		this.colorInput.title = "Must be a hex color code";
+		this.colorInput.type = "color";
 
 		const nameInput = document.createElement('section');
 		nameInput.classList.add('name-input');
