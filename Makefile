@@ -25,6 +25,7 @@ deps:
 clean:
 	-rm $(BIN) $(BIN_DEBUG) 
 	-rm $(STATIC_DIR)/main.js
+	find ts -name "*.js" -type f -print0 | xargs -0 /bin/rm -f
 
 $(BIN): go.mod go.sum $(STATIC_SOURCES)
 	echo $(LDFLAGS)
