@@ -54,7 +54,7 @@ func main() {
 	ao.HandleFunc("/", apih.HandlePOST)
 
 	io := ro.Host(imgHost).Subrouter()
-	io.Handle("/s/{id:[0-9]+}", handlers.CompressHandler(shieldeddotdev.NewShieldHandler(sm)))
+	io.Handle("/s/{pid:[a-z0-9]{3,128}}", handlers.CompressHandler(shieldeddotdev.NewShieldHandler(sm)))
 
 	wo := ro.Host(rootHost).Subrouter()
 

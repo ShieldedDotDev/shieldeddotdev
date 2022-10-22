@@ -3,7 +3,6 @@ package shieldeddotdev
 import (
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
 	"github.com/gorilla/mux"
@@ -20,14 +19,9 @@ func NewShieldHandler(sm *model.ShieldMapper) *ShieldHandler {
 
 func (sh *ShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	idst := vars["id"]
-	i, err := strconv.ParseInt(idst, 10, 64)
-	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-		return
-	}
+	idst := vars["pid"]
 
-	s, err := sh.sm.GetFromID(i)
+	s, err := sh.sm.GetFromPublicID(idst)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
