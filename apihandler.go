@@ -35,7 +35,13 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	r.ParseForm()
+	err = r.ParseForm()
+	if err != nil {
+		log.Println("error parsing form: ", err)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+
 	if title := r.FormValue("title"); title != "" {
 		shield.Title = title
 	}
@@ -46,10 +52,19 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 		shield.Color = color
 	}
 
+	for k := range r.Form {
+		if k != "title" && k != "text" && k != "color" {
+			http.Error(w, "invalid field: "+k, http.StatusBadRequest)
+			return
+		}
+	}
+
 	err = ah.sm.Save(shield)
 	if err != nil {
 		log.Println("error fetching shield from secret: ", err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
+
+	w.Write([]byte("ok\n"))
 }
