@@ -10,11 +10,13 @@
 	<script src="/require.min.js"></script>
 	<script src="/main.js"></script>
 
-	<section>
-		<article id="dashboard">
-			<h3>Dashboard</h3>
-		</article>
-	</section>
+	<main>
+		<section>
+			<article id="dashboard">
+				<h3>Dashboard</h3>
+			</article>
+		</section>
+	</main>
 
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
