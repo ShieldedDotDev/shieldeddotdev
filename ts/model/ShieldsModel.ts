@@ -88,7 +88,7 @@ export class ShieldsModel {
 		const shield = await this.shieldsApi.saveShield({
 			Name: 'New Shield',
 			Title: 'New',
-
+			Color: '00AA55',
 			Text: 'Shield',
 		});
 
