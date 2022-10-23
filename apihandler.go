@@ -51,6 +51,12 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 		shield.Text = text
 	}
 	if color := r.FormValue("color"); color != "" {
+		color, err := NormalizeColor(color)
+		if err != nil {
+			log.Println("error normalizing color: ", err)
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
 		shield.Color = color
 	}
 
