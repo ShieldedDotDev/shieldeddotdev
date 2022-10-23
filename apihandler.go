@@ -1,6 +1,7 @@
 package shieldeddotdev
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"strings"
@@ -9,11 +10,12 @@ import (
 )
 
 type ApiHandler struct {
-	sm *model.ShieldMapper
+	sm      *model.ShieldMapper
+	imgHost string
 }
 
-func NewApiHandler(sm *model.ShieldMapper) *ApiHandler {
-	return &ApiHandler{sm}
+func NewApiHandler(sm *model.ShieldMapper, imgHost string) *ApiHandler {
+	return &ApiHandler{sm, imgHost}
 }
 
 func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
@@ -66,5 +68,8 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte("ok\n"))
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"ShieldURL": "https://" + ah.imgHost + "/s/" + shield.PublicID,
+	})
 }
