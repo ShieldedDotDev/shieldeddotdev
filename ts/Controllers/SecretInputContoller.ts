@@ -21,8 +21,8 @@ export class SecretInputController extends AbstractBaseController<HTMLDivElement
 		this.secretCopyButton.type = 'button';
 		this.secretShowButton.type = 'button';
 
-		this.secretCopyButton.innerText = '📋 Copy';
-		this.secretShowButton.innerText = '👁️ Reveal';
+		this.secretCopyButton.innerText = 'Copy';
+		this.secretShowButton.innerText = 'Reveal';
 
 		this.container.appendChild(this.input);
 		this.container.appendChild(this.secretCopyButton);
@@ -30,16 +30,16 @@ export class SecretInputController extends AbstractBaseController<HTMLDivElement
 
 		this.secretCopyButton.addEventListener('click', async () => {
 			await navigator.clipboard.writeText(shield.Secret);
-			this.secretCopyButton.innerText = '📋 Copied!';
+			this.secretCopyButton.innerText = 'Copied!';
 		});
 
 		this.secretShowButton.addEventListener('click', () => {
 			if (this.input.type == 'password') {
 				this.input.type = 'text';
-				this.secretShowButton.innerText = '👁️ Hide';
+				this.secretShowButton.innerText = 'Hide';
 			} else {
 				this.input.type = 'password';
-				this.secretShowButton.innerText = '👁️ Reveal';
+				this.secretShowButton.innerText = 'Reveal';
 			}
 		});
 	}

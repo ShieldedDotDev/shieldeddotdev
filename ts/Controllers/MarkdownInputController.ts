@@ -19,14 +19,14 @@ export class MarkdownInputController extends AbstractBaseController<HTMLDivEleme
 
 		this.secretCopyButton.type = 'button';
 
-		this.secretCopyButton.innerText = '📋 Copy';
+		this.secretCopyButton.innerText = 'Copy';
 
 		this.container.appendChild(this.input);
 		this.container.appendChild(this.secretCopyButton);
 
 		this.secretCopyButton.addEventListener('click', async () => {
 			await navigator.clipboard.writeText(this.input.value);
-			this.secretCopyButton.innerText = '📋 Copied!';
+			this.secretCopyButton.innerText = 'Copied!';
 		});
 	}
 

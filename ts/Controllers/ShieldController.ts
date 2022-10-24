@@ -51,14 +51,14 @@ export class ShieldController extends AbstractBaseController<HTMLFormElement> {
 		mainInputs.appendChild(this.createInputContainer("Text", this.textInput));
 		mainInputs.appendChild(this.createInputContainer("Color", this.colorInput));
 
-		const apiExample = document.createElement('section');
+		const apiExample = document.createElement('details');
 		apiExample.classList.add('api-example');
 		this.container.appendChild(apiExample);
 
 		function renderExample(){
 			apiExample.innerHTML = '';
 			const ec = new ApiExampleController(env, shield);
-			const apiLabel = document.createElement('label')
+			const apiLabel = document.createElement('summary')
 			apiLabel.innerText = 'API Example';
 			apiExample.appendChild(apiLabel);
 			ec.attach(apiExample);

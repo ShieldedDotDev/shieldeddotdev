@@ -33,6 +33,13 @@ export class DashboardController extends AbstractBaseController {
 			const sc = new ShieldController(shield, this.model, this.env, this.imgr);
 			sc.attach(this.shieldsElm);
 		}
+
+		if( shields.length === 0 ) {
+			const msg = document.createElement('h4');
+			msg.classList.add('no-shields');
+			msg.innerText = 'No shields yet. Click the + button to get started.';
+			this.shieldsElm.appendChild(msg);
+		}
 	}
 
 }

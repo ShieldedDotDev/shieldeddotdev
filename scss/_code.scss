@@ -23,3 +23,46 @@ pre {
 code {
 	font-family: Menlo, Monaco, Courier New, monospace;
 }
+
+.api-example--controller {
+	display: flex;
+	> * {
+		flex-grow: 1;
+	}
+
+	ul, li {
+		margin: 0;
+		padding: 0;
+		display: block;
+		list-style: none;
+	}
+
+	ul {
+		flex-grow: 0;
+		min-width: 80px;
+		padding-top: 6px;
+	}
+
+	li {
+		background: white;
+		padding: 5px;
+		margin-bottom: 5px;
+		box-shadow: inset -11px 1px 10px -9px rgb(0 0 0 / 33%);
+
+		&:hover {
+			background: mix($hot, white, 50%);
+		}
+
+		&.selected {
+			box-shadow: none;
+			background: $hot;
+			color: $darkBgText;
+
+			&:after {
+				content: "●";
+				float: right;
+				margin-right: 5px;
+			}
+		}
+	}
+}

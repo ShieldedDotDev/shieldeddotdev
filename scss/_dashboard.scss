@@ -12,18 +12,24 @@
 	height: 2em;
 }
 
+.no-shields {
+	text-align: center;
+	display: block;
+	margin-bottom: 2em;
+}
+
 .shield--controller {
 	display: grid;
 	grid-template-areas: "ni img" "mi fi" "api api" "bc bc";
-	grid-template-columns: 2fr 3fr;
+	grid-template-columns: 2fr 2fr;
 
 	%left {
 		background: $shade;
-		padding: .3em;
+		padding: .4em;
 	}
 
 	%right {
-		padding: .3em;
+		padding: .4em;
 	}
 
 	> .name-input {
@@ -87,9 +93,16 @@
 		}
 	}
 
+	input[type="color"] {
+		padding: 0;
+	}
+
 	button {
 		padding-left: .5em;
 		padding-right: .5em;
+		&:hover {
+			background: color.scale($hot, $alpha: -90%);
+		}
 	}
 
 	.input-container {
@@ -157,7 +170,8 @@
 	.fancy-inputs {
 		> label {
 			display: block;
-			margin-bottom: 0.2em;
+			margin-bottom: 0.4em;
+			text-align: center;
 		}
 
 		> .markdown-input--controller {
@@ -187,6 +201,19 @@
 
 	.secret-input--controller {
 		@extend %input-with-buttons-container;
+	}
+
+	.api-example {
+		> summary {
+			display: revert;
+			padding: 0.5em;
+			&:hover {
+				text-decoration: underline;
+				background: $hover;
+			}
+		}
+		
+		border-top: 1px solid $shade;
 	}
 
 	> img {
