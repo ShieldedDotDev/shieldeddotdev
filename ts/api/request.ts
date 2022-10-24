@@ -38,14 +38,14 @@ export function doRawRequest(
 			if (this.status >= 200 && this.status < 400) {
 				resolve(this.responseText);
 			} else {
-				reject(<RequestErrorInterface>{ ctx: this, event: e });
+				reject({ ctx: this, event: e } as RequestErrorInterface);
 			}
 		});
 
 		request.withCredentials = true;
 
 		request.addEventListener('error', function(e) {
-			reject(<RequestErrorInterface>{ ctx: this, event: e });
+			reject({ ctx: this, event: e } as RequestErrorInterface);
 		});
 		if (body) {
 			request.send(body);

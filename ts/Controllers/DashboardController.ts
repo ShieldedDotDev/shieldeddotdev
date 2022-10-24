@@ -11,6 +11,7 @@ export class DashboardController extends AbstractBaseController {
 
 		this.container.appendChild(this.shieldsElm);
 
+		this.addBtn.title = 'Create new shield';
 		this.addBtn.innerText = '+';
 		this.addBtn.classList.add('add-button');
 		this.container.appendChild(this.addBtn);
@@ -28,20 +29,8 @@ export class DashboardController extends AbstractBaseController {
 
 		const shields = await this.model.getShields();
 		for (const shield of shields) {
-			const sc = new ShieldController(shield);
-
+			const sc = new ShieldController(shield, this.model);
 			sc.attach(this.shieldsElm);
-
-			sc.events.add((e) => {
-				switch(e) {
-					case "updated":
-						this.model.updateShield(sc.shield);
-						break;
-					case "deleted":
-						this.model.deleteShield(sc.shield);
-				}
-
-			});
 		}
 	}
 

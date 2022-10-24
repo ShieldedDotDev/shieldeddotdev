@@ -1,6 +1,11 @@
+@use "sass:color";
+
 > .add-button {
+ 	@extend %big-action-button;
+
 	display: block;
 	margin: 0 auto;
+	border: 1px solid #ccc;
 	border-radius: 1000px;
 	font-size: 2em;
 	width: 2em;
@@ -8,12 +13,153 @@
 }
 
 .shield--controller {
-	@extend %shaded-box;
-	margin-bottom: 1em;
+	display: grid;
+	grid-template-areas: "ni img" "mi fi" "bc bc";
+	grid-template-columns: 2fr 3fr;
 
-	> input {
-		font-size: 1.2em;
+	%left {
+		background: $shade;
+		padding: .3em;
+	}
+
+	%right {
+		padding: .3em;
+	}
+
+	> .name-input {
+		@extend %left;
+		grid-area: ni;
+	}
+
+	> .main-inputs {
+		@extend %left;
+		grid-area: mi;
+	}
+
+	> .button-container {
+		grid-area: bc;
+		background-color: rgba(255,255,255,.3);
+	}
+
+	> .fancy-inputs {
+		@extend %right;
+		grid-area: fi;
+	}
+
+	> .shield-container {
+		@extend %right;
+		grid-area: img;
+	}
+}
+
+.shield--controller {
+	@extend %shaded-box;
+
+	&:nth-child(even) {
+		background: color.scale($shade, $alpha: +10%, $blue: -100%);
+	}
+
+	padding: 0;
+
+	border-radius: 6px;
+	overflow: hidden;
+
+	margin-bottom: 1em;
+	font-size: 1.2rem;
+
+	input, button {
+		font-size: 1.1rem;
 		padding: 0.3em;
+		border-radius: 0.3em;
+		border: 1px solid #ccc;
+	}
+
+	button {
+		padding-left: .5em;
+		padding-right: .5em;
+	}
+
+	.input-container {
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+
+		> label {
+			width: 4em;
+		}
+
+		> input {
+			flex-grow: 1;
+		}
+	}
+
+	.button-container {
+		display: flex;
+		justify-content: flex-end;
+		padding: 5px;
+
+		> button {
+			flex-grow: 1;
+			margin: .1em;
+			border-radius: 0;
+
+			&:first-child {
+				border-bottom-left-radius: 0.3em;
+			}
+
+			&:last-child {
+				border-bottom-right-radius: 0.3em;
+			}
+		}
+	}
+
+	%input-with-buttons-container {
+		display: flex;
+
+		> input {
+			border-radius: 0.4em 0 0 0.4em;
+			flex-grow: 1;
+		}
+
+		> button {
+			border-left: 0;
+			padding-left: 0.5em;
+			padding-right: 0.5em;
+			border-radius: 0;
+		}
+	
+		> button:last-of-type {
+			border-radius: 0 0.4em 0.4em 0;
+		}
+	}
+
+	.fancy-inputs {
+		> label {
+			display: block;
+			margin-bottom: 0.2em;
+		}
+
+		> .markdown-input--controller {
+			margin-bottom: .3em;
+		}
+	}
+
+	.shield-container {
+		max-width: 100%;
+		overflow: auto;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 0.5em;
+		border-bottom: 1px solid $shade;
+	}
+
+	.markdown-input--controller {
+		@extend %input-with-buttons-container;
+	}
+
+	.secret-input--controller {
+		@extend %input-with-buttons-container;
 	}
 
 	> img {
