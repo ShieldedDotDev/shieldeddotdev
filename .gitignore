@@ -1,5 +1,8 @@
 /shielded
 /shielded-debug
+/release
+/dist
+
 /.sass-cache
 /node_modules
 *.pem

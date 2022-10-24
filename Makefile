@@ -13,6 +13,8 @@ LDFLAGS="-X main.buildStamp=$(STAMP) -X main.buildUser=$(USER) -X main.buildHash
 TEMPLATES_DIR = ./pages
 STATIC_DIR = ./static
 STATIC_SOURCES = $(shell find $(STATIC_DIR) -type f)
+RELEASE_DIR = ./release
+DIST_DIR = ./dist
 
 .PHONY: build
 build: $(BIN)
@@ -25,12 +27,34 @@ deps:
 clean:
 	-rm $(BIN) $(BIN_DEBUG) 
 	-rm $(STATIC_DIR)/main.js
+	-rm -rf $(RELEASE_DIR) $(DIST_DIR)
 	find ts -name "*.js" -type f -print0 | xargs -0 /bin/rm -f
 
 $(BIN): go.mod go.sum $(STATIC_SOURCES)
 	echo $(LDFLAGS)
 	go build -tags $(BUILDTAGS) -ldflags $(LDFLAGS) -o $(BIN) ./cmd/shielded
 
+
+$(RELEASE_DIR)/linux_amd64/$(BIN): go.mod go.sum $(STATIC_SOURCES)
+	GOOS=linux GOARCH=amd64 go build -tags $(BUILDTAGS) -ldflags $(LDFLAGS) -o $(RELEASE_DIR)/linux_amd64/$(BIN) ./cmd/shielded
+
+$(RELEASE_DIR)/darwin_amd64/$(BIN): go.mod go.sum $(STATIC_SOURCES)
+	GOOS=darwin GOARCH=amd64 go build -tags $(BUILDTAGS) -ldflags $(LDFLAGS) -o $(RELEASE_DIR)/darwin_amd64/$(BIN) ./cmd/shielded
+
+$(RELEASE_DIR)/darwin_arm64/$(BIN): go.mod go.sum $(STATIC_SOURCES)
+	GOOS=darwin GOARCH=arm64 go build -tags $(BUILDTAGS) -ldflags $(LDFLAGS) -o $(RELEASE_DIR)/darwin_arm64/$(BIN) ./cmd/shielded
+
+$(RELEASE_DIR)/windows_amd64/$(BIN).exe: go.mod go.sum $(STATIC_SOURCES)
+	GOOS=windows GOARCH=amd64 go build -tags $(BUILDTAGS) -ldflags $(LDFLAGS) -o $(RELEASE_DIR)/windows_amd64/$(BIN).exe ./cmd/shielded
+
+.PHONY: $(RELEASE_DIR)
+$(RELEASE_DIR): clean $(RELEASE_DIR)/linux_amd64/$(BIN) $(RELEASE_DIR)/darwin_amd64/$(BIN) $(RELEASE_DIR)/darwin_arm64/$(BIN) $(RELEASE_DIR)/windows_amd64/$(BIN).exe
+	mkdir $(DIST_DIR)
+	zip -j 'dist/$(BIN)_$(HEAD)_linux_amd64.zip' $(RELEASE_DIR)/linux_amd64/$(BIN)
+	zip -j 'dist/$(BIN)_$(HEAD)_darwin_amd64.zip' $(RELEASE_DIR)/darwin_amd64/$(BIN)
+	zip -j 'dist/$(BIN)_$(HEAD)_darwin_arm64.zip' $(RELEASE_DIR)/darwin_arm64/$(BIN)
+	zip -j 'dist/$(BIN)_$(HEAD)_windows_amd64.zip' $(RELEASE_DIR)/windows_amd64/$(BIN).exe
+	
 .PHONY: lint
 lint:
 	./node_modules/.bin/tslint -c tslint.json ts/**/*.ts --fix 
