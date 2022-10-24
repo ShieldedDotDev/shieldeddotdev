@@ -65,6 +65,34 @@ strong {
   font-weight: bold;
 }
 
+h6, h5, h4, h3, h2, h1 {
+  line-height: 1.42;
+}
+
+h1 {
+  font-size: 2.1867647056em;
+}
+
+h2 {
+  font-size: 1.8220588232em;
+}
+
+h3 {
+  font-size: 1.5323529408em;
+}
+
+h4 {
+  font-size: 1.3176470584em;
+}
+
+h5 {
+  font-size: 1.177941176em;
+}
+
+h6 {
+  font-size: 1.1132352936em;
+}
+
 body {
   min-height: 100vh;
   display: grid;
@@ -79,14 +107,14 @@ body > header {
   color: white;
   display: grid;
 }
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 800px) {
   body > header {
     grid-template-rows: 100%;
     grid-template-areas: "title subtitle";
-    grid-template-columns: minmax(260px, calc((100% - 600px) / 2));
+    grid-template-columns: minmax(260px, calc((100% - 800px) / 2));
   }
 }
-@media screen and (max-width: 599px) {
+@media screen and (max-width: 799px) {
   body > header {
     grid-template-areas: "title" "subtitle";
   }
@@ -96,10 +124,14 @@ body > header > * {
   height: 100%;
   text-align: center;
 }
+body > header > h2, body > header > h1 {
+  font-size: 32px;
+  line-height: 1;
+}
 body > header > h1 {
   grid-area: title;
 }
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 800px) {
   body > header > h1 {
     text-align: right;
   }
@@ -108,12 +140,12 @@ body > header > h2 {
   grid-area: subtitle;
   background: #5c72a6;
 }
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 800px) {
   body > header > h2 {
     text-align: left;
   }
 }
-@media screen and (max-width: 599px) {
+@media screen and (max-width: 799px) {
   body > header > h2 {
     font-size: 0.7em;
   }
@@ -121,7 +153,7 @@ body > header > h2 {
 body > main > section {
   padding: 1em 0;
 }
-@media screen and (max-width: 611px) {
+@media screen and (max-width: 811px) {
   body > main > section {
     padding-left: 11px;
     padding-right: 11px;
@@ -131,17 +163,21 @@ body > main > section:nth-child(odd) {
   background: rgba(0, 0, 0, 0.065);
 }
 body > main > section > article {
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
 }
 body > main > section > article > h3 {
   font-size: 2em;
+  font-weight: bold;
   padding: 0 0 0.5em;
   text-align: center;
 }
 body > footer {
   background: #555;
   padding: 20px;
+  color: white;
+}
+body > footer a {
   color: white;
 }
 
@@ -155,20 +191,135 @@ p {
   padding: 1em;
 }
 
+.home--app .github-login, .dashboard--controller > .add-button {
+  background-color: #555;
+  color: white;
+  transition: background-color cubic-bezier(0, 0.5, 0, 1) 1s;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+.home--app .github-login:hover, .dashboard--controller > .add-button:hover {
+  background-color: #44c444;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+}
+.home--app .github-login:active, .dashboard--controller > .add-button:active {
+  background-color: #727d97;
+}
+
 .dashboard--controller > .add-button {
   display: block;
   margin: 0 auto;
+  border: 1px solid #ccc;
   border-radius: 1000px;
   font-size: 2em;
   width: 2em;
   height: 2em;
 }
 .dashboard--controller .shield--controller {
-  margin-bottom: 1em;
+  display: grid;
+  grid-template-areas: "ni img" "mi fi" "bc bc";
+  grid-template-columns: 2fr 3fr;
 }
-.dashboard--controller .shield--controller > input {
-  font-size: 1.2em;
+.dashboard--controller .shield--controller > .main-inputs, .dashboard--controller .shield--controller > .name-input {
+  background: rgba(0, 0, 0, 0.065);
   padding: 0.3em;
+}
+.dashboard--controller .shield--controller > .shield-container, .dashboard--controller .shield--controller > .fancy-inputs {
+  padding: 0.3em;
+}
+.dashboard--controller .shield--controller > .name-input {
+  grid-area: ni;
+}
+.dashboard--controller .shield--controller > .main-inputs {
+  grid-area: mi;
+}
+.dashboard--controller .shield--controller > .button-container {
+  grid-area: bc;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.dashboard--controller .shield--controller > .fancy-inputs {
+  grid-area: fi;
+}
+.dashboard--controller .shield--controller > .shield-container {
+  grid-area: img;
+}
+.dashboard--controller .shield--controller {
+  padding: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1em;
+  font-size: 1.2rem;
+}
+.dashboard--controller .shield--controller:nth-child(even) {
+  background: rgba(0, 0, 0, 0.1585);
+}
+.dashboard--controller .shield--controller input, .dashboard--controller .shield--controller button {
+  font-size: 1.1rem;
+  padding: 0.3em;
+  border-radius: 0.3em;
+  border: 1px solid #ccc;
+}
+.dashboard--controller .shield--controller button {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+.dashboard--controller .shield--controller .input-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.dashboard--controller .shield--controller .input-container > label {
+  width: 4em;
+}
+.dashboard--controller .shield--controller .input-container > input {
+  flex-grow: 1;
+}
+.dashboard--controller .shield--controller .button-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px;
+}
+.dashboard--controller .shield--controller .button-container > button {
+  flex-grow: 1;
+  margin: 0.1em;
+  border-radius: 0;
+}
+.dashboard--controller .shield--controller .button-container > button:first-child {
+  border-bottom-left-radius: 0.3em;
+}
+.dashboard--controller .shield--controller .button-container > button:last-child {
+  border-bottom-right-radius: 0.3em;
+}
+.dashboard--controller .shield--controller .secret-input--controller, .dashboard--controller .shield--controller .markdown-input--controller {
+  display: flex;
+}
+.dashboard--controller .shield--controller .secret-input--controller > input, .dashboard--controller .shield--controller .markdown-input--controller > input {
+  border-radius: 0.4em 0 0 0.4em;
+  flex-grow: 1;
+}
+.dashboard--controller .shield--controller .secret-input--controller > button, .dashboard--controller .shield--controller .markdown-input--controller > button {
+  border-left: 0;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border-radius: 0;
+}
+.dashboard--controller .shield--controller .secret-input--controller > button:last-of-type, .dashboard--controller .shield--controller .markdown-input--controller > button:last-of-type {
+  border-radius: 0 0.4em 0.4em 0;
+}
+.dashboard--controller .shield--controller .fancy-inputs > label {
+  display: block;
+  margin-bottom: 0.2em;
+}
+.dashboard--controller .shield--controller .fancy-inputs > .markdown-input--controller {
+  margin-bottom: 0.3em;
+}
+.dashboard--controller .shield--controller .shield-container {
+  max-width: 100%;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.065);
 }
 .dashboard--controller .shield--controller > img {
   float: right;
@@ -194,7 +345,6 @@ p {
 }
 .home--app .github-login {
   display: inline-block;
-  color: white;
   text-decoration: none;
   padding: 1em;
   padding-left: 2.5em;
@@ -204,19 +354,10 @@ p {
   background-size: 1.5em;
   background-repeat: no-repeat;
   background-position: 0.5em center;
-  transition: background-color cubic-bezier(0, 0.5, 0, 1) 1s;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-}
-.home--app .github-login:hover {
-  background-color: #44c444;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
-}
-.home--app .github-login:active {
-  background-color: #bd655f;
 }
 
 ::selection {
-  background: #f24236;
+  background: #e0e4ee;
   color: white;
   text-shadow: none;
 }
