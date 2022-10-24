@@ -100,7 +100,7 @@ func (ah *GitHubAuthHandler) CallbackHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	oauthClient := ah.config.Client(oauth2.NoContext, token)
+	oauthClient := ah.config.Client(r.Context(), token)
 	client := github.NewClient(oauthClient)
 	user, _, err := client.Users.Get(context.Background(), "")
 	if err != nil {
@@ -109,11 +109,11 @@ func (ah *GitHubAuthHandler) CallbackHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	log.Printf("Logged in as GitHub user: %s - %s : %d\n", *user.Login, *user.Email, *user.ID)
+	log.Printf("Logged in as GitHub user: %s - %s : %d\n", user.GetLogin(), user.GetEmail(), user.GetID())
 	err = ah.um.Save(&model.User{
-		UserID: *user.ID,
-		Login:  *user.Login,
-		Email:  *user.Email,
+		UserID: user.GetID(),
+		Login:  user.GetLogin(),
+		Email:  user.GetEmail(),
 	})
 
 	if err != nil {
