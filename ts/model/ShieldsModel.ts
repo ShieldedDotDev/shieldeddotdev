@@ -21,7 +21,7 @@ export class ShieldsModel {
 		return this.shields;
 	}
 
-	private timeouts: { [s: number]: { timeout: number, resolves: Array<() => void> } } = {};
+	private timeouts: { [s: number]: { timeout: number, resolves: (() => void)[] } } = {};
 
 	public async deleteShield(shield: ShieldInterface) {
 		const shieldId = shield.ShieldID;
@@ -35,7 +35,7 @@ export class ShieldsModel {
 		this.shieldEventEmitter.trigger({ shield, event: "deleted" });
 	}
 
-	public updateShield(shield: ShieldInterface, debounce: number = 2000) {
+	public updateShield(shield: ShieldInterface, debounce: number = 100) {
 		const shieldId = shield.ShieldID;
 		if (!shieldId) {
 			throw Error("Attempting to update unpersisted shield");
@@ -62,7 +62,7 @@ export class ShieldsModel {
 		this.shieldEventEmitter.trigger({ shield, event: "changed" });
 
 		return new Promise<void>((resolve) => {
-			let resolves : Array<() => void> = [resolve];
+			let resolves : (() => void)[] = [resolve];
 			if(this.timeouts[shieldId]) {
 				resolves = [...this.timeouts[shieldId].resolves, ...resolves];
 			}
