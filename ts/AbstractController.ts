@@ -1,10 +1,10 @@
-export interface ControllerInterface {
+export interface ControllerInterface<T extends HTMLElement> {
 	attach(elm: HTMLElement): void;
-	getContainer(): HTMLElement;
+	getContainer(): T;
 }
 
-export abstract class AbstractBaseController implements ControllerInterface {
-	constructor(protected container: HTMLElement, private name: string) {
+export abstract class AbstractBaseController<T extends HTMLElement = HTMLElement> implements ControllerInterface<T> {
+	constructor(protected container: T, private name: string) {
 		this.container.classList.add(`${this.name}--controller`);
 	}
 
