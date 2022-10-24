@@ -126,10 +126,6 @@ body {
 				padding-right: $minHorizWs;
 			}
 
-			&:nth-child(odd) {
-				background: $shade;
-			}
-
 			> article {
 				> h3 {
 					font-size: 2em;

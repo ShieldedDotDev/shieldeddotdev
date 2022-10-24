@@ -40,3 +40,9 @@
 	background-position: 0.5em center;
 
 }
+
+main > section {
+	&:nth-child(odd) {
+		background: $shade;
+	}
+}

@@ -24,7 +24,7 @@
 	grid-template-columns: 2fr 2fr;
 
 	%left {
-		background: $shade;
+		border-right: 1px solid $shade;
 		padding: .4em;
 	}
 
@@ -59,15 +59,13 @@
 
 	> .api-example {
 		grid-area: api;
+		background-color: rgba(0,0,0,.1);
+		box-shadow: inset 0 0 1px 0px rgba(0, 0, 0, .3)
 	}
 }
 
 .shield--controller {
 	@extend %shaded-box;
-
-	&:nth-child(even) {
-		background: color.scale($shade, $alpha: +10%, $blue: -100%);
-	}
 
 	padding: 0;
 
