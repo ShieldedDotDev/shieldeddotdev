@@ -121,6 +121,8 @@ body {
 		$minHorizWs: 11px;
 		> section {
 			padding: 1em 0;
+			box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
+
 			@media screen and (max-width: #{$pageWidth + $minHorizWs}) {
 				padding-left: $minHorizWs;
 				padding-right: $minHorizWs;
