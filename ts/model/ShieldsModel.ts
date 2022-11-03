@@ -21,7 +21,7 @@ export class ShieldsModel {
 		return this.shields;
 	}
 
-	private timeouts: { [s: number]: { timeout: number, resolves: (() => void)[] } } = {};
+	private timeouts: { [s: number]: { timeout: ReturnType<typeof setTimeout>, resolves: (() => void)[] } } = {};
 
 	public async deleteShield(shield: ShieldInterface) {
 		const shieldId = shield.ShieldID;
