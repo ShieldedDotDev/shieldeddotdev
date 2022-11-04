@@ -205,6 +205,9 @@
 		> summary {
 			display: revert;
 			padding: 0.5em;
+			cursor: pointer;
+			user-select: none;
+
 			&:hover {
 				text-decoration: underline;
 				background: $hover;
