@@ -7,3 +7,7 @@
 /node_modules
 *.pem
 *.map
+
+/static
+!/static/img/github.svg
+!/static/favicon.ico
