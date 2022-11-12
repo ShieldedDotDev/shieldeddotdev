@@ -20,6 +20,9 @@ type Shield struct {
 	Color string
 
 	Secret string
+
+	Created time.Time
+	Updated time.Time
 }
 
 type ShieldMapper struct {
@@ -47,8 +50,8 @@ func (sm *ShieldMapper) New(userID int64) (*Shield, error) {
 func (sm *ShieldMapper) GetFromID(id int64) (*Shield, error) {
 	sh := &Shield{}
 
-	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret FROM shields AS s WHERE s.shield_id = ?", id)
-	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret); err {
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.shield_id = ?", id)
+	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
 	case sql.ErrNoRows:
 		return nil, nil
 	case nil:
@@ -61,8 +64,8 @@ func (sm *ShieldMapper) GetFromID(id int64) (*Shield, error) {
 func (sm *ShieldMapper) GetFromPublicID(publicID string) (*Shield, error) {
 	sh := &Shield{}
 
-	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret FROM shields AS s WHERE s.public_id = ?", publicID)
-	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret); err {
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.public_id = ?", publicID)
+	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
 	case sql.ErrNoRows:
 		return nil, nil
 	case nil:
@@ -75,8 +78,8 @@ func (sm *ShieldMapper) GetFromPublicID(publicID string) (*Shield, error) {
 func (sm *ShieldMapper) GetFromUserIDAndID(userID, id int64) (*Shield, error) {
 	sh := &Shield{}
 
-	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret FROM shields AS s WHERE s.user_id = ? AND s.shield_id = ?", userID, id)
-	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret); err {
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.user_id = ? AND s.shield_id = ?", userID, id)
+	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
 	case sql.ErrNoRows:
 		return nil, nil
 	case nil:
@@ -89,8 +92,8 @@ func (sm *ShieldMapper) GetFromUserIDAndID(userID, id int64) (*Shield, error) {
 func (sm *ShieldMapper) GetFromSecret(secret string) (*Shield, error) {
 	sh := &Shield{}
 
-	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret FROM shields AS s WHERE s.secret = ?", secret)
-	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret); err {
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.secret = ?", secret)
+	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
 	case sql.ErrNoRows:
 		return nil, nil
 	case nil:
@@ -103,7 +106,7 @@ func (sm *ShieldMapper) GetFromSecret(secret string) (*Shield, error) {
 func (sm *ShieldMapper) GetFromUserID(userID int64) ([]*Shield, error) {
 	out := []*Shield{}
 
-	rows, err := sm.db.Query("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret FROM shields AS s WHERE s.user_id = ?", userID)
+	rows, err := sm.db.Query("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.user_id = ?", userID)
 	if err != nil {
 		return out, err
 	}
@@ -111,7 +114,7 @@ func (sm *ShieldMapper) GetFromUserID(userID int64) ([]*Shield, error) {
 
 	for rows.Next() {
 		sh := &Shield{}
-		err := rows.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret)
+		err := rows.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated)
 		if err != nil {
 			return out, err
 		}
