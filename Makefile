@@ -12,7 +12,7 @@ LDFLAGS="-X main.buildStamp=$(STAMP) -X main.buildUser=$(USER) -X main.buildHash
 
 TEMPLATES_DIR = ./pages
 STATIC_DIR = ./static
-STATIC_SOURCES = $(shell find $(STATIC_DIR) -type f)
+STATIC_SOURCES = $(STATIC_DIR)/style/style.css $(STATIC_DIR)/main.js $(STATIC_DIR)/index.html $(STATIC_DIR)/dashboard.html
 RELEASE_DIR = ./release
 DIST_DIR = ./dist
 
@@ -26,7 +26,7 @@ deps:
 .PHONY: clean
 clean:
 	-rm $(BIN) $(BIN_DEBUG) 
-	-rm $(STATIC_DIR)/main.js
+	-rm $(STATIC_SOURCES)
 	-rm -rf $(RELEASE_DIR) $(DIST_DIR)
 	find ts -name "*.js" -type f -print0 | xargs -0 /bin/rm -f
 
@@ -64,12 +64,12 @@ debug: clean $(STATIC_SOURCES) $(STATIC_DIR)/main.js
 	$(MAKE) BIN=$(BIN_DEBUG) BUILDTAGS="debug" LDADDIT="-X main.rootHost=local.shielded.dev -X main.apiHost=api.local.shielded.dev -X main.imgHost=img.local.shielded.dev" build
 	./$(BIN_DEBUG) -run-local=true
 
-$(shell find $(STATIC_DIR) -name "*.css"): $(shell find scss -name "*.scss")
+$(STATIC_DIR)/style/style.css: $(shell find scss -name "*.scss")
 	npx sass scss:static/style
 
 $(STATIC_DIR)/main.js: $(shell find ts -name "*.ts") webpack.config.js tsconfig.json
 	npx webpack --mode=production
 
-static/index.html static/dashboard.html: $(shell find $(TEMPLATES_DIR) -name "*.php")
+$(STATIC_DIR)/index.html $(STATIC_DIR)/dashboard.html: $(shell find $(TEMPLATES_DIR) -name "*.php")
 	$(foreach file, $(wildcard $(TEMPLATES_DIR)/*.html.php), php $(file) > $(STATIC_DIR)/$$(basename $(file) | sed 's/\.[^.]*$$//'); )
 	npx html-minifier --input-dir static --output-dir static --file-ext html --collapse-whitespace --conservative-collapse
