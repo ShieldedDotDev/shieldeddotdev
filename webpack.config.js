@@ -19,7 +19,7 @@ module.exports = {
     extensions: [ '.tsx', '.ts', '.js' ],
   },
   output: {
-    libraryTarget: 'amd',
+    libraryTarget: 'global',
     library: 'shielded',
     filename: 'main.js',
     path: path.resolve(__dirname, 'static'),

@@ -7,8 +7,6 @@
 
 <body class="dashboard--app">
 	<?php require('_header.php') ?>
-	<script src="/require.min.js"></script>
-	<script src="/main.js"></script>
 
 	<main>
 		<section>
@@ -20,9 +18,7 @@
 
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
-			require(['shielded'], function (d) {  
-				d.Dashboard( document.getElementById('dashboard') ) 
-			});
+			shielded.Dashboard( document.getElementById('dashboard') ) 
 		});
 	</script>
 	<?php require('_footer.php') ?>

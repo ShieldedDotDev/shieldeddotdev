@@ -40,9 +40,7 @@
 	</main>
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
-			require(['shielded'], function (d) {  
-				d.Home(document.getElementById('api-example'));
-			});
+			shielded.Home(document.getElementById('api-example'));
 		});
 	</script>
 	<?php require('_footer.php') ?>
