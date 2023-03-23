@@ -11,7 +11,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/narqo/go-badge v0.0.0-20220127184443-140af28a266e
 	golang.org/x/image v0.1.0 // indirect
-	golang.org/x/oauth2 v0.2.0
+	golang.org/x/oauth2 v0.5.0
 )
 
 require (
