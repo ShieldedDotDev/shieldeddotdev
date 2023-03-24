@@ -14,6 +14,4 @@ jobs:
         uses: shieldeddotdev/shielded-action@v1
         with:
           shielded-token: ${{ secrets.SHIELDED_TOKEN }}
-          title: 'Title of the badge'
-          color: '0011aa'
-          text: '0 warnings'
+          text: ${{ github.event.repository.updated_at}}
