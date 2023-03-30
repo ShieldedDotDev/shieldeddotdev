@@ -25,10 +25,8 @@ code {
 }
 
 .api-example--controller {
-	display: flex;
-	> * {
-		flex-grow: 1;
-	}
+	display: grid;
+	grid-template-columns: 160px 1fr;
 
 	ul, li {
 		margin: 0;

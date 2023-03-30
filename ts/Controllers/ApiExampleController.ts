@@ -14,6 +14,7 @@ export class ApiExampleController extends AbstractBaseController {
 	private examplesElm = document.createElement('ul');
 
 	private examples: [string, ApiExampleGeneratorInterface, HTMLLIElement][] = [
+		['GitHub Action', gitHubActionExample, document.createElement('li')],
 		['Curl', curlExample, document.createElement('li')],
 		['JS', jsExample, document.createElement('li')],
 		['PHP', phpExample, document.createElement('li')],
@@ -125,3 +126,31 @@ fetch('https://${env.ApiHost}', {
 });`
 }
 
+function gitHubActionExample(
+	_: EnvInterface,
+	title: string,
+	text: string,
+	color: string,
+	token: string
+) {
+	return `name: Update Shield
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Update Shielded.dev Badge
+        uses: shieldeddotdev/shielded-action@v1
+        with:
+          # The token should be stored as a repository secret
+          shielded-token: ${JSON.stringify(token)}
+          title: ${JSON.stringify(title)}
+          text: ${JSON.stringify(text)}
+          color: ${JSON.stringify(color)}`
+}
