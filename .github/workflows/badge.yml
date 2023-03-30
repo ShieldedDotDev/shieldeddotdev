@@ -1,0 +1,17 @@
+name: Update Shield
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Update Shielded.dev Badge
+        uses: shieldeddotdev/shielded-action@v1
+        with:
+          shielded-token: ${{ secrets.SHIELDED_TOKEN }}
+          text: ${{ github.event.repository.updated_at}}
