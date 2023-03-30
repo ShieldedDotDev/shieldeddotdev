@@ -11,8 +11,8 @@ var ErrUnsupportedColor = errors.New("unsupported color")
 
 func NormalizeColor(color string) (string, error) {
 	color = strings.ToLower(strings.TrimSpace(color))
-	if _, ok := badge.ColorScheme[color]; ok {
-		return color, nil
+	if c, ok := badge.ColorScheme[color]; ok {
+		color = c
 	}
 
 	color = strings.TrimPrefix(color, "#")
