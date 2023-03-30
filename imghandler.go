@@ -43,3 +43,32 @@ func (sh *ShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+type StaticShieldHandler struct{}
+
+func (ssh *StaticShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Query().Get("title")
+	text := r.URL.Query().Get("text")
+	color := r.URL.Query().Get("color")
+	if color == "" {
+		color = "green"
+	}
+
+	normalizedColor, err := NormalizeColor(color)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+
+	log.Println(color, normalizedColor)
+
+	w.Header().Set("Content-Type", "image/svg+xml")
+	w.Header().Set("Cache-Control", "no-cache")
+
+	err = badge.Render(title, text, badge.Color("#"+normalizedColor), w)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+}
