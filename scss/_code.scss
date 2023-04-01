@@ -51,7 +51,9 @@ code {
 			background: mix($hot, white, 50%);
 		}
 
+		cursor: pointer;
 		&.selected {
+			cursor: default;
 			box-shadow: none;
 			background: $hot;
 			color: $darkBgText;
