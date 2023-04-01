@@ -14,4 +14,4 @@ jobs:
         uses: shieldeddotdev/shielded-action@v1
         with:
           shielded-token: ${{ secrets.SHIELDED_TOKEN }}
-          text: ${{ github.event.repository.updated_at}}
+          text: ${{ github.event.repository.pushed_at }}
