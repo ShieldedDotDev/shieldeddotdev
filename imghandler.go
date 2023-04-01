@@ -1,6 +1,7 @@
 package shieldeddotdev
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -62,8 +63,11 @@ func (ssh *StaticShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 
 	log.Println(color, normalizedColor)
 
+	seconds := 2592000
+
 	w.Header().Set("Content-Type", "image/svg+xml")
-	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Pragma", "public")
+	w.Header().Set("Cache-Control", fmt.Sprintf("max-age=%d", seconds))
 
 	err = badge.Render(title, text, badge.Color("#"+normalizedColor), w)
 	if err != nil {
