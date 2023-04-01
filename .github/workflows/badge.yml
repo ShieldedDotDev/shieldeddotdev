@@ -8,10 +8,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Set current date as env variable
+        run: echo "builddate=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
+        id: date
 
       - name: Update Shielded.dev Badge
         uses: shieldeddotdev/shielded-action@v1
         with:
           shielded-token: ${{ secrets.SHIELDED_TOKEN }}
-          text: ${{ github.event.repository.pushed_at }}
+          text: ${{ steps.date.outputs.builddate }}
