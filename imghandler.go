@@ -61,8 +61,6 @@ func (ssh *StaticShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	log.Println(color, normalizedColor)
-
 	seconds := 2592000
 
 	w.Header().Set("Content-Type", "image/svg+xml")
