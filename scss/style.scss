@@ -7,7 +7,7 @@ $hot: #5c72a6;
 
 $selected: lighten($hot, 40%);
 $lightSpace: darken(#fafafa, 8%);
-$hover: mix($hot, white, 50%);;
+$hover: mix($hot, white, 50%);
 
 $control: #555;
 $controlHover: mix(lighten($control, 20%), #0f0);
@@ -63,7 +63,7 @@ body {
 		@media screen and (min-width: #{$pageWidth}) {
 			grid-template-rows: 100%;
 			grid-template-areas: "title subtitle";
-			grid-template-columns: minmax(260px, calc(calc(100% - #{$pageWidth}) / 2));
+			grid-template-columns: minmax(260px, calc(((100% - #{$pageWidth}) / 2) - 1em));
 		}
 
 		@media screen and (max-width: #{$pageWidth - 1}) {
@@ -78,6 +78,7 @@ body {
 
 		%headerTitle {
 			font-size: 32px;
+			font-weight: 300;
 			line-height: 1;
 		}
 
