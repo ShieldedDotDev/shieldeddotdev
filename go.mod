@@ -3,7 +3,7 @@ module github.com/ShieldedDotDev/shieldeddotdev
 go 1.19
 
 require (
-	github.com/caddyserver/certmagic v0.19.1
+	github.com/caddyserver/certmagic v0.19.2
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/gofrs/uuid v4.3.0+incompatible
 	github.com/golang-jwt/jwt v3.2.2+incompatible
