@@ -23,14 +23,14 @@ function shield($title, $text, $color) {
 	<main>
 		<section>
 			<article>
-				<p>Want a badge for a detail from your CI system?</p>
+				<p>Want a dynamic badge for a detail from your CI system?</p>
 			</article>
 		</section>
 		<section>
 			<article class="home-core">
 				<div class="welcome">
 					<h3>Welcome to Shielded.dev</h3>
-					<p>Shielded.dev is a service that allows you to create custom shields for your projects.</p>
+					<p>Shielded.dev is a service that allows you to create dynamic README badge shields for your projects.</p>
 					<p>It's free and open source.</p>
 				</div>
 				<div class="getting-started">
