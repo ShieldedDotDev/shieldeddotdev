@@ -2,7 +2,7 @@ package shieldeddotdev
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
@@ -24,7 +24,7 @@ func (sh *ShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	s, err := sh.sm.GetFromPublicID(idst)
 	if err != nil {
-		log.Println(err)
+		slog.Info("error fetching shield from public id", slog.Any("error", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
@@ -39,7 +39,7 @@ func (sh *ShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	err = badge.Render(s.Title, s.Text, badge.Color("#"+s.Color), w)
 	if err != nil {
-		log.Println(err)
+		slog.Error("error rendering shield", slog.Any("error", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
@@ -69,7 +69,7 @@ func (ssh *StaticShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 
 	err = badge.Render(title, text, badge.Color("#"+normalizedColor), w)
 	if err != nil {
-		log.Println(err)
+		slog.Error("error rendering shield", slog.Any("error", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}

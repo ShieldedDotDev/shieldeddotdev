@@ -3,7 +3,7 @@ package shieldeddotdev
 import (
 	"context"
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"time"
@@ -30,7 +30,7 @@ func (ah *DebugAuthHandler) LoginHandler(w http.ResponseWriter, r *http.Request)
 
 	err := ah.jwtAuth.Authorize(w, user.UserID)
 	if err != nil {
-		log.Printf("Failed to sign jwt: %s\n", err)
+		slog.Warn("Failed to sign jwt", slog.Any("error", err))
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
@@ -80,14 +80,14 @@ func (ah *GitHubAuthHandler) CallbackHandler(w http.ResponseWriter, r *http.Requ
 
 	c, err := r.Cookie("gh-auth-state")
 	if err != nil {
-		log.Println("missing auth-state cookie")
+		slog.Info("missing auth-state cookie")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
 	state := r.FormValue("state")
 	if state != c.Value {
-		log.Printf("invalid oauth state, expected '%s', got '%s'\n", c.Value, state)
+		slog.Warn("invalid oauth state", slog.String("expected", c.Value), slog.String("got", state))
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
@@ -95,7 +95,7 @@ func (ah *GitHubAuthHandler) CallbackHandler(w http.ResponseWriter, r *http.Requ
 	code := r.FormValue("code")
 	token, err := ah.config.Exchange(context.Background(), code)
 	if err != nil {
-		log.Printf("ah.config.Exchange() failed with '%s'\n", err)
+		slog.Error("ah.config.Exchange() failed to exchange code", slog.Any("error", err))
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
@@ -104,12 +104,17 @@ func (ah *GitHubAuthHandler) CallbackHandler(w http.ResponseWriter, r *http.Requ
 	client := github.NewClient(oauthClient)
 	user, _, err := client.Users.Get(context.Background(), "")
 	if err != nil {
-		log.Printf("client.Users.Get() failed with '%s'\n", err)
+		slog.Error("client.Users.Get() failed to get user", slog.Any("error", err))
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
-	log.Printf("Logged in as GitHub user: %s - %s : %d\n", user.GetLogin(), user.GetEmail(), user.GetID())
+	slog.Info("log in successful",
+		slog.String("type", "github"),
+		slog.String("login", user.GetLogin()),
+		slog.String("email", user.GetEmail()),
+		slog.Int64("id", user.GetID()))
+
 	err = ah.um.Save(&model.User{
 		UserID: user.GetID(),
 		Login:  user.GetLogin(),
@@ -117,14 +122,14 @@ func (ah *GitHubAuthHandler) CallbackHandler(w http.ResponseWriter, r *http.Requ
 	})
 
 	if err != nil {
-		log.Printf("Failed to record credentials: %s\n", err)
+		slog.Error("Failed to record credentials", slog.Any("error", err))
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
 	err = ah.jwtAuth.Authorize(w, *user.ID)
 	if err != nil {
-		log.Printf("Failed to sign jwt: %s\n", err)
+		slog.Error("Failed to sign jwt", slog.Any("error", err))
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
@@ -169,13 +174,13 @@ func (j *JwtAuth) GetAuth(r *http.Request) *int64 {
 
 	token, err := jwt.ParseWithClaims(c.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 
 		return j.Secret, nil
 	})
 	if err != nil {
-		log.Printf("failed to read JWT: %s\n", err)
+		slog.Error("failed to read JWT", slog.Any("error", err))
 		return nil
 	}
 

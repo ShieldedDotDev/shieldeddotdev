@@ -3,7 +3,7 @@ package shieldeddotdev
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+	"log/slog"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -34,7 +34,7 @@ func (sh *DashboardShieldApiIndexHandler) HandleGET(w http.ResponseWriter, r *ht
 
 	shields, err := sh.sm.GetFromUserID(*id)
 	if err != nil {
-		log.Println(err)
+		slog.Error("error fetching shields", slog.Any("error", err), slog.Any("id", *id))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
@@ -44,7 +44,7 @@ func (sh *DashboardShieldApiIndexHandler) HandleGET(w http.ResponseWriter, r *ht
 	enc := json.NewEncoder(w)
 	err = enc.Encode(shields)
 	if err != nil {
-		log.Println(err)
+		slog.Error("error encoding shields", slog.Any("error", err))
 	}
 }
 
@@ -80,7 +80,7 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 
 	err = sh.sm.Save(cleanShield)
 	if err != nil {
-		log.Println(err)
+		slog.Error("error saving shield", slog.Any("error", err))
 		http.Error(w, "database error", http.StatusInternalServerError)
 		return
 	}

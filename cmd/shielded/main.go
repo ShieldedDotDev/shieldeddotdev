@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"flag"
 	"log"
+	"log/slog"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/NYTimes/gziphandler"
@@ -30,6 +32,10 @@ var (
 )
 
 func init() {
+	slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
+		AddSource: true,
+	})))
+
 	log.Println(buildString)
 	log.Println(hostString)
 

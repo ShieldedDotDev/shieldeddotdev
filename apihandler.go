@@ -2,7 +2,7 @@ package shieldeddotdev
 
 import (
 	"encoding/json"
-	"log"
+	"log/slog"
 	"net/http"
 	"strings"
 
@@ -28,18 +28,19 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 
 	shield, err := ah.sm.GetFromSecret(authParts[1])
 	if err != nil {
-		log.Println("error fetching shield from secret: ", err)
+		slog.Error("error fetching shield from secret", slog.Any("error", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 	if shield == nil {
+		slog.Info("shield not found", slog.String("secret", authParts[1]))
 		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
 
 	err = r.ParseForm()
 	if err != nil {
-		log.Println("error parsing form: ", err)
+		slog.Error("error parsing form", slog.Any("error", err))
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
@@ -53,7 +54,7 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 	if color := r.FormValue("color"); color != "" {
 		color, err := NormalizeColor(color)
 		if err != nil {
-			log.Println("error normalizing color: ", err)
+			slog.Error("error normalizing color", slog.Any("error", err))
 			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 			return
 		}
@@ -69,7 +70,7 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 
 	err = ah.sm.Save(shield)
 	if err != nil {
-		log.Println("error fetching shield from secret: ", err)
+		slog.Error("error saving shield", slog.Any("error", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
