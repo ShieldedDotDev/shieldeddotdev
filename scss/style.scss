@@ -10,7 +10,7 @@ $lightSpace: darken(#fafafa, 8%);
 $hover: mix($hot, white, 50%);
 
 $control: #555;
-$controlHover: mix(lighten($control, 20%), #0f0);
+$controlHover: #3ead3e; //mix(lighten($control, 40%), rgb(32, 207, 32));
 $controlActive: mix(lighten($control, 20%), $hot);
 
 $darkBg: #555;
@@ -55,7 +55,7 @@ body {
 		font-size: 2em;
 		font-weight: bold;
 
-		background: $darkBg;
+		background: linear-gradient(0deg, rgba(187, 187, 187, .1), transparent), $darkBg;
 		color: $darkBgText;
 
 		display: grid;
@@ -104,7 +104,7 @@ body {
 			@extend %headerTitle;
 
 			grid-area: subtitle;
-			background: $hot;
+			background: linear-gradient(0deg, rgba(187, 187, 187, .1), transparent), $hot;
 
 			@media screen and (min-width: #{$pageWidth}) {
 				text-align: left;

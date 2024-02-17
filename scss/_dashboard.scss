@@ -6,9 +6,11 @@
 	display: block;
 	margin: 0 auto;
 	border: 1px solid #ccc;
-	border-radius: 1000px;
+	border-radius: 10px;
 	font-size: 2em;
-	width: 2em;
+	// width: 2em;
+	padding-left: .5em;
+	padding-right: .5em;
 	height: 2em;
 }
 
