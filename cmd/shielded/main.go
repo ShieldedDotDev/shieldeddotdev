@@ -29,17 +29,22 @@ var (
 
 	runLocal  = flag.Bool("run-local", true, "Run in local development mode")
 	localAddr = flag.String("local-addr", ":8686", "Local address to listen on")
+
+	logSource = flag.Bool("log-source", false, "log output includes source code location")
 )
 
 func init() {
+	flag.Parse()
 	slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
-		AddSource: true,
+		AddSource: *logSource,
 	})))
 
-	log.Println(buildString)
-	log.Println(hostString)
+	slog.Info("starting up",
+		slog.String("build", buildString),
+		slog.String("root", rootHost),
+		slog.String("api", apiHost),
+		slog.String("img", imgHost))
 
-	flag.Parse()
 }
 
 func main() {

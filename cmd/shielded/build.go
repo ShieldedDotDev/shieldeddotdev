@@ -16,6 +16,4 @@ var (
 	rootHost = "shielded.dev"
 	apiHost  = "api.shielded.dev"
 	imgHost  = "img.shielded.dev"
-
-	hostString = fmt.Sprintf("root: %s api: %s img: %s", rootHost, apiHost, imgHost)
 )
