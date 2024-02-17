@@ -23,7 +23,7 @@ function shield($title, $text, $color) {
 	<main>
 		<section>
 			<article>
-				<p>Want a dynamic badge for a detail from your CI system?</p>
+				<p>Want a dynamic, API controlled badge for your README?</p>
 			</article>
 		</section>
 		<section>
