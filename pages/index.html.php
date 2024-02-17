@@ -89,7 +89,7 @@ function shield($title, $text, $color) {
 			</article>
 		</section>
 		<section>
-			<article>
+			<article class="api-examples">
 				<h3>API Examples</h3>
 				<div id="api-example"></div>
 			</article>
