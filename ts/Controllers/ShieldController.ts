@@ -65,7 +65,7 @@ export class ShieldController extends AbstractBaseController<HTMLFormElement> {
 		}
 
 		renderExample();
-		
+
 		this.container.addEventListener('input', () => {
 			shield.Name = this.nameInput.value;
 			shield.Title = this.titleInput.value;
@@ -143,7 +143,7 @@ export class ShieldImgRouter {
 	public shieldURL(shield: ShieldInterface) {
 		return `https://${this.env.ImgHost}/s/${shield.PublicID}`;
 	}
-	
+
 	public shieldMarkdown(shield: ShieldInterface) {
 		return `![${shield.Name}](${this.shieldURL(shield)})`;
 	}
