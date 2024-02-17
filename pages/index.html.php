@@ -22,8 +22,9 @@ function shield($title, $text, $color) {
 	<?php require('_header.php') ?>
 	<main>
 		<section>
-			<article>
-				<p>Want a dynamic, API controlled badge for your README?</p>
+			<article class="callout">
+				<p>Looking for a way to create dynamic, API controlled badges for your README?
+					<br>You're in the right place.</p>
 			</article>
 		</section>
 		<section>
@@ -31,7 +32,7 @@ function shield($title, $text, $color) {
 				<div class="welcome">
 					<h3>Welcome to Shielded.dev</h3>
 					<p>Shielded.dev is a service that allows you to create dynamic README badge shields for your projects.</p>
-					<p>It's free and open source.</p>
+					<p>It's entirely free and open source.</p>
 				</div>
 				<div class="getting-started">
 					<h3>Getting Started!</h3>
@@ -94,9 +95,11 @@ function shield($title, $text, $color) {
 			</article>
 		</section>
 		<section>
-			<article>
+			<article class="open-source">
 				<h3>Open Source</h3>
-				<p>Want to run your own instance? The entire source code is freely availbile on GitHub.</p>
+				<p>Want to audit the code? Want to run your own instance? The entire source code is freely availbile on GitHub.</p>
+				<p>Visit <a href="https://github.com/shieldedDotDev/">Shielded.dev on GitHub</a> to learn more.</p>
+				<p>Shielded.dev is built with Go, and TypeScript.</p>
 			</article>
 		</section>
 	</main>

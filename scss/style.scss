@@ -29,14 +29,14 @@ strong {
 %header {
 	// font-weight: bold;
 	line-height: 1.42;
+	// font-family: DejaVu Sans,Verdana,Geneva,sans-serif;
+	text-shadow: 0px 2px #01010133;
 }
 
 @for $i from 1 through 6 {
 	h#{$i} {
 		@extend %header;
 		font-size: #{2.626470588 + (-0.4772058824 * $i)+ (0.0375 * ($i * $i))}em;
-
-
 	}
 }
 
@@ -77,9 +77,11 @@ body {
 		}
 
 		%headerTitle {
+			font-family: DejaVu Sans,Verdana,Geneva,sans-serif;
 			font-size: 32px;
 			font-weight: 300;
 			line-height: 1;
+			text-shadow: 0px 2px #01010133;
 		}
 
 		> h1 {
