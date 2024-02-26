@@ -1,14 +1,18 @@
-pre, code {
+pre,
+code {
 	background: $darkBg;
 	color: $darkBgText;
 
-	font-family: Consolas,"Courier New",Courier,monospace;
-	border-radius: 3px;
+	font-family: Consolas, "Courier New", Courier, monospace;
 }
 
 pre {
 	line-height: 1.4em;
-	font-family: Menlo, Monaco, Courier New, monospace;
+	font-family:
+		Menlo,
+		Monaco,
+		Courier New,
+		monospace;
 	@include force-wrap();
 	// background-color: alabaster;
 	font-size: 0.8rem;
@@ -16,19 +20,31 @@ pre {
 
 	> code {
 		white-space: pre-wrap;
-		background: transparent; 
+		background: transparent;
 	}
 }
 
 code {
-	font-family: Menlo, Monaco, Courier New, monospace;
+	font-family:
+		Menlo,
+		Monaco,
+		Courier New,
+		monospace;
 }
 
 .api-example--controller {
-	display: grid;
-	grid-template-columns: 160px 1fr;
+	.home--app & { @extend %shadowed-box; }
 
-	ul, li {
+	display: grid;
+	grid-template-rows: 1fr;
+
+	border-radius: 5px;
+	// outline: 1px solid $hot;
+	border: 1px solid $hot;
+	overflow: hidden;
+
+	ul,
+	li {
 		margin: 0;
 		padding: 0;
 		display: block;
@@ -36,15 +52,18 @@ code {
 	}
 
 	ul {
-		flex-grow: 0;
+		display: grid;
+		grid-auto-flow: column;
+		grid-auto-columns: 1fr;
+
 		min-width: 80px;
-		padding-top: 6px;
+
+		text-align: center;
 	}
 
 	li {
 		background: white;
 		padding: 5px;
-		margin-bottom: 5px;
 		box-shadow: inset -11px 1px 10px -9px rgb(0 0 0 / 33%);
 
 		&:hover {

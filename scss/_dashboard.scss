@@ -25,6 +25,9 @@
 	grid-template-areas: "ni img" "mi fi" "api api" "bc bc";
 	grid-template-columns: 2fr 2fr;
 
+	border: 1px solid #ccc;
+	outline: 1px solid #eee;
+
 	%left {
 		border-right: 1px solid $shade;
 		padding: .4em;
