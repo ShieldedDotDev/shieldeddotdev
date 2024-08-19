@@ -132,15 +132,15 @@ body {
 			}
 
 			> article {
+				max-width: $pageWidth;
+				margin: 0 auto;
+
 				> h3 {
 					font-size: 2em;
 					font-weight: bold;
 					padding: 0 0 0.5em;
 					text-align: center;
 				}
-
-				max-width: $pageWidth;
-				margin: 0 auto;
 			}
 		}
 	}

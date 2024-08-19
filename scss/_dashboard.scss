@@ -124,12 +124,12 @@
 
 	.button-container {
 		display: flex;
+		justify-content: flex-end;
+		padding: 5px;
+
 		> * {
 			flex-grow: 1;
 		}
-
-		justify-content: flex-end;
-		padding: 5px;
 
 		> button {
 			margin: .1em;
@@ -207,6 +207,8 @@
 	}
 
 	.api-example {
+		border-top: 1px solid $shade;
+
 		> summary {
 			display: revert;
 			padding: 0.5em;
@@ -218,8 +220,6 @@
 				background: $hover;
 			}
 		}
-		
-		border-top: 1px solid $shade;
 	}
 
 	> img {

@@ -33,7 +33,6 @@ code {
 }
 
 .api-example--controller {
-	.home--app & { @extend %shadowed-box; }
 
 	display: grid;
 	grid-template-rows: 1fr;
@@ -42,6 +41,8 @@ code {
 	// outline: 1px solid $hot;
 	border: 1px solid $hot;
 	overflow: hidden;
+
+	.home--app & { @extend %shadowed-box; }
 
 	ul,
 	li {
@@ -62,15 +63,16 @@ code {
 	}
 
 	li {
-		background: white;
+		
 		padding: 5px;
 		box-shadow: inset -11px 1px 10px -9px rgb(0 0 0 / 33%);
+		cursor: pointer;
+		background: white;
 
 		&:hover {
 			background: mix($hot, white, 50%);
 		}
 
-		cursor: pointer;
 		&.selected {
 			cursor: default;
 			box-shadow: none;
