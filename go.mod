@@ -1,9 +1,8 @@
 module github.com/ShieldedDotDev/shieldeddotdev
 
-toolchain go1.22.5
+toolchain go1.23.6
 
 go 1.22
-
 require (
 	github.com/caddyserver/certmagic v0.21.7
 	github.com/go-sql-driver/mysql v1.9.0
@@ -13,7 +12,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/narqo/go-badge v0.0.0-20230821190521-c9a75c019a59
 	golang.org/x/image v0.18.0 // indirect
-	golang.org/x/oauth2 v0.25.0
+	golang.org/x/oauth2 v0.27.0
 )
 
 require (
