@@ -1,8 +1,8 @@
 module github.com/ShieldedDotDev/shieldeddotdev
 
-toolchain go1.22.5
+toolchain go1.24.0
 
-go 1.22
+go 1.24
 
 require (
 	github.com/caddyserver/certmagic v0.21.7
