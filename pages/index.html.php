@@ -103,9 +103,11 @@ function shield($title, $text, $color) {
 			</article>
 		</section>
 	</main>
-	<script>
+	<script type="module">
+		import { Home } from '/main.js';
+
 		document.addEventListener('DOMContentLoaded', function () {
-			shielded.Home(document.getElementById('api-example'));
+			Home(document.getElementById('api-example'));
 		});
 	</script>
 	<?php require('_footer.php') ?>

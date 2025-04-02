@@ -67,9 +67,9 @@ debug: clean $(STATIC_SOURCES) $(STATIC_DIR)/main.js
 $(STATIC_DIR)/style/style.css: $(shell find scss -name "*.scss")
 	npx sass scss:static/style
 
-$(STATIC_DIR)/main.js: $(shell find ts -name "*.ts") webpack.config.js tsconfig.json
-	npx webpack --mode=production
+$(STATIC_DIR)/main.js: $(shell find ts -name "*.ts") rollup.config.js tsconfig.json
+	npx rollup --config rollup.config.js
 
 $(STATIC_DIR)/index.html $(STATIC_DIR)/dashboard.html: $(shell find $(TEMPLATES_DIR) -name "*.php")
 	$(foreach file, $(wildcard $(TEMPLATES_DIR)/*.html.php), php $(file) > $(STATIC_DIR)/$$(basename $(file) | sed 's/\.[^.]*$$//'); )
-	npx html-minifier --input-dir static --output-dir static --file-ext html --collapse-whitespace --conservative-collapse
+	npx html-minifier-terser --input-dir static --output-dir static --file-ext html --collapse-whitespace --conservative-collapse

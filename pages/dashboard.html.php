@@ -16,9 +16,11 @@
 		</section>
 	</main>
 
-	<script>
+	<script type="module">
+		import { Dashboard } from '/main.js';
+
 		document.addEventListener('DOMContentLoaded', function () {
-			shielded.Dashboard( document.getElementById('dashboard') ) 
+			Dashboard( document.getElementById('dashboard') ) 
 		});
 	</script>
 	<?php require('_footer.php') ?>
