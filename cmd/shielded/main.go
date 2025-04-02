@@ -10,7 +10,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/NYTimes/gziphandler"
+	"github.com/CAFxX/httpcompression"
 	"github.com/ShieldedDotDev/shieldeddotdev"
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
 
@@ -121,7 +121,9 @@ func main() {
 			log.Fatal(err)
 		}
 	} else {
-		err = certmagic.HTTPS([]string{rootHost, "www." + rootHost, apiHost, imgHost}, gziphandler.GzipHandler(ro))
+		compress, _ := httpcompression.DefaultAdapter()
+
+		err = certmagic.HTTPS([]string{rootHost, "www." + rootHost, apiHost, imgHost}, compress(ro))
 		if err != nil {
 			log.Fatal(err)
 		}

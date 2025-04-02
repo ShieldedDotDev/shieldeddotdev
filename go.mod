@@ -17,14 +17,16 @@ require (
 )
 
 require (
-	github.com/NYTimes/gziphandler v1.1.1
+	github.com/CAFxX/httpcompression v0.0.9
 	github.com/google/go-github/v43 v43.0.0
 )
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
+	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/caddyserver/zerossl v0.1.3 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/klauspost/compress v1.16.7 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
 	github.com/libdns/libdns v0.2.2 // indirect
 	github.com/mholt/acmez/v3 v3.0.1 // indirect
