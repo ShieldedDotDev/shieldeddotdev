@@ -6,5 +6,3 @@
 <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
 <title>Shielded.dev</title>
 <link rel="stylesheet" href="style/style.css" type="text/css" />
-
-<script src="/main.js"></script>
