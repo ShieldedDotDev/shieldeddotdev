@@ -26,7 +26,7 @@ jobs:
         run: make lint
 
       - name: Build
-        run: make release
+        run: make clean release
 
       - name: Test
         run: go test ./...
