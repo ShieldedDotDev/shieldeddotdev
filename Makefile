@@ -72,4 +72,4 @@ $(STATIC_DIR)/main.js: $(shell find ts -name "*.ts") rollup.config.js tsconfig.j
 
 $(STATIC_DIR)/index.html $(STATIC_DIR)/dashboard.html: $(shell find $(TEMPLATES_DIR) -name "*.php")
 	$(foreach file, $(wildcard $(TEMPLATES_DIR)/*.html.php), php $(file) > $(STATIC_DIR)/$$(basename $(file) | sed 's/\.[^.]*$$//'); )
-	npx html-minifier --input-dir static --output-dir static --file-ext html --collapse-whitespace --conservative-collapse
+	npx html-minifier-terser --input-dir static --output-dir static --file-ext html --collapse-whitespace --conservative-collapse
