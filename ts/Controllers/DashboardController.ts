@@ -14,17 +14,27 @@ export class DashboardController extends AbstractBaseController {
 		super(document.createElement('div'), 'dashboard');
 
 		this.container.append(
-			this.shieldsElm,
 			this.addBtn,
+			document.createElement('br'),
+			this.shieldsElm,
 		);
 
 		document.body.appendChild(this.errDialog.getContainer());
 
-		this.addBtn.innerText = 'Create new shield';
+		this.addBtn.innerText = 'New shield';
 		this.addBtn.classList.add('add-button');
+		this.addBtn.classList.add('primary');
 
-		this.addBtn.addEventListener('click', ()=> {
-			this.model.newShield();
+		const plusIcon = document.createElement('span');
+		plusIcon.classList.add('icon');
+		plusIcon.textContent = '➕';
+		this.addBtn.prepend(plusIcon);
+
+		this.addBtn.addEventListener('click', async ()=> {
+			await this.model.newShield();
+			setTimeout(() => {
+				window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+			}, 100);
 		});
 
 		this.render();

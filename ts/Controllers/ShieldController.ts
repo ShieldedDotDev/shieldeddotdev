@@ -36,7 +36,7 @@ export class ShieldController extends AbstractBaseController<HTMLFormElement> {
 		nameInput.classList.add('name-input');
 		this.container.appendChild(nameInput);
 
-		nameInput.appendChild(this.createInputContainer("Name", this.nameInput));
+		nameInput.appendChild(this.createInputContainer("Shield Name", this.nameInput));
 
 		const shieldContainer = document.createElement('section');
 		shieldContainer.appendChild(this.shieldImg);
@@ -59,7 +59,7 @@ export class ShieldController extends AbstractBaseController<HTMLFormElement> {
 			apiExample.innerHTML = '';
 			const ec = new ApiExampleController(env, shield);
 			const apiLabel = document.createElement('summary')
-			apiLabel.innerText = 'API Example';
+			apiLabel.innerText = 'API Call Examples';
 			apiExample.appendChild(apiLabel);
 			ec.attach(apiExample);
 		}
@@ -83,8 +83,15 @@ export class ShieldController extends AbstractBaseController<HTMLFormElement> {
 		buttonContainer.classList.add('button-container');
 		this.container.appendChild(buttonContainer);
 
-		this.updateBtn.innerText = '💾 Update';
+		this.updateBtn.innerText = 'Update';
+		this.updateBtn.classList.add('primary');
 		buttonContainer.appendChild(this.updateBtn);
+
+		const saveIcon = document.createElement('span');
+		saveIcon.classList.add('icon');
+		saveIcon.innerText = '💾';
+		this.updateBtn.prepend(saveIcon);
+
 		this.updateBtn.addEventListener('click', async () => {
 			if (!this.container.checkValidity()) {
 				this.container.reportValidity();
@@ -94,7 +101,14 @@ export class ShieldController extends AbstractBaseController<HTMLFormElement> {
 			await model.updateShield(shield);
 		});
 
-		this.deleteBtn.innerText = '❌ Delete';
+		this.deleteBtn.classList.add('danger');
+		this.deleteBtn.innerText = 'Delete';
+
+		const xIcon = document.createElement('span');
+		xIcon.classList.add('icon');
+		xIcon.innerText = '❌';
+		this.deleteBtn.prepend(xIcon);
+
 		buttonContainer.appendChild(this.deleteBtn);
 		this.deleteBtn.addEventListener('click', () => {
 			if (confirm('Are you sure you want to delete this shield?')) {
