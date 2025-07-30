@@ -8,6 +8,8 @@
 		margin: 0 auto;
 		height: 2em;
 
+		transform: scale(1.2);
+
 		> .icon {
 			filter: grayscale(1) brightness(0) invert(1);
 		}
@@ -21,12 +23,21 @@
 
 	.shield--controller {
 		display: grid;
-		grid-template-areas: "ni img" "mi fi" "api api" "bc bc";
-		grid-template-columns: 2fr 2fr;
+		
 
-		%left {
-			border-right: 1px solid variables.$shade;
+		@media screen and (min-width: #{variables.$pageWidth}) {
+			grid-template-areas: "ni img" "mi fi" "api api" "bc bc";
+			grid-template-columns: 2fr 2fr;
+
+			%left {
+				border-right: 1px solid variables.$shade;
+			}
 		}
+
+		@media screen and (max-width: #{variables.$pageWidth - 1}) {
+			grid-template-areas: "ni" "img" "mi" "fi" "api" "bc";
+		}
+		
 
 		%right {
 		}
@@ -132,6 +143,10 @@
 				font-weight: 600;
 				font-size: 14px;
 			}
+
+			input {
+				width: 100%;
+			}
 		}
 
 		.input-container {
@@ -156,10 +171,6 @@
 
 			> .input-container {
 				margin-bottom: 5px;
-
-				input {
-					width: 100%;
-				}
 			}
 		}
 
