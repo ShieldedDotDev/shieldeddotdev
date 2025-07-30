@@ -23,8 +23,7 @@ function shield($title, $text, $color) {
 	<main>
 		<section>
 			<article class="callout">
-				<p>Looking for a way to create dynamic, API controlled badges for your README?
-					<br>You're in the right place.</p>
+				<p>Real‑time README badges driven by your own data</p>
 			</article>
 		</section>
 		<section>
@@ -35,7 +34,7 @@ function shield($title, $text, $color) {
 					<p>It's entirely free and open source.</p>
 				</div>
 				<div class="getting-started">
-					<h3>Getting Started!</h3>
+					<h3>Getting started</h3>
 					<a href="/github/login" class="github-login">Sign in with GitHub</a>
 					<p>By clicking this button you accept our <a href="/privacy.html">Privacy Policy</a> and consent to two cookies.</p>
 					<hr />
@@ -44,44 +43,44 @@ function shield($title, $text, $color) {
 				</div>
 
 				<div class="examples">
-					<h3>Shield Ideas</h3>
+					<h3>Shield examples</h3>
 					<ul>
-						<li><p>Build Status</p>
+						<li>
 							<?= shield("Build", "passing", "28a3df") ?>
 						</li>
-						<li><p>Code Coverage</p>
+						<li>
 							<?= shield("Coverage", "100%", "28a3df") ?>
 						</li>
-						<li><p>Code Quality</p>
+						<li>
 							<?= shield("Quality", "A+", "green") ?>
 						</li>
-						<li><p>License</p>
+						<li>
 							<?= shield("License", "MIT", "428F7E") ?>
 						</li>
-						<li><p>Version</p>
+						<li>
 							<?= shield("Stable", "1.2.34", "28a3df") ?>
 							<?= shield("Latest", "1.2.34", "28a3df") ?>
 							<?= shield("Unstable", "8.67.5-dev", "e68718") ?>
 						</li>
-						<li><p>Downloads</p>
+						<li>
 							<?= shield("Daily Downloads", "128", "28a3df") ?>
 						</li>
-						<li><p>Open Issues</p>
+						<li>
 							<?= shield("Issues", "5", "99004d") ?>
 						</li>
-						<li><p>Open Pull Requests</p>
+						<li>
 							<?= shield("Pull Requests", "1", "99004d") ?>
 						</li>
-						<li><p>Code Size</p>
-							<?= shield("Code Size", "1.2mb", "5c72a6") ?>
+						<li>
+							<?= shield("Bundle Size", "1.2mb", "5c72a6") ?>
 						</li>
-						<li><p>Contributors</p>
+						<li>
 							<?= shield("Contributors", "13", "5c72a6") ?>
 						</li>
-						<li><p>Commit Activity</p>
+						<li>
 							<?= shield("Commits", "2/week", "28a3df") ?>
 						</li>
-						<li><p>Release Activity</p>
+						<li>
 							<?= shield("Releases", "1/month", "28a3df") ?>
 						</li>
 					</ul>
@@ -90,14 +89,15 @@ function shield($title, $text, $color) {
 		</section>
 		<section>
 			<article class="api-examples">
-				<h3>API Examples</h3>
+				<h3>API examples</h3>
 				<div id="api-example"></div>
 			</article>
 		</section>
 		<section>
 			<article class="open-source">
 				<h3>Open Source</h3>
-				<p>Want to audit the code? Want to run your own instance? The entire source code is freely availbile on GitHub.</p>
+				<p>Interested in reviewing the code or hosting your own instance?</p>
+				<p>The complete source is available on GitHub.</p>
 				<p>Visit <a href="https://github.com/shieldedDotDev/">Shielded.dev on GitHub</a> to learn more.</p>
 				<p>Shielded.dev is built with Go, and TypeScript.</p>
 			</article>
