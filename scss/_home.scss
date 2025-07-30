@@ -26,18 +26,22 @@
 			display: grid;
 			grid-template: "welcome examples" "getting-started examples";
 			grid-template-columns: 7fr 4fr;
-			grid-gap: 2em;
+			grid-gap: 1em;
 			align-items: baseline;
 
 			@media screen and (max-width: 800px) {
 				grid-template: "welcome" "getting-started" "examples";
 			}
 
+			> * {
+				padding: 2em;
+			}
+
 			> .examples {
 				grid-area: examples;
 
 				li {
-					padding: .4em;
+					padding: .4em 0;
 				}
 			}
 
@@ -50,12 +54,9 @@
 				@extend %bordered-box;
 				grid-area: getting-started;
 
-				border-radius: 11px;
-
 				margin: 1em auto;
 
 				display: inline-block;
-				padding: 2em;
 				text-align: center;
 
 				> h3 {

@@ -34,16 +34,14 @@ function shield($title, $text, $color) {
 					<p>It's entirely free and open source.</p>
 				</div>
 				<div class="getting-started">
-					<h3>Getting started</h3>
+					<h3>Get started</h3>
 					<a href="/github/login" class="github-login">Sign in with GitHub</a>
-					<p>By clicking this button you accept our <a href="/privacy.html">Privacy Policy</a> and consent to two cookies.</p>
-					<hr />
-					<p>One cookie is for the handshake with GitHub and the other holds and verifies the returned authentication.</p>
-					<p>There are zero tracking cookies used.</p>
+					<p>When you sign in, we’ll set two simple cookies to make things work. One helps us talk to GitHub, and the other confirms you’re signed in.</p>
+					<p>That’s it — no tracking, no ads.</p>	
 				</div>
 
 				<div class="examples">
-					<h3>Shield examples</h3>
+					<h3>Examples</h3>
 					<ul>
 						<li>
 							<?= shield("Build", "passing", "28a3df") ?>
@@ -96,10 +94,9 @@ function shield($title, $text, $color) {
 		<section>
 			<article class="open-source">
 				<h3>Open Source</h3>
-				<p>Interested in reviewing the code or hosting your own instance?</p>
-				<p>The complete source is available on GitHub.</p>
+				<p>Interested in reviewing the code or hosting your own instance? The complete source is available on GitHub.</p>
 				<p>Visit <a href="https://github.com/shieldedDotDev/">Shielded.dev on GitHub</a> to learn more.</p>
-				<p>Shielded.dev is built with Go, and TypeScript.</p>
+				<p>Shielded.dev is built with Go and TypeScript using a MySQL database.</p>
 			</article>
 		</section>
 	</main>
