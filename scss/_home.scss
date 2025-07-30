@@ -29,7 +29,7 @@
 			grid-gap: 1em;
 			align-items: baseline;
 
-			@media screen and (max-width: 800px) {
+			@media screen and (max-width: #{variables.$pageWidth}) {
 				grid-template: "welcome" "getting-started" "examples";
 			}
 
