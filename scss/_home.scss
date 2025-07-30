@@ -1,98 +1,102 @@
-article {
+@use "variables";
+@use "shared";
 
-	text-align: center;
+%home {
 
-	p {
-		margin: .6em 0;
-	}
+	article {
 
-	&.callout {
 		p {
-			font-size: 1.2em;
-			font-weight: 100;
-			margin: 0;
-			text-shadow: 1px 1px rgba(0,0,0,.3);
+			margin: .6em 0;
 		}
-	}
 
-	&.api-examples {
-		text-align: left;
-	}
-
-
-	&.home-core {
-		display: grid;
-		grid-template: "welcome examples" "getting-started examples";
-		grid-gap: 2em;
-		align-items: baseline;
-	
-		@media screen and (max-width: 800px) {
-			grid-template: "welcome" "getting-started" "examples";
-		}
-	
-		> .examples {
-			grid-area: examples;
-			text-align: center;
-	
+		&.callout {
 			p {
-				margin: .2em 0;
+				font-size: 1.6em;
+				font-weight: 600;
+				text-align: center;
 			}
 		}
-	
-		> .welcome {
-			grid-area: welcome;
-			text-align: center;
+
+		&.api-examples {
+			text-align: left;
 		}
-	
-		> .getting-started {
-			grid-area: getting-started;
-	
-			@extend %shaded-box;
-			margin: 1em auto;
-	
-			display: inline-block;
-			padding: 2em;
-			text-align: center;
-			// max-width: 300px;
-			// border-radius: 0.2em;
-	
-			> h3 {
-				font-weight: bold;
-				margin-bottom: 1em;
+
+
+		&.home-core {
+			display: grid;
+			grid-template: "welcome examples" "getting-started examples";
+			grid-template-columns: 7fr 4fr;
+			grid-gap: 2em;
+			align-items: baseline;
+
+			@media screen and (max-width: 800px) {
+				grid-template: "welcome" "getting-started" "examples";
 			}
-	
-			> p {
-				margin: 1em 0;
-				font-size: 0.9em;
-	
-				&:last-child {
-					margin-bottom: 0;
+
+			> .examples {
+				grid-area: examples;
+
+				li {
+					padding: .4em;
+				}
+			}
+
+			> .welcome {
+				grid-area: welcome;
+				text-align: center;
+			}
+
+			> .getting-started {
+				@extend %bordered-box;
+				grid-area: getting-started;
+
+				border-radius: 11px;
+
+				margin: 1em auto;
+
+				display: inline-block;
+				padding: 2em;
+				text-align: center;
+
+				> h3 {
+					font-weight: bold;
+					margin-bottom: 1em;
+				}
+
+				> p {
+					margin: 1em 0;
+					font-size: 0.9em;
+
+					&:last-child {
+						margin-bottom: 0;
+					}
 				}
 			}
 		}
 	}
-}
 
-.github-login {
-	@extend %big-action-button;
+	.github-login {
+		@extend %big-action-button;
 
-	display: inline-block;
+		display: inline-block;
 
-	text-decoration: none;
+		text-decoration: none;
 
-	padding: 1em;
-	padding-left: 2.5em;
-	font-size: 1.2em;
-	border-radius: 0.2em;
-	background: $control url("/img/github.svg");
-	background-size: 1.5em;
-	background-repeat: no-repeat;
-	background-position: 0.5em center;
+		padding: 1em;
+		padding-left: 3em;
+		font-size: 1.2em;
+		border-radius: 0.5em;
+		background: variables.$primaryControl url("/img/github.svg");
+		background-size: 1.5em;
+		background-repeat: no-repeat;
+		background-position: 1em center;
+		color: variables.$primaryControlColor;
 
-}
+		&:hover {
+			background-color: variables.$primaryControlHover;
+		}
 
-main > section {
-	&:nth-child(odd) {
-		background: $shade;
+
 	}
+
 }

@@ -1,20 +1,23 @@
+@use "sass:color";
+@use "mixins";
+@use "variables";
+@use "shared";
+
 pre,
 code {
-	background: $darkBg;
-	color: $darkBgText;
+	background: variables.$darkBg;
+	color: variables.$darkBgText;
 
 	font-family: Consolas, "Courier New", Courier, monospace;
 }
 
 pre {
 	line-height: 1.4em;
-	font-family:
-		Menlo,
-		Monaco,
-		Courier New,
-		monospace;
-	@include force-wrap();
-	// background-color: alabaster;
+	font-family: Menlo,
+	Monaco,
+	Courier New,
+	monospace;
+	@include mixins.force-wrap();
 	font-size: 0.8rem;
 	padding: 1.125em;
 
@@ -25,11 +28,10 @@ pre {
 }
 
 code {
-	font-family:
-		Menlo,
-		Monaco,
-		Courier New,
-		monospace;
+	font-family: Menlo,
+	Monaco,
+	Courier New,
+	monospace;
 }
 
 .api-example--controller {
@@ -38,11 +40,12 @@ code {
 	grid-template-rows: 1fr;
 
 	border-radius: 5px;
-	// outline: 1px solid $hot;
-	border: 1px solid $hot;
+	border: 1px solid variables.$hot;
 	overflow: hidden;
 
-	.home--app & { @extend %shadowed-box; }
+	.home--app & {
+		@extend %bordered-box;
+	}
 
 	ul,
 	li {
@@ -63,27 +66,30 @@ code {
 	}
 
 	li {
-		
-		padding: 11px;
-		box-shadow: inset -11px 1px 10px -9px rgb(0 0 0 / 33%);
+		border-left: 1px solid variables.$border;
+
+		&:first-child {
+			border-left: none;
+		}
+
+
+		padding: 1em;
 		cursor: pointer;
 		background: white;
 
 		&:hover {
-			background: mix($hot, white, 50%);
+			border-left: none;
+
+			background: color.mix(variables.$hot, white, 50%);
 		}
 
 		&.selected {
+			border-left: none;
+
 			cursor: default;
 			box-shadow: none;
-			background: $hot;
-			color: $darkBgText;
-
-			&:after {
-				content: "●";
-				float: right;
-				margin-right: 5px;
-			}
+			background: variables.$hot;
+			color: variables.$darkBgText;
 		}
 	}
 }
