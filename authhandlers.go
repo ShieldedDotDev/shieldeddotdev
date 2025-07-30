@@ -10,7 +10,7 @@ import (
 
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
 	"github.com/gofrs/uuid"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/go-github/v43/github"
 	"golang.org/x/oauth2"
 	goauth "golang.org/x/oauth2/github"
@@ -142,8 +142,8 @@ type JwtAuth struct {
 }
 
 func (j *JwtAuth) Authorize(w http.ResponseWriter, uid int64) error {
-	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		Id: strconv.FormatInt(uid, 10),
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
+		ID: strconv.FormatInt(uid, 10),
 	})
 
 	tokenString, err := jwtToken.SignedString(j.Secret)
@@ -172,7 +172,7 @@ func (j *JwtAuth) GetAuth(r *http.Request) *int64 {
 		return nil
 	}
 
-	token, err := jwt.ParseWithClaims(c.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(c.Value, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
@@ -184,8 +184,8 @@ func (j *JwtAuth) GetAuth(r *http.Request) *int64 {
 		return nil
 	}
 
-	if claims, ok := token.Claims.(*jwt.StandardClaims); ok && token.Valid {
-		if id, _ := strconv.ParseInt(claims.Id, 10, 64); id > 0 {
+	if claims, ok := token.Claims.(*jwt.RegisteredClaims); ok && token.Valid {
+		if id, _ := strconv.ParseInt(claims.ID, 10, 64); id > 0 {
 			return &id
 		}
 	}
