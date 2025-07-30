@@ -1,36 +1,25 @@
-@import "reset";
-@import "mixins";
-
-$pageWidth: 700px;
-
-$hot: #5c72a6;
-
-$selected: lighten($hot, 40%);
-$lightSpace: darken(#fafafa, 8%);
-$hover: mix($hot, white, 50%);
-
-$control: #555;
-$controlHover: #3ead3e; //mix(lighten($control, 40%), rgb(32, 207, 32));
-$controlActive: mix(lighten($control, 20%), $hot);
-
-$darkBg: #555;
-$darkBgText: white;
-
-$shade: rgba(0, 0, 0, 0.065);
-
-* {
-	@include box-sizing(border-box);
-}
+@use "sass:meta";
+@use "reset";
+@use "mixins";
+@use "variables";
+@use "dashboard";
+@use "home";
 
 strong {
 	font-weight: bold;
 }
 
 %header {
-	// font-weight: bold;
 	line-height: 1.42;
-	// font-family: DejaVu Sans,Verdana,Geneva,sans-serif;
-	text-shadow: 0px 2px #01010133;
+	font-weight: 500;
+}
+
+button {
+	@extend %button;
+}
+
+input {
+	@extend %input;
 }
 
 @for $i from 1 through 6 {
@@ -41,43 +30,47 @@ strong {
 }
 
 body {
+	@extend %system-font;
+
 	min-height: 100vh;
 	tab-size: 4;
 	display: grid;
 	grid-template-rows: min-content auto min-content;
-	background: $shade;
+	background: white;
 
-	color: #2a2a2a;
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
-		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	color: variables.$textColor;
+
 
 	> header {
+		margin: 1em auto;
+		border-radius: 10px;
+
 		font-size: 2em;
 		font-weight: bold;
 
-		background: linear-gradient(0deg, rgba(187, 187, 187, .1), transparent), $darkBg;
-		color: $darkBgText;
+		background: linear-gradient(0deg, rgba(187, 187, 187, .1), transparent), variables.$darkBg;
+		color: variables.$darkBgText;
+		overflow: hidden;
 
 		display: grid;
 
-		@media screen and (min-width: #{$pageWidth}) {
+		@media screen and (min-width: #{variables.$pageWidth}) {
 			grid-template-rows: 100%;
 			grid-template-areas: "title subtitle";
-			grid-template-columns: minmax(260px, calc(((100% - #{$pageWidth}) / 2) - 1em));
 		}
 
-		@media screen and (max-width: #{$pageWidth - 1}) {
+		@media screen and (max-width: #{variables.$pageWidth - 1}) {
 			grid-template-areas: "title" "subtitle";
 		}
-	
+
 		> * {
-			padding: 1em;
+			padding: 0.5em;
 			height: 100%;
 			text-align: center;
 		}
 
 		%headerTitle {
-			font-family: DejaVu Sans,Verdana,Geneva,sans-serif;
+			font-family: DejaVu Sans, Verdana, Geneva, sans-serif;
 			font-size: 32px;
 			font-weight: 300;
 			line-height: 1;
@@ -87,8 +80,9 @@ body {
 		> h1 {
 			@extend %headerTitle;
 			grid-area: title;
-			
-			@media screen and (min-width: #{$pageWidth}) {
+			padding-left: 1em;
+
+			@media screen and (min-width: #{variables.$pageWidth}) {
 				text-align: right;
 			}
 
@@ -104,40 +98,38 @@ body {
 
 		> h2 {
 			@extend %headerTitle;
-
 			grid-area: subtitle;
-			background: linear-gradient(0deg, rgba(187, 187, 187, .1), transparent), $hot;
+			padding-right: 1em;
 
-			@media screen and (min-width: #{$pageWidth}) {
+			background: linear-gradient(0deg, rgba(187, 187, 187, .1), transparent), variables.$hot;
+			border-left: 3px solid rgb(255 255 255 / 10%);
+
+			@media screen and (min-width: #{variables.$pageWidth}) {
 				text-align: left;
 			}
 
-			@media screen and (max-width: #{$pageWidth - 1}) {
+			@media screen and (max-width: #{variables.$pageWidth - 1}) {
 				font-size: 0.7em;
 			}
 		}
 	}
 
 	> main {
-		// min-height: 100vw;
-
 		$minHorizWs: 11px;
+
 		> section {
 			padding: 1em 0;
-			box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
 
-			@media screen and (max-width: #{$pageWidth + $minHorizWs}) {
+			@media screen and (max-width: #{variables.$pageWidth + $minHorizWs}) {
 				padding-left: $minHorizWs;
 				padding-right: $minHorizWs;
 			}
 
 			> article {
-				max-width: $pageWidth;
+				max-width: variables.$pageWidth;
 				margin: 0 auto;
 
 				> h3 {
-					font-size: 2em;
-					font-weight: bold;
 					padding: 0 0 0.5em;
 					text-align: center;
 				}
@@ -146,13 +138,20 @@ body {
 	}
 
 	> footer {
-		background: $darkBg;
+		font-size: 0.8em;
 		padding: 20px;
-		color: white;
 		text-align: center;
 
+		border-top: 1px solid variables.$border;
+
 		a {
-			color: white;
+			color: variables.$textColor;
+			padding: 10px;
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
 		}
 	}
 }
@@ -161,46 +160,18 @@ p {
 	line-height: 1.4em;
 }
 
-%shadowed-box {
-	// box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
-	box-shadow: 0px 3px 12px 4px rgba(0, 0, 0, 0.2);
-}
-
-%shaded-box {
-	@extend %shadowed-box;
-	background: $shade;
-	padding: 1em;
-}
-
-%big-action-button {
-	background-color: $control;
-	color: white;
-
-	transition: background-color cubic-bezier(0, 0.5, 0, 1) 1s;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-	
-	&:hover {
-		background-color: $controlHover;
-		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
-	}
-
-	&:active {
-		background-color: $controlActive;
-	}
-}
-
 .dashboard--controller {
-	@import "dashboard";
+	@extend %dashboard;
 }
 
 .home--app {
-	@import "home";
+	@extend %home;
 }
 
 ::selection {
-	background: $selected;
+	background: variables.$selected;
 	color: white;
 	text-shadow: none;
 }
 
-@import "code";
+@include meta.load-css("code");

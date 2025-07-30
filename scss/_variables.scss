@@ -1,0 +1,32 @@
+@use "sass:color";
+
+$textColor: #2a2a2a;
+
+$pageWidth: 800px;
+
+$hot: #5c72a6;
+$danger: #d22937;
+
+$selected: color.adjust($hot, $lightness: 40%);
+$lightSpace: color.adjust(#fafafa, $lightness: -8%);
+$hover: color.mix($hot, white, 50%);
+
+$border: #d1d9e0;
+
+$control: #efefef;
+$controlColor: #25292e; // text color for controls
+$controlHover: color.adjust($control, $lightness: -5%); //mix(lighten($control, 40%), rgb(32, 207, 32));
+$controlActive: color.mix(color.adjust($control, $lightness: 20%), $hot);
+
+$primaryControl: #384;
+$primaryControlColor: #fff;
+$primaryControlHover: color.adjust($primaryControl, $lightness: -5%);
+
+
+$controlBorder: $border;
+$controlActiveBorder: #006cd6;
+
+$darkBg: #555;
+$darkBgText: white;
+
+$shade: rgba(0, 0, 0, 0.065);

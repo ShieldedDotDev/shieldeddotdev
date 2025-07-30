@@ -1,0 +1,85 @@
+@use "sass:color";
+@use "variables";
+
+%system-font {
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+}
+
+%input {
+	@extend %system-font;
+
+	font-size: 14px;
+	padding: 6px 8px;
+
+	border: 1px solid variables.$border;
+	border-radius: 0.3em;
+
+	&:focus {
+		outline: 2px solid variables.$controlActiveBorder;
+	}
+}
+
+%button {
+	@extend %system-font;
+
+	background-color: variables.$control;
+	color: variables.$controlColor;
+	font-size: 14px;
+	padding: 5px 16px;
+	font-weight: 500;
+
+	border: 1px solid variables.$border;
+	border-radius: 6px;
+
+	transition: background-color cubic-bezier(0, 0.5, 0, 1) .4s;
+
+	&:hover {
+		background-color: variables.$controlHover;
+	}
+
+	&:active {
+		background-color: variables.$controlActive;
+	}
+
+	> .icon {
+		font-size: .9em;
+		align-items: baseline;
+		filter: grayscale(1);
+		margin-right: 0.5em;
+	}
+
+	&.danger {
+		color: variables.$danger;
+
+		> .icon {
+			filter: grayscale(0);
+		}
+	}
+
+	&.primary {
+		background-color: variables.$primaryControl;
+		color: variables.$primaryControlColor;
+		border: 1px solid #2a2;
+
+		&:hover {
+			background-color: variables.$primaryControlHover;
+		}
+	}
+}
+
+
+%big-action-button {
+	@extend %button;
+
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+	border: 1px solid #{variables.$border};
+
+	&:hover {
+		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+	}
+}
+
+%bordered-box {
+	border: 1px solid variables.$border;
+	border-radius: 6px;
+}

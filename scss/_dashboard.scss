@@ -1,228 +1,206 @@
+@use "variables";
 @use "sass:color";
+@use "shared";
 
-> .add-button {
- 	@extend %big-action-button;
+%dashboard {
+	> .add-button {
+		display: block;
+		margin: 0 auto;
+		height: 2em;
 
-	display: block;
-	margin: 0 auto;
-	border: 1px solid #ccc;
-	border-radius: 10px;
-	font-size: 2em;
-	// width: 2em;
-	padding-left: .5em;
-	padding-right: .5em;
-	height: 2em;
-}
-
-.no-shields {
-	text-align: center;
-	display: block;
-	margin-bottom: 2em;
-}
-
-.shield--controller {
-	display: grid;
-	grid-template-areas: "ni img" "mi fi" "api api" "bc bc";
-	grid-template-columns: 2fr 2fr;
-
-	border: 1px solid #ccc;
-	outline: 1px solid #eee;
-
-	%left {
-		border-right: 1px solid $shade;
-		padding: .4em;
-	}
-
-	%right {
-		padding: .4em;
-	}
-
-	> .name-input {
-		@extend %left;
-		grid-area: ni;
-	}
-
-	> .main-inputs {
-		@extend %left;
-		grid-area: mi;
-	}
-
-	> .button-container {
-		grid-area: bc;
-		background-color: rgba(255,255,255,.3);
-	}
-
-	> .fancy-inputs {
-		@extend %right;
-		grid-area: fi;
-	}
-
-	> .shield-container {
-		@extend %right;
-		grid-area: img;
-	}
-
-	> .api-example {
-		grid-area: api;
-		background-color: rgba(0,0,0,.1);
-		box-shadow: inset 0 0 1px 0px rgba(0, 0, 0, .3)
-	}
-}
-
-.shield--controller {
-	@extend %shaded-box;
-
-	padding: 0;
-
-	border-radius: 6px;
-	overflow: hidden;
-
-	margin-bottom: 1em;
-	font-size: 1.2rem;
-
-	input, button {
-		font-size: 1.1rem;
-		padding: 0.3em;
-		border-radius: 0.3em;
-		border: 1px solid #ccc;
-
-		&:focus, &:active {
-			box-shadow: color.scale($hot, $alpha: -40%) 0 0 0 3px;
-			outline: none;
-		}
-
-		&:active {
-			box-shadow: color.scale($hot, $alpha: -10%) 0 0 0 3px;
+		> .icon {
+			filter: grayscale(1) brightness(0) invert(1);
 		}
 	}
 
-	input[type="color"] {
+	.no-shields {
+		text-align: center;
+		display: block;
+		margin-bottom: 2em;
+	}
+
+	.shield--controller {
+		display: grid;
+		grid-template-areas: "ni img" "mi fi" "api api" "bc bc";
+		grid-template-columns: 2fr 2fr;
+
+		%left {
+			border-right: 1px solid variables.$shade;
+		}
+
+		%right {
+		}
+
+		> .name-input {
+			@extend %left;
+			grid-area: ni;
+		}
+
+		> .main-inputs {
+			@extend %left;
+			grid-area: mi;
+		}
+
+		> .button-container {
+			grid-area: bc;
+			background-color: rgba(255, 255, 255, .3);
+		}
+
+		> .fancy-inputs {
+			@extend %right;
+			grid-area: fi;
+		}
+
+		> .shield-container {
+			@extend %right;
+			grid-area: img;
+		}
+
+		> .api-example {
+			grid-area: api;
+			background-color: rgba(0, 0, 0, .1);
+			box-shadow: inset 0 0 1px 0px rgba(0, 0, 0, .3)
+		}
+	}
+
+	.shield--controller {
+		@extend %bordered-box;
+
 		padding: 0;
-	}
 
-	button {
-		padding-left: .5em;
-		padding-right: .5em;
-		&:hover {
-			background: color.scale($hot, $alpha: -90%);
-		}
-	}
+		border-radius: 6px;
+		overflow: hidden;
 
-	.input-container {
-		display: flex;
-		align-items: center;
-		justify-content: space-evenly;
+		margin-bottom: 1rem;
 
-		> label {
-			width: 4em;
-		}
+		input, button {
 
-		> input {
-			flex-grow: 1;
-		}
-	}
-
-	.button-container {
-		display: flex;
-		justify-content: flex-end;
-		padding: 5px;
-
-		> * {
-			flex-grow: 1;
-		}
-
-		> button {
-			margin: .1em;
-			border-radius: 0;
-
-			&:first-child {
-				border-bottom-left-radius: 0.3em;
+			&:focus, &:active {
+				box-shadow: color.scale(variables.$hot, $alpha: -40%) 0 0 0 3px;
+				outline: none;
 			}
 
-			&:last-child {
-				border-bottom-right-radius: 0.3em;
+			&:active {
+				box-shadow: color.scale(variables.$hot, $alpha: -10%) 0 0 0 3px;
 			}
 		}
-	}
 
-	%input-with-buttons-container {
-		display: flex;
-
-		> input {
-			border-radius: 0.4em 0 0 0.4em;
-			flex-grow: 1;
+		input[type="color"] {
+			padding: 0;
 		}
 
-		> button {
-			border-left: 0;
-			padding-left: 0.5em;
-			padding-right: 0.5em;
-			border-radius: 0;
-			white-space: nowrap;
+		.button-container {
+			@extend %padded-container;
+
+			display: flex;
+			flex-direction: row-reverse;
+			justify-content: flex-start;
+
+			> button {
+				margin: .1em;
+			}
 		}
 
-		> input, button {
-			font-size: .85em;
-		}
-	
-		> button:last-of-type {
-			border-radius: 0 0.4em 0.4em 0;
-		}
-	}
-
-	.fancy-inputs {
-		> label {
-			display: block;
-			margin-bottom: 0.4em;
-			text-align: center;
+		%padded-container {
+			padding: 1em;
 		}
 
-		> .markdown-input--controller {
-			margin-bottom: .3em;
+		%input-with-buttons-container {
+			display: flex;
+
+			> input {
+				flex-grow: 1;
+			}
+
+			> button {
+				border-left: 0;
+				padding-left: 0.5em;
+				padding-right: 0.5em;
+				border-radius: 0;
+				white-space: nowrap;
+			}
+
+			> button:last-of-type {
+				border-radius: 0 0.4em 0.4em 0;
+			}
 		}
-	}
 
-	.main-inputs {
-		> .input-container {
-			margin-bottom: 5px;
+		%input-container {
+			> label {
+				display: block;
+				margin-bottom: 0.4em;
+				font-weight: 600;
+				font-size: 14px;
+			}
 		}
-	}
 
-	.shield-container {
-		max-width: 100%;
-		overflow: auto;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		padding: 0.5em;
-		border-bottom: 1px solid $shade;
-	}
+		.input-container {
+			@extend %input-container;
+		}
 
-	.markdown-input--controller {
-		@extend %input-with-buttons-container;
-	}
+		.name-input {
+			@extend %padded-container;
+		}
 
-	.secret-input--controller {
-		@extend %input-with-buttons-container;
-	}
+		.fancy-inputs {
+			@extend %padded-container;
+			@extend %input-container;
 
-	.api-example {
-		border-top: 1px solid $shade;
+			> .markdown-input--controller {
+				margin-bottom: .3em;
+			}
+		}
 
-		> summary {
-			display: revert;
+		.main-inputs {
+			@extend %padded-container;
+
+			> .input-container {
+				margin-bottom: 5px;
+
+				input {
+					width: 100%;
+				}
+			}
+		}
+
+		.shield-container {
+			@extend %padded-container;
+
+			max-width: 100%;
+			overflow: auto;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 			padding: 0.5em;
-			cursor: pointer;
-			user-select: none;
+		}
 
-			&:hover {
-				text-decoration: underline;
-				background: $hover;
+		.markdown-input--controller {
+			@extend %input-with-buttons-container;
+		}
+
+		.secret-input--controller {
+			@extend %input-with-buttons-container;
+		}
+
+		.api-example {
+			border-top: 1px solid variables.$border;
+
+			> summary {
+				@extend %padded-container;
+
+				display: revert;
+				cursor: pointer;
+				user-select: none;
+
+				&:hover {
+					text-decoration: underline;
+					background: variables.$hover;
+				}
 			}
 		}
-	}
 
-	> img {
-		float: right;
+		> img {
+			float: right;
+		}
 	}
 }
