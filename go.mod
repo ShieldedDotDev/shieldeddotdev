@@ -2,7 +2,7 @@ module github.com/ShieldedDotDev/shieldeddotdev
 
 toolchain go1.24.2
 
-go 1.24
+go 1.24.0
 
 require (
 	github.com/caddyserver/certmagic v0.25.0
@@ -13,7 +13,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/narqo/go-badge v0.0.0-20230821190521-c9a75c019a59
 	golang.org/x/image v0.18.0 // indirect
-	golang.org/x/oauth2 v0.30.0
+	golang.org/x/oauth2 v0.31.0
 )
 
 require (
