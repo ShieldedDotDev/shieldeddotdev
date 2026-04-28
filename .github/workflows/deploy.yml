@@ -24,6 +24,8 @@ jobs:
         uses: actions/setup-node@v6
 
       - name: Build
+        env:
+          CGO_ENABLED: 0
         run: make deps clean release/linux_amd64/shielded
 
       - name: Install ssh keys
