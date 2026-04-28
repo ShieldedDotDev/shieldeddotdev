@@ -1,0 +1,38 @@
+on:
+  push:
+    tags:
+      - '**'
+  workflow_dispatch:
+
+name: Deploy
+
+jobs:
+  deploy:
+    name: Deploy to server
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: 'go.mod'
+
+      - name: Install Node
+        uses: actions/setup-node@v6
+
+      - name: Build
+        run: make deps clean release/linux_amd64/shielded
+
+      - name: Install ssh keys
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+
+      - name: Publish
+        run: |
+          scp -r release/linux_amd64/shielded ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:shielded_tmp
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "mv shielded_tmp shielded && sudo systemctl restart shielded"
