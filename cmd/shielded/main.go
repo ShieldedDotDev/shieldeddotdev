@@ -95,7 +95,7 @@ func main() {
 	wo.HandleFunc("/api/shield/{id:[0-9]+}", sah.HandleDELETE).Methods("DELETE")
 
 	wo.HandleFunc("/env", func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(map[string]interface{}{
+		json.NewEncoder(w).Encode(map[string]any{
 			"RootHost": rootHost,
 			"ApiHost":  apiHost,
 			"ImgHost":  imgHost,

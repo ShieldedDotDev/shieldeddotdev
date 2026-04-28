@@ -1,6 +1,6 @@
 module github.com/ShieldedDotDev/shieldeddotdev
 
-go 1.25.0
+go 1.26.2
 
 require (
 	github.com/caddyserver/certmagic v0.25.2
