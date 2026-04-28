@@ -1,0 +1,629 @@
+* {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+html {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+q, blockquote {
+  quotes: none;
+}
+
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+a img {
+  border: none;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+body, button, .home--app .github-login, input {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+input {
+  font-size: 14px;
+  padding: 6px 8px;
+  border: 1px solid #d1d9e0;
+  border-radius: 0.3em;
+}
+input:focus {
+  outline: 2px solid #006cd6;
+}
+
+button, .home--app .github-login {
+  background-color: #efefef;
+  color: #25292e;
+  font-size: 14px;
+  padding: 5px 16px;
+  font-weight: 500;
+  border: 1px solid #d1d9e0;
+  border-radius: 6px;
+  transition: background-color cubic-bezier(0, 0.5, 0, 1) 0.4s;
+}
+button:hover, .home--app .github-login:hover {
+  background-color: rgb(226.25, 226.25, 226.25);
+}
+button:active, .home--app .github-login:active {
+  background-color: #bfcae4;
+}
+button > .icon, .home--app .github-login > .icon {
+  font-size: 0.9em;
+  align-items: baseline;
+  filter: grayscale(1);
+  margin-right: 0.5em;
+}
+button.danger, .home--app .danger.github-login {
+  color: #d22937;
+}
+button.danger > .icon, .home--app .danger.github-login > .icon {
+  filter: grayscale(0);
+}
+button.primary, .home--app .primary.github-login {
+  background-color: #384;
+  color: #fff;
+  border: 1px solid #2a2;
+}
+button.primary:hover, .home--app .primary.github-login:hover {
+  background-color: rgb(44.0454545455, 117.4545454545, 58.7272727273);
+}
+
+.home--app .github-login {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid #d1d9e0;
+}
+.home--app .github-login:hover {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+}
+
+.home--app article.home-core > .getting-started, .dashboard--controller .shield--controller {
+  border: 1px solid #d1d9e0;
+  border-radius: 6px;
+}
+
+.dashboard--controller > .add-button {
+  display: block;
+  margin: 0 auto;
+  transform: scale(1.2);
+}
+.dashboard--controller > .add-button > .icon {
+  filter: grayscale(1) brightness(0) invert(1);
+}
+.dashboard--controller .no-shields {
+  text-align: center;
+  display: block;
+  margin-bottom: 2em;
+}
+.dashboard--controller .shield--controller {
+  display: grid;
+}
+@media screen and (min-width: 800px) {
+  .dashboard--controller .shield--controller {
+    grid-template-areas: "ni img" "mi fi" "api api" "bc bc";
+    grid-template-columns: 2fr 2fr;
+  }
+  .dashboard--controller .shield--controller > .main-inputs, .dashboard--controller .shield--controller > .name-input {
+    border-right: 1px solid rgba(0, 0, 0, 0.065);
+  }
+}
+@media screen and (max-width: 799px) {
+  .dashboard--controller .shield--controller {
+    grid-template-areas: "ni" "img" "mi" "fi" "api" "bc";
+  }
+}
+.dashboard--controller .shield--controller > .name-input {
+  grid-area: ni;
+}
+.dashboard--controller .shield--controller > .main-inputs {
+  grid-area: mi;
+}
+.dashboard--controller .shield--controller > .button-container {
+  grid-area: bc;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.dashboard--controller .shield--controller > .fancy-inputs {
+  grid-area: fi;
+}
+.dashboard--controller .shield--controller > .shield-container {
+  grid-area: img;
+}
+.dashboard--controller .shield--controller > .api-example {
+  grid-area: api;
+  background-color: rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 1px 0px rgba(0, 0, 0, 0.3);
+}
+.dashboard--controller .shield--controller {
+  padding: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.dashboard--controller .shield--controller input:focus, .dashboard--controller .shield--controller input:active, .dashboard--controller .shield--controller button:focus, .dashboard--controller .shield--controller button:active {
+  box-shadow: rgba(92, 114, 166, 0.6) 0 0 0 3px;
+  outline: none;
+}
+.dashboard--controller .shield--controller input:active, .dashboard--controller .shield--controller button:active {
+  box-shadow: rgba(92, 114, 166, 0.9) 0 0 0 3px;
+}
+.dashboard--controller .shield--controller input[type=color] {
+  padding: 0;
+}
+.dashboard--controller .shield--controller .button-container {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+.dashboard--controller .shield--controller .button-container > button {
+  margin: 0.1em;
+}
+.dashboard--controller .shield--controller .api-example > summary, .dashboard--controller .shield--controller .shield-container, .dashboard--controller .shield--controller .main-inputs, .dashboard--controller .shield--controller .fancy-inputs, .dashboard--controller .shield--controller .name-input, .dashboard--controller .shield--controller .button-container {
+  padding: 1em;
+}
+.dashboard--controller .shield--controller .secret-input--controller, .dashboard--controller .shield--controller .markdown-input--controller {
+  display: flex;
+}
+.dashboard--controller .shield--controller .secret-input--controller > input, .dashboard--controller .shield--controller .markdown-input--controller > input {
+  flex-grow: 1;
+}
+.dashboard--controller .shield--controller .secret-input--controller > button, .dashboard--controller .shield--controller .markdown-input--controller > button {
+  border-left: 0;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border-radius: 0;
+  white-space: nowrap;
+}
+.dashboard--controller .shield--controller .secret-input--controller > button:last-of-type, .dashboard--controller .shield--controller .markdown-input--controller > button:last-of-type {
+  border-radius: 0 0.4em 0.4em 0;
+}
+.dashboard--controller .shield--controller .fancy-inputs > label, .dashboard--controller .shield--controller .input-container > label {
+  display: block;
+  margin-bottom: 0.4em;
+  font-weight: 600;
+  font-size: 14px;
+}
+.dashboard--controller .shield--controller .fancy-inputs input, .dashboard--controller .shield--controller .input-container input {
+  width: 100%;
+}
+.dashboard--controller .shield--controller .fancy-inputs input[type=color], .dashboard--controller .shield--controller .input-container input[type=color] {
+  width: 5em;
+}
+.dashboard--controller .shield--controller .fancy-inputs > .markdown-input--controller {
+  margin-bottom: 0.3em;
+}
+.dashboard--controller .shield--controller .main-inputs > .input-container {
+  margin-bottom: 5px;
+}
+.dashboard--controller .shield--controller .shield-container {
+  max-width: 100%;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5em;
+}
+.dashboard--controller .shield--controller .api-example {
+  border-top: 1px solid #d1d9e0;
+}
+.dashboard--controller .shield--controller .api-example > summary {
+  display: revert;
+  cursor: pointer;
+  user-select: none;
+}
+.dashboard--controller .shield--controller .api-example > summary:hover {
+  text-decoration: underline;
+  background: rgb(173.5, 184.5, 210.5);
+}
+.dashboard--controller .shield--controller > img {
+  float: right;
+}
+
+.home--app article p {
+  margin: 0.6em 0;
+}
+.home--app article.callout p {
+  font-size: 1.6em;
+  font-weight: 600;
+  text-align: center;
+}
+.home--app article.api-examples {
+  text-align: left;
+}
+.home--app article.home-core {
+  display: grid;
+  grid-template: "welcome examples" "getting-started examples";
+  grid-template-columns: 7fr 4fr;
+  grid-gap: 1em;
+  align-items: baseline;
+}
+@media screen and (max-width: 800px) {
+  .home--app article.home-core {
+    grid-template: "welcome" "getting-started" "examples";
+  }
+}
+.home--app article.home-core > * {
+  padding: 2em;
+}
+.home--app article.home-core > .examples {
+  grid-area: examples;
+}
+.home--app article.home-core > .examples li {
+  padding: 0.4em 0;
+}
+.home--app article.home-core > .welcome {
+  grid-area: welcome;
+  text-align: center;
+}
+.home--app article.home-core > .getting-started {
+  grid-area: getting-started;
+  margin: 1em auto;
+  display: inline-block;
+  text-align: center;
+}
+.home--app article.home-core > .getting-started > h3 {
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+.home--app article.home-core > .getting-started > p {
+  margin: 1em 0;
+  font-size: 0.9em;
+}
+.home--app article.home-core > .getting-started > p:last-child {
+  margin-bottom: 0;
+}
+.home--app .github-login {
+  display: inline-block;
+  text-decoration: none;
+  padding: 1em;
+  padding-left: 3em;
+  font-size: 1.2em;
+  border-radius: 0.5em;
+  background: #384 url("/img/github.svg");
+  background-size: 1.5em;
+  background-repeat: no-repeat;
+  background-position: 1em center;
+  color: #fff;
+}
+.home--app .github-login:hover {
+  background-color: rgb(44.0454545455, 117.4545454545, 58.7272727273);
+}
+
+strong {
+  font-weight: bold;
+}
+
+h6, h5, h4, h3, h2, h1 {
+  line-height: 1.42;
+  font-weight: 500;
+}
+
+h1 {
+  font-size: 2.1867647056em;
+}
+
+h2 {
+  font-size: 1.8220588232em;
+}
+
+h3 {
+  font-size: 1.5323529408em;
+}
+
+h4 {
+  font-size: 1.3176470584em;
+}
+
+h5 {
+  font-size: 1.177941176em;
+}
+
+h6 {
+  font-size: 1.1132352936em;
+}
+
+body {
+  min-height: 100vh;
+  tab-size: 4;
+  display: grid;
+  grid-template-rows: min-content auto min-content;
+  background: white;
+  color: #2a2a2a;
+}
+body > header {
+  margin: 1em auto;
+  border-radius: 10px;
+  font-size: 2em;
+  font-weight: bold;
+  background: linear-gradient(0deg, rgba(187, 187, 187, 0.1), transparent), #555;
+  color: white;
+  overflow: hidden;
+  display: grid;
+}
+@media screen and (min-width: 800px) {
+  body > header {
+    grid-template-rows: 100%;
+    grid-template-areas: "title subtitle";
+  }
+}
+@media screen and (max-width: 799px) {
+  body > header {
+    grid-template-areas: "title" "subtitle";
+    min-width: 90vw;
+  }
+}
+body > header > * {
+  padding: 0.5em;
+  height: 100%;
+  text-align: center;
+}
+body > header > h2, body > header > h1 {
+  font-family: DejaVu Sans, Verdana, Geneva, sans-serif;
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1;
+  text-shadow: 0px 2px rgba(1, 1, 1, 0.2);
+}
+body > header > h1 {
+  grid-area: title;
+  padding-left: 1em;
+}
+@media screen and (min-width: 800px) {
+  body > header > h1 {
+    text-align: right;
+  }
+}
+body > header > h1 > a {
+  color: inherit;
+  text-decoration: none;
+}
+body > header > h1 > a:hover {
+  text-decoration: underline;
+}
+body > header > h2 {
+  grid-area: subtitle;
+  padding-right: 1em;
+  background: linear-gradient(0deg, rgba(187, 187, 187, 0.1), transparent), #5c72a6;
+  border-left: 3px solid rgba(255, 255, 255, 0.1);
+}
+@media screen and (min-width: 800px) {
+  body > header > h2 {
+    text-align: left;
+  }
+}
+@media screen and (max-width: 799px) {
+  body > header > h2 {
+    font-size: 0.7em;
+  }
+}
+body > main > section {
+  padding: 1em 0;
+}
+@media screen and (max-width: 811px) {
+  body > main > section {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+}
+body > main > section > article {
+  max-width: 800px;
+  margin: 0 auto;
+}
+body > main > section > article > h3 {
+  padding: 0 0 0.5em;
+  text-align: center;
+}
+body > footer {
+  font-size: 0.8em;
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #d1d9e0;
+}
+body > footer a {
+  color: #2a2a2a;
+  padding: 10px;
+  text-decoration: none;
+}
+body > footer a:hover {
+  text-decoration: underline;
+}
+
+p {
+  line-height: 1.4em;
+}
+
+::selection {
+  background: rgb(223.9523809524, 228.1428571429, 238.0476190476);
+  color: white;
+  text-shadow: none;
+}
+
+body, button, input {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+input {
+  font-size: 14px;
+  padding: 6px 8px;
+  border: 1px solid #d1d9e0;
+  border-radius: 0.3em;
+}
+
+input:focus {
+  outline: 2px solid #006cd6;
+}
+
+button {
+  background-color: #efefef;
+  color: #25292e;
+  font-size: 14px;
+  padding: 5px 16px;
+  font-weight: 500;
+  border: 1px solid #d1d9e0;
+  border-radius: 6px;
+  transition: background-color cubic-bezier(0, 0.5, 0, 1) 0.4s;
+}
+
+button:hover {
+  background-color: rgb(226.25, 226.25, 226.25);
+}
+
+button:active {
+  background-color: #bfcae4;
+}
+
+button > .icon {
+  font-size: 0.9em;
+  align-items: baseline;
+  filter: grayscale(1);
+  margin-right: 0.5em;
+}
+
+button.danger {
+  color: #d22937;
+}
+
+button.danger > .icon {
+  filter: grayscale(0);
+}
+
+button.primary {
+  background-color: #384;
+  color: #fff;
+  border: 1px solid #2a2;
+}
+
+button.primary:hover {
+  background-color: rgb(44.0454545455, 117.4545454545, 58.7272727273);
+}
+
+.home--app .api-example--controller {
+  border: 1px solid #d1d9e0;
+  border-radius: 6px;
+}
+
+pre,
+code {
+  background: #555;
+  color: white;
+  font-family: Consolas, "Courier New", Courier, monospace;
+}
+
+pre {
+  line-height: 1.4em;
+  font-family: Menlo, Monaco, Courier New, monospace;
+  white-space: pre;
+  white-space: pre-wrap;
+  white-space: pre-line;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -hp-pre-wrap;
+  word-wrap: break-word;
+  font-size: 0.8rem;
+  padding: 1.125em;
+}
+
+pre > code {
+  white-space: pre-wrap;
+  background: transparent;
+}
+
+code {
+  font-family: Menlo, Monaco, Courier New, monospace;
+}
+
+.api-example--controller {
+  display: grid;
+  grid-template-rows: 1fr;
+  border-radius: 5px;
+  border: 1px solid #5c72a6;
+  overflow: hidden;
+}
+
+.api-example--controller ul,
+.api-example--controller li {
+  margin: 0;
+  padding: 0;
+  display: block;
+  list-style: none;
+}
+
+.api-example--controller ul {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  min-width: 80px;
+  text-align: center;
+}
+
+.api-example--controller li {
+  border-left: 1px solid #d1d9e0;
+}
+
+.api-example--controller li:first-child {
+  border-left: none;
+}
+
+.api-example--controller li {
+  padding: 1em;
+  cursor: pointer;
+  background: white;
+}
+
+.api-example--controller li:hover {
+  border-left: none;
+  background: rgb(173.5, 184.5, 210.5);
+}
+
+.api-example--controller li.selected {
+  border-left: none;
+  cursor: default;
+  box-shadow: none;
+  background: #5c72a6;
+  color: white;
+}
+
+/*# sourceMappingURL=style.css.map */
