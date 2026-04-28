@@ -1,0 +1,56 @@
+package pages
+
+import (
+	"net/url"
+)
+
+type Hosts struct {
+	RootHost string
+	ApiHost  string
+	ImgHost  string
+}
+
+func dnsPrefetchURL(host string) templ.SafeURL {
+	return templ.URL("//" + host)
+}
+
+func shieldURL(imgHost, title, text, color string) templ.SafeURL {
+	return templ.URL(
+		"https://" + imgHost + "/s?title=" + url.QueryEscape(title) +
+			"&text=" + url.QueryEscape(text) +
+			"&color=" + url.QueryEscape(color),
+	)
+}
+
+func shieldAlt(title, text string) string {
+	return title + " : " + text
+}
+
+templ Head(hosts Hosts) {
+	<meta charset="utf-8"/>
+	<link rel="dns-prefetch" href={ dnsPrefetchURL(hosts.ApiHost) }/>
+	<link rel="dns-prefetch" href={ dnsPrefetchURL(hosts.ImgHost) }/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+	<meta name="theme-color" content="#5c72a6"/>
+	<link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon"/>
+	<title>Shielded.dev</title>
+	<link rel="stylesheet" href="style/style.css" type="text/css"/>
+}
+
+templ Header() {
+	<header>
+		<h1><a href="/">Shielded.dev</a></h1>
+		<h2>API Driven README Shields</h2>
+	</header>
+}
+
+templ Footer() {
+	<footer>
+		<a href="https://github.com/shieldedDotDev/">Shielded.dev on GitHub</a>
+		<a href="/privacy.html">Privacy Policy</a>
+	</footer>
+}
+
+templ Shield(hosts Hosts, title, text, color string) {
+	<img src={ shieldURL(hosts.ImgHost, title, text, color) } alt={ shieldAlt(title, text) }/>
+}

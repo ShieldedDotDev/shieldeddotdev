@@ -1,0 +1,100 @@
+package pages
+
+templ IndexPage(hosts Hosts) {
+	<!doctype html>
+	<html>
+		<head>
+			@Head(hosts)
+		</head>
+		<body class="home--app">
+			@Header()
+			<main>
+				<section>
+					<article class="callout">
+						<p>Real-time README badges driven by your own data</p>
+					</article>
+				</section>
+				<section>
+					<article class="home-core">
+						<div class="welcome">
+							<h3>Welcome to Shielded.dev</h3>
+							<p>Shielded.dev is a service that allows you to create dynamic README badge shields for your projects.</p>
+							<p>It's entirely free and open source.</p>
+						</div>
+						<div class="getting-started">
+							<h3>Get started</h3>
+							<a href="/github/login" class="github-login">Sign in with GitHub</a>
+							<p>When you sign in, we’ll set two simple cookies to make things work. One helps us talk to GitHub, and the other confirms you’re signed in.</p>
+							<p>That’s it — no tracking, no ads.</p>
+						</div>
+						<div class="examples">
+							<h3>Examples</h3>
+							<ul>
+								<li>
+									@Shield(hosts, "Build", "passing", "28a3df")
+								</li>
+								<li>
+									@Shield(hosts, "Coverage", "100%", "28a3df")
+								</li>
+								<li>
+									@Shield(hosts, "Quality", "A+", "green")
+								</li>
+								<li>
+									@Shield(hosts, "License", "MIT", "428F7E")
+								</li>
+								<li>
+									@Shield(hosts, "Stable", "1.2.34", "28a3df")
+									@Shield(hosts, "Latest", "1.2.34", "28a3df")
+									@Shield(hosts, "Unstable", "8.67.5-dev", "e68718")
+								</li>
+								<li>
+									@Shield(hosts, "Daily Downloads", "128", "28a3df")
+								</li>
+								<li>
+									@Shield(hosts, "Issues", "5", "99004d")
+								</li>
+								<li>
+									@Shield(hosts, "Pull Requests", "1", "99004d")
+								</li>
+								<li>
+									@Shield(hosts, "Bundle Size", "1.2mb", "5c72a6")
+								</li>
+								<li>
+									@Shield(hosts, "Contributors", "13", "5c72a6")
+								</li>
+								<li>
+									@Shield(hosts, "Commits", "2/week", "28a3df")
+								</li>
+								<li>
+									@Shield(hosts, "Releases", "1/month", "28a3df")
+								</li>
+							</ul>
+						</div>
+					</article>
+				</section>
+				<section>
+					<article class="api-examples">
+						<h3>API examples</h3>
+						<div id="api-example"></div>
+					</article>
+				</section>
+				<section>
+					<article class="open-source">
+						<h3>Open Source</h3>
+						<p>Interested in reviewing the code or hosting your own instance? The complete source is available on GitHub.</p>
+						<p>Visit <a href="https://github.com/shieldedDotDev/">Shielded.dev on GitHub</a> to learn more.</p>
+						<p>Shielded.dev is built with Go and TypeScript using a MySQL database.</p>
+					</article>
+				</section>
+			</main>
+			<script type="module">
+				import { Home } from '/main.js';
+
+				document.addEventListener('DOMContentLoaded', function () {
+					Home(document.getElementById('api-example'));
+				});
+			</script>
+			@Footer()
+		</body>
+	</html>
+}
