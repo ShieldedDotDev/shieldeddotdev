@@ -1,0 +1,28 @@
+package pages
+
+templ DashboardPage() {
+	<!doctype html>
+	<html>
+		<head>
+			@Head()
+		</head>
+		<body class="dashboard--app">
+			@Header()
+			<main>
+				<section>
+					<article id="dashboard">
+						<h3>Dashboard</h3>
+					</article>
+				</section>
+			</main>
+			<script type="module">
+				import { Dashboard } from '/main.js';
+
+				document.addEventListener('DOMContentLoaded', function () {
+					Dashboard(document.getElementById('dashboard'));
+				});
+			</script>
+			@Footer()
+		</body>
+	</html>
+}

@@ -12,16 +12,20 @@ LDFLAGS="-X main.buildStamp=$(STAMP) -X main.buildUser=$(USER) -X main.buildHash
 
 TEMPLATES_DIR = ./pages
 STATIC_DIR = ./static
-STATIC_SOURCES = $(STATIC_DIR)/style/style.css $(STATIC_DIR)/main.js $(STATIC_DIR)/index.html $(STATIC_DIR)/dashboard.html
+STATIC_SOURCES = $(STATIC_DIR)/style/style.css $(STATIC_DIR)/main.js
 RELEASE_DIR = ./release
 DIST_DIR = ./dist
 
 .PHONY: build
-build: $(BIN)
+build: generate $(BIN)
 
 .PHONY: deps
 deps:
 	npm install
+
+.PHONY: generate
+generate:
+	go generate ./...
 
 .PHONY: clean
 clean:
@@ -30,21 +34,21 @@ clean:
 	-rm -rf $(RELEASE_DIR) $(DIST_DIR)
 	find ts -name "*.js" -type f -print0 | xargs -0 /bin/rm -f
 
-$(BIN): go.mod go.sum $(STATIC_SOURCES)
+$(BIN): generate go.mod go.sum $(STATIC_SOURCES)
 	echo $(LDFLAGS)
 	go build -tags $(BUILDTAGS) -ldflags $(LDFLAGS) -o $(BIN) ./cmd/shielded
 
 
-$(RELEASE_DIR)/linux_amd64/$(BIN): go.mod go.sum $(STATIC_SOURCES)
+$(RELEASE_DIR)/linux_amd64/$(BIN): generate go.mod go.sum $(STATIC_SOURCES)
 	GOOS=linux GOARCH=amd64 go build -tags $(BUILDTAGS) -ldflags $(LDFLAGS) -o $(RELEASE_DIR)/linux_amd64/$(BIN) ./cmd/shielded
 
-$(RELEASE_DIR)/darwin_amd64/$(BIN): go.mod go.sum $(STATIC_SOURCES)
+$(RELEASE_DIR)/darwin_amd64/$(BIN): generate go.mod go.sum $(STATIC_SOURCES)
 	GOOS=darwin GOARCH=amd64 go build -tags $(BUILDTAGS) -ldflags $(LDFLAGS) -o $(RELEASE_DIR)/darwin_amd64/$(BIN) ./cmd/shielded
 
-$(RELEASE_DIR)/darwin_arm64/$(BIN): go.mod go.sum $(STATIC_SOURCES)
+$(RELEASE_DIR)/darwin_arm64/$(BIN): generate go.mod go.sum $(STATIC_SOURCES)
 	GOOS=darwin GOARCH=arm64 go build -tags $(BUILDTAGS) -ldflags $(LDFLAGS) -o $(RELEASE_DIR)/darwin_arm64/$(BIN) ./cmd/shielded
 
-$(RELEASE_DIR)/windows_amd64/$(BIN).exe: go.mod go.sum $(STATIC_SOURCES)
+$(RELEASE_DIR)/windows_amd64/$(BIN).exe: generate go.mod go.sum $(STATIC_SOURCES)
 	GOOS=windows GOARCH=amd64 go build -tags $(BUILDTAGS) -ldflags $(LDFLAGS) -o $(RELEASE_DIR)/windows_amd64/$(BIN).exe ./cmd/shielded
 
 .PHONY: $(RELEASE_DIR)
@@ -69,7 +73,3 @@ $(STATIC_DIR)/style/style.css: $(shell find scss -name "*.scss")
 
 $(STATIC_DIR)/main.js: $(shell find ts -name "*.ts") rollup.config.mjs tsconfig.json
 	npx rollup --config rollup.config.mjs
-
-$(STATIC_DIR)/index.html $(STATIC_DIR)/dashboard.html: $(shell find $(TEMPLATES_DIR) -name "*.php")
-	$(foreach file, $(wildcard $(TEMPLATES_DIR)/*.html.php), php $(file) > $(STATIC_DIR)/$$(basename $(file) | sed 's/\.[^.]*$$//'); )
-	npx html-minifier-terser --input-dir static --output-dir static --file-ext html --collapse-whitespace --conservative-collapse

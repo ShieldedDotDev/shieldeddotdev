@@ -1,0 +1,48 @@
+package pages
+
+import (
+	"net/url"
+
+	gotempl "github.com/a-h/templ"
+)
+
+func shieldURL(title, text, color string) gotempl.SafeURL {
+	return gotempl.URL(
+		"https://img.shielded.dev/s?title=" + url.QueryEscape(title) +
+			"&text=" + url.QueryEscape(text) +
+			"&color=" + url.QueryEscape(color),
+	)
+}
+
+func shieldAlt(title, text string) string {
+	return title + " : " + text
+}
+
+templ Head() {
+	<meta charset="utf-8"/>
+	<link rel="dns-prefetch" href="//api.shielded.dev"/>
+	<link rel="dns-prefetch" href="//img.shielded.dev"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+	<meta name="theme-color" content="#5c72a6"/>
+	<link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon"/>
+	<title>Shielded.dev</title>
+	<link rel="stylesheet" href="style/style.css" type="text/css"/>
+}
+
+templ Header() {
+	<header>
+		<h1><a href="/">Shielded.dev</a></h1>
+		<h2>API Driven README Shields</h2>
+	</header>
+}
+
+templ Footer() {
+	<footer>
+		<a href="https://github.com/shieldedDotDev/">Shielded.dev on GitHub</a>
+		<a href="/privacy.html">Privacy Policy</a>
+	</footer>
+}
+
+templ Shield(title, text, color string) {
+	<img src={ shieldURL(title, text, color) } alt={ shieldAlt(title, text) }/>
+}
