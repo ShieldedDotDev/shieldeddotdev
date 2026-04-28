@@ -72,11 +72,17 @@ func main() {
 	io.Handle("/s/{pid:[a-z0-9]{3,128}}", shieldeddotdev.NewShieldHandler(sm))
 	io.Handle("/s", &shieldeddotdev.StaticShieldHandler{})
 
+	hosts := pages.Hosts{
+		RootHost: rootHost,
+		ApiHost:  apiHost,
+		ImgHost:  imgHost,
+	}
+
 	wo := ro.Host(rootHost).Subrouter()
-	wo.Handle("/", templ.Handler(pages.IndexPage())).Methods(http.MethodGet, http.MethodHead)
-	wo.Handle("/index.html", templ.Handler(pages.IndexPage())).Methods(http.MethodGet, http.MethodHead)
-	wo.Handle("/dashboard.html", templ.Handler(pages.DashboardPage())).Methods(http.MethodGet, http.MethodHead)
-	wo.Handle("/privacy.html", templ.Handler(pages.PrivacyPage())).Methods(http.MethodGet, http.MethodHead)
+	wo.Handle("/", templ.Handler(pages.IndexPage(hosts))).Methods(http.MethodGet, http.MethodHead)
+	wo.Handle("/index.html", templ.Handler(pages.IndexPage(hosts))).Methods(http.MethodGet, http.MethodHead)
+	wo.Handle("/dashboard.html", templ.Handler(pages.DashboardPage(hosts))).Methods(http.MethodGet, http.MethodHead)
+	wo.Handle("/privacy.html", templ.Handler(pages.PrivacyPage(hosts))).Methods(http.MethodGet, http.MethodHead)
 
 	uuu, err := uuid.NewV4()
 	if err != nil {

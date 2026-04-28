@@ -8,7 +8,7 @@ package pages
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func IndexPage() templ.Component {
+func IndexPage(hosts Hosts) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -33,7 +33,7 @@ func IndexPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Head().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Head(hosts).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -49,7 +49,7 @@ func IndexPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Shield("Build", "passing", "28a3df").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Shield(hosts, "Build", "passing", "28a3df").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -57,7 +57,7 @@ func IndexPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Shield("Coverage", "100%", "28a3df").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Shield(hosts, "Coverage", "100%", "28a3df").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -65,7 +65,7 @@ func IndexPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Shield("Quality", "A+", "green").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Shield(hosts, "Quality", "A+", "green").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -73,7 +73,7 @@ func IndexPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Shield("License", "MIT", "428F7E").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Shield(hosts, "License", "MIT", "428F7E").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -81,15 +81,15 @@ func IndexPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Shield("Stable", "1.2.34", "28a3df").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Shield(hosts, "Stable", "1.2.34", "28a3df").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Shield("Latest", "1.2.34", "28a3df").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Shield(hosts, "Latest", "1.2.34", "28a3df").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Shield("Unstable", "8.67.5-dev", "e68718").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Shield(hosts, "Unstable", "8.67.5-dev", "e68718").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -97,7 +97,7 @@ func IndexPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Shield("Daily Downloads", "128", "28a3df").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Shield(hosts, "Daily Downloads", "128", "28a3df").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -105,7 +105,7 @@ func IndexPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Shield("Issues", "5", "99004d").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Shield(hosts, "Issues", "5", "99004d").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -113,7 +113,7 @@ func IndexPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Shield("Pull Requests", "1", "99004d").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Shield(hosts, "Pull Requests", "1", "99004d").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -121,7 +121,7 @@ func IndexPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Shield("Bundle Size", "1.2mb", "5c72a6").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Shield(hosts, "Bundle Size", "1.2mb", "5c72a6").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -129,7 +129,7 @@ func IndexPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Shield("Contributors", "13", "5c72a6").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Shield(hosts, "Contributors", "13", "5c72a6").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -137,7 +137,7 @@ func IndexPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Shield("Commits", "2/week", "28a3df").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Shield(hosts, "Commits", "2/week", "28a3df").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -145,7 +145,7 @@ func IndexPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = Shield("Releases", "1/month", "28a3df").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Shield(hosts, "Releases", "1/month", "28a3df").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

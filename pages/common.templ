@@ -6,9 +6,19 @@ import (
 	gotempl "github.com/a-h/templ"
 )
 
-func shieldURL(title, text, color string) gotempl.SafeURL {
+type Hosts struct {
+	RootHost string
+	ApiHost  string
+	ImgHost  string
+}
+
+func dnsPrefetchURL(host string) gotempl.SafeURL {
+	return gotempl.URL("//" + host)
+}
+
+func shieldURL(imgHost, title, text, color string) gotempl.SafeURL {
 	return gotempl.URL(
-		"https://img.shielded.dev/s?title=" + url.QueryEscape(title) +
+		"https://" + imgHost + "/s?title=" + url.QueryEscape(title) +
 			"&text=" + url.QueryEscape(text) +
 			"&color=" + url.QueryEscape(color),
 	)
@@ -18,10 +28,10 @@ func shieldAlt(title, text string) string {
 	return title + " : " + text
 }
 
-templ Head() {
+templ Head(hosts Hosts) {
 	<meta charset="utf-8"/>
-	<link rel="dns-prefetch" href="//api.shielded.dev"/>
-	<link rel="dns-prefetch" href="//img.shielded.dev"/>
+	<link rel="dns-prefetch" href={ dnsPrefetchURL(hosts.ApiHost) }/>
+	<link rel="dns-prefetch" href={ dnsPrefetchURL(hosts.ImgHost) }/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 	<meta name="theme-color" content="#5c72a6"/>
 	<link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon"/>
@@ -43,6 +53,6 @@ templ Footer() {
 	</footer>
 }
 
-templ Shield(title, text, color string) {
-	<img src={ shieldURL(title, text, color) } alt={ shieldAlt(title, text) }/>
+templ Shield(hosts Hosts, title, text, color string) {
+	<img src={ shieldURL(hosts.ImgHost, title, text, color) } alt={ shieldAlt(title, text) }/>
 }

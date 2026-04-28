@@ -1,10 +1,10 @@
 package pages
 
-templ IndexPage() {
+templ IndexPage(hosts Hosts) {
 	<!doctype html>
 	<html>
 		<head>
-			@Head()
+			@Head(hosts)
 		</head>
 		<body class="home--app">
 			@Header()
@@ -31,42 +31,42 @@ templ IndexPage() {
 							<h3>Examples</h3>
 							<ul>
 								<li>
-									@Shield("Build", "passing", "28a3df")
+									@Shield(hosts, "Build", "passing", "28a3df")
 								</li>
 								<li>
-									@Shield("Coverage", "100%", "28a3df")
+									@Shield(hosts, "Coverage", "100%", "28a3df")
 								</li>
 								<li>
-									@Shield("Quality", "A+", "green")
+									@Shield(hosts, "Quality", "A+", "green")
 								</li>
 								<li>
-									@Shield("License", "MIT", "428F7E")
+									@Shield(hosts, "License", "MIT", "428F7E")
 								</li>
 								<li>
-									@Shield("Stable", "1.2.34", "28a3df")
-									@Shield("Latest", "1.2.34", "28a3df")
-									@Shield("Unstable", "8.67.5-dev", "e68718")
+									@Shield(hosts, "Stable", "1.2.34", "28a3df")
+									@Shield(hosts, "Latest", "1.2.34", "28a3df")
+									@Shield(hosts, "Unstable", "8.67.5-dev", "e68718")
 								</li>
 								<li>
-									@Shield("Daily Downloads", "128", "28a3df")
+									@Shield(hosts, "Daily Downloads", "128", "28a3df")
 								</li>
 								<li>
-									@Shield("Issues", "5", "99004d")
+									@Shield(hosts, "Issues", "5", "99004d")
 								</li>
 								<li>
-									@Shield("Pull Requests", "1", "99004d")
+									@Shield(hosts, "Pull Requests", "1", "99004d")
 								</li>
 								<li>
-									@Shield("Bundle Size", "1.2mb", "5c72a6")
+									@Shield(hosts, "Bundle Size", "1.2mb", "5c72a6")
 								</li>
 								<li>
-									@Shield("Contributors", "13", "5c72a6")
+									@Shield(hosts, "Contributors", "13", "5c72a6")
 								</li>
 								<li>
-									@Shield("Commits", "2/week", "28a3df")
+									@Shield(hosts, "Commits", "2/week", "28a3df")
 								</li>
 								<li>
-									@Shield("Releases", "1/month", "28a3df")
+									@Shield(hosts, "Releases", "1/month", "28a3df")
 								</li>
 							</ul>
 						</div>
