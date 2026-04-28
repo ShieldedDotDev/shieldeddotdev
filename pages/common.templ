@@ -2,8 +2,6 @@ package pages
 
 import (
 	"net/url"
-
-	gotempl "github.com/a-h/templ"
 )
 
 type Hosts struct {
@@ -12,12 +10,12 @@ type Hosts struct {
 	ImgHost  string
 }
 
-func dnsPrefetchURL(host string) gotempl.SafeURL {
-	return gotempl.URL("//" + host)
+func dnsPrefetchURL(host string) templ.SafeURL {
+	return templ.URL("//" + host)
 }
 
-func shieldURL(imgHost, title, text, color string) gotempl.SafeURL {
-	return gotempl.URL(
+func shieldURL(imgHost, title, text, color string) templ.SafeURL {
+	return templ.URL(
 		"https://" + imgHost + "/s?title=" + url.QueryEscape(title) +
 			"&text=" + url.QueryEscape(text) +
 			"&color=" + url.QueryEscape(color),

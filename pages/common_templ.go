@@ -10,8 +10,6 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import (
 	"net/url"
-
-	gotempl "github.com/a-h/templ"
 )
 
 type Hosts struct {
@@ -20,12 +18,12 @@ type Hosts struct {
 	ImgHost  string
 }
 
-func dnsPrefetchURL(host string) gotempl.SafeURL {
-	return gotempl.URL("//" + host)
+func dnsPrefetchURL(host string) templ.SafeURL {
+	return templ.URL("//" + host)
 }
 
-func shieldURL(imgHost, title, text, color string) gotempl.SafeURL {
-	return gotempl.URL(
+func shieldURL(imgHost, title, text, color string) templ.SafeURL {
+	return templ.URL(
 		"https://" + imgHost + "/s?title=" + url.QueryEscape(title) +
 			"&text=" + url.QueryEscape(text) +
 			"&color=" + url.QueryEscape(color),
@@ -64,7 +62,7 @@ func Head(hosts Hosts) templ.Component {
 		var templ_7745c5c3_Var2 templ.SafeURL
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(dnsPrefetchURL(hosts.ApiHost))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/common.templ`, Line: 33, Col: 62}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/common.templ`, Line: 31, Col: 62}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -77,7 +75,7 @@ func Head(hosts Hosts) templ.Component {
 		var templ_7745c5c3_Var3 templ.SafeURL
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs(dnsPrefetchURL(hosts.ImgHost))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/common.templ`, Line: 34, Col: 62}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/common.templ`, Line: 32, Col: 62}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -177,7 +175,7 @@ func Shield(hosts Hosts, title, text, color string) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(shieldURL(hosts.ImgHost, title, text, color))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/common.templ`, Line: 57, Col: 56}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/common.templ`, Line: 55, Col: 56}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -190,7 +188,7 @@ func Shield(hosts Hosts, title, text, color string) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(shieldAlt(title, text))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/common.templ`, Line: 57, Col: 87}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/common.templ`, Line: 55, Col: 87}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
