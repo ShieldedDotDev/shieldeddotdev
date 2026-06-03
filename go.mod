@@ -16,7 +16,7 @@ require (
 
 require (
 	github.com/CAFxX/httpcompression v0.0.9
-	github.com/a-h/templ v0.3.1001
+	github.com/a-h/templ v0.3.1020
 	github.com/google/go-github/v43 v43.0.0
 )
 
