@@ -61,7 +61,7 @@ $(RELEASE_DIR): clean $(RELEASE_DIR)/linux_amd64/$(BIN) $(RELEASE_DIR)/darwin_am
 	
 .PHONY: lint
 lint:
-	./node_modules/.bin/tslint -c tslint.json ts/**/*.ts --fix 
+	./node_modules/.bin/oxlint -c oxlint.config.ts ts/
 
 .PHONY: debug
 debug: clean $(STATIC_SOURCES) $(STATIC_DIR)/main.js
