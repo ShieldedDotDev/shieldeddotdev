@@ -17,7 +17,7 @@
     "@rollup/plugin-typescript": "^12.3.0",
     "html-minifier-terser": "^7.2.0",
     "mustache": "^4.2.0",
-    "rollup": "^4.61.1",
+    "rollup": "^4.62.2",
     "sass": "^1.101.0",
     "tslint": "^6.1.3",
     "typescript": "^5.9.3"
