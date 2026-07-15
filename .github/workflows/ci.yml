@@ -16,7 +16,7 @@ jobs:
           go-version-file: 'go.mod'
 
       - name: Install Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
 
       - name: Install Dependencies
         run: make deps
