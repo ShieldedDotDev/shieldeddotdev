@@ -2,15 +2,17 @@ import { AbstractBaseController } from "../AbstractController";
 import { EnvInterface } from "../api/env";
 import { isRequestError } from "../api/request";
 import { ShieldsModel } from "../model/ShieldsModel";
+import { UserAPITokensModel } from "../model/UserAPITokensModel";
 import { ErrorDialogController } from "./ErrorDialogController";
 import { ShieldController, ShieldImgRouter } from "./ShieldController";
+import { UserAPITokensController } from "./UserAPITokensController";
 
 export class DashboardController extends AbstractBaseController {
 
 	private addBtn = document.createElement('button');
 	private errDialog = new ErrorDialogController();
 
-	constructor(private model: ShieldsModel, private env: EnvInterface, private imgr : ShieldImgRouter) {
+	constructor(private model: ShieldsModel, tokensModel: UserAPITokensModel, private env: EnvInterface, private imgr : ShieldImgRouter) {
 		super(document.createElement('div'), 'dashboard');
 
 		this.container.append(
@@ -36,6 +38,8 @@ export class DashboardController extends AbstractBaseController {
 				window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 			}, 100);
 		});
+
+		(new UserAPITokensController(tokensModel)).attach(this.container);
 
 		this.render();
 	}

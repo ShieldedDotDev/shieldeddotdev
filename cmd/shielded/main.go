@@ -59,6 +59,7 @@ func main() {
 
 	um := model.NewUserMapper(db)
 	sm := model.NewShieldMapper(db)
+	tm := model.NewUserAPITokenMapper(db)
 
 	ro := mux.NewRouter()
 	ro.PathPrefix("/").Host("www." + rootHost).Handler(
@@ -107,6 +108,13 @@ func main() {
 	sah := shieldeddotdev.NewDashboardShieldApiHandler(sm, jwta)
 	wo.HandleFunc("/api/shield/{id:[0-9]+}", sah.HandlePUT).Methods("PUT")
 	wo.HandleFunc("/api/shield/{id:[0-9]+}", sah.HandleDELETE).Methods("DELETE")
+
+	tih := shieldeddotdev.NewDashboardUserAPITokenIndexHandler(tm, jwta)
+	wo.HandleFunc("/api/tokens", tih.HandleGET).Methods("GET")
+	wo.HandleFunc("/api/tokens", tih.HandlePOST).Methods("POST")
+
+	th := shieldeddotdev.NewDashboardUserAPITokenHandler(tm, jwta)
+	wo.HandleFunc("/api/token/{id:[0-9]+}", th.HandleDELETE).Methods("DELETE")
 
 	wo.HandleFunc("/env", func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]any{

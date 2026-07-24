@@ -1,9 +1,11 @@
 import { AuthedApi } from "./api/authed";
 import { EnvApi } from "./api/env";
 import { ShieldsApi } from "./api/shields";
+import { UserAPITokensApi } from "./api/tokens";
 import { DashboardController } from "./Controllers/DashboardController";
 import { ShieldImgRouter } from "./Controllers/ShieldController";
 import { ShieldsModel } from "./model/ShieldsModel";
+import { UserAPITokensModel } from "./model/UserAPITokensModel";
 
 export async function Dashboard(elm: HTMLElement) {
 	const authApi = new AuthedApi();
@@ -17,7 +19,9 @@ export async function Dashboard(elm: HTMLElement) {
 
 	const sapi = new ShieldsApi();
 	const sm = new ShieldsModel(sapi);
-	const dc = new DashboardController(sm, env, imgr);
+	const tokensApi = new UserAPITokensApi();
+	const tokensModel = new UserAPITokensModel(tokensApi);
+	const dc = new DashboardController(sm, tokensModel, env, imgr);
 	dc.attach(elm);
 
 	sm.shieldEventEmitter.add(() => {
