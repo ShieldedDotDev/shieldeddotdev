@@ -11,7 +11,10 @@ import (
 	"unicode/utf8"
 )
 
-const MaxUserAPITokenDescriptionLength = 255
+const (
+	MaxUserAPITokenDescriptionLength = 255
+	UserAPITokenPrefix               = "sdu_"
+)
 
 var (
 	ErrUserAPITokenDescriptionRequired = errors.New("API token description is required")
@@ -168,6 +171,6 @@ func newUserAPITokenSecret() (string, [sha256.Size]byte, error) {
 		return "", [sha256.Size]byte{}, err
 	}
 
-	plainToken := "sdt_" + base64.RawURLEncoding.EncodeToString(secret)
+	plainToken := UserAPITokenPrefix + base64.RawURLEncoding.EncodeToString(secret)
 	return plainToken, sha256.Sum256([]byte(plainToken)), nil
 }
