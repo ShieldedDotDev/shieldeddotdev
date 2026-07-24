@@ -269,7 +269,7 @@ jobs:
           color: ${JSON.stringify(color)}`;
 }
 
-const shieldAPIIDPattern = /^[a-z0-9-]{5,64}$/;
+const userShieldIDPattern = /^[a-z0-9-]{5,64}$/;
 const apiExamples = [
     ["GitHub Action", gitHubActionExample],
     ["Curl", curlExample],
@@ -369,7 +369,7 @@ function ShieldForm({ shield, env, onSave, onDelete }) {
             clearTimeout(saveTimeout.current);
             saveTimeout.current = null;
         }
-        if (next.APIID !== undefined && next.APIID !== "" && !shieldAPIIDPattern.test(next.APIID)) {
+        if (next.UserShieldID !== undefined && next.UserShieldID !== "" && !userShieldIDPattern.test(next.UserShieldID)) {
             return;
         }
         saveTimeout.current = setTimeout(() => {
@@ -384,7 +384,7 @@ function ShieldForm({ shield, env, onSave, onDelete }) {
         let next;
         switch (input.name) {
             case "Name":
-            case "APIID":
+            case "UserShieldID":
             case "Title":
             case "Text":
                 next = Object.assign(Object.assign({}, draftRef.current), { [input.name]: input.value });
@@ -410,9 +410,9 @@ function ShieldForm({ shield, env, onSave, onDelete }) {
     });
     const markdown = `![${draft.Name}](https://${env.ImgHost}/s/${draft.PublicID})`;
     const selectedExample = example[1](env, draft.Title, draft.Text, draft.Color, draft.Secret);
-    const apiIDInvalid = draft.APIID !== undefined && draft.APIID !== "" && !shieldAPIIDPattern.test(draft.APIID);
-    const apiIDErrorID = `shield-${draft.ShieldID}-id-error`;
-    return u$1("form", { class: "shield--controller", onInput: handleInput, children: [u$1("section", { class: "name-input", children: [u$1(Input, { label: "Shield Name", name: "Name", value: draft.Name }), u$1(Input, { label: "Shield ID", name: "APIID", value: draft.APIID || "", pattern: "[a-z0-9\\\\-]{5,64}", title: "Optional: 5-64 lowercase letters, digits, or hyphens", placeholder: "e.g. production-status", autoComplete: "off", spellcheck: false, "aria-invalid": apiIDInvalid, "aria-describedby": apiIDInvalid ? apiIDErrorID : undefined }), apiIDInvalid && u$1("p", { id: apiIDErrorID, class: "input-error", role: "alert", children: "Shield ID must be 5-64 lowercase letters, digits, or hyphens." })] }), u$1("section", { class: "shield-container", children: u$1("img", { src: `https://${env.ImgHost}/s/${draft.PublicID}?break=${imageTick}` }) }), u$1("section", { class: "main-inputs", children: [u$1(Input, { label: "Title", name: "Title", value: draft.Title }), u$1(Input, { label: "Text", name: "Text", value: draft.Text }), u$1(Input, { label: "Color", name: "Color", value: `#${draft.Color.replace(/^#/, "")}`, type: "color", title: "Must be a hex color code" })] }), u$1("details", { class: "api-example", children: [u$1("summary", { children: "API Call Examples" }), u$1("div", { class: "api-example--controller", children: [u$1("ul", { children: apiExamples.map((item) => u$1("li", { class: item[0] === example[0] ? "selected" : "", onClick: () => setExample(item), children: item[0] }, item[0])) }), u$1("pre", { children: u$1("code", { children: selectedExample }) })] })] }), u$1("section", { class: "button-container", children: u$1("button", { type: "button", class: "danger", onClick: deleteShield, children: [u$1("span", { class: "icon", children: "\u274C" }), "Delete"] }) }), u$1("section", { class: "fancy-inputs", children: [u$1("label", { children: "Markdown" }), u$1("div", { class: "markdown-input--controller", children: [u$1("input", { value: markdown, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(markdown, setMarkdownCopied), children: markdownCopied ? "Copied!" : "Copy" })] }), u$1("label", { children: "This shield's API token" }), u$1("div", { class: "secret-input--controller", children: [u$1("input", { type: secretVisible ? "text" : "password", value: draft.Secret, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(draft.Secret, setSecretCopied), children: secretCopied ? "Copied!" : "Copy" }), u$1("button", { type: "button", onClick: () => setSecretVisible(!secretVisible), children: secretVisible ? "Hide" : "Reveal" })] })] })] });
+    const userShieldIDInvalid = draft.UserShieldID !== undefined && draft.UserShieldID !== "" && !userShieldIDPattern.test(draft.UserShieldID);
+    const userShieldIDErrorID = `shield-${draft.ShieldID}-id-error`;
+    return u$1("form", { class: "shield--controller", onInput: handleInput, children: [u$1("section", { class: "name-input", children: [u$1(Input, { label: "Shield Name", name: "Name", value: draft.Name }), u$1(Input, { label: "Shield ID", name: "UserShieldID", value: draft.UserShieldID || "", pattern: "[a-z0-9\\\\-]{5,64}", title: "Optional: 5-64 lowercase letters, digits, or hyphens", placeholder: "e.g. production-status", autoComplete: "off", spellcheck: false, "aria-invalid": userShieldIDInvalid, "aria-describedby": userShieldIDInvalid ? userShieldIDErrorID : undefined }), userShieldIDInvalid && u$1("p", { id: userShieldIDErrorID, class: "input-error", role: "alert", children: "Shield ID must be 5-64 lowercase letters, digits, or hyphens." })] }), u$1("section", { class: "shield-container", children: u$1("img", { src: `https://${env.ImgHost}/s/${draft.PublicID}?break=${imageTick}` }) }), u$1("section", { class: "main-inputs", children: [u$1(Input, { label: "Title", name: "Title", value: draft.Title }), u$1(Input, { label: "Text", name: "Text", value: draft.Text }), u$1(Input, { label: "Color", name: "Color", value: `#${draft.Color.replace(/^#/, "")}`, type: "color", title: "Must be a hex color code" })] }), u$1("details", { class: "api-example", children: [u$1("summary", { children: "API Call Examples" }), u$1("div", { class: "api-example--controller", children: [u$1("ul", { children: apiExamples.map((item) => u$1("li", { class: item[0] === example[0] ? "selected" : "", onClick: () => setExample(item), children: item[0] }, item[0])) }), u$1("pre", { children: u$1("code", { children: selectedExample }) })] })] }), u$1("section", { class: "button-container", children: u$1("button", { type: "button", class: "danger", onClick: deleteShield, children: [u$1("span", { class: "icon", children: "\u274C" }), "Delete"] }) }), u$1("section", { class: "fancy-inputs", children: [u$1("label", { children: "Markdown" }), u$1("div", { class: "markdown-input--controller", children: [u$1("input", { value: markdown, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(markdown, setMarkdownCopied), children: markdownCopied ? "Copied!" : "Copy" })] }), u$1("label", { children: "This shield's API token" }), u$1("div", { class: "secret-input--controller", children: [u$1("input", { type: secretVisible ? "text" : "password", value: draft.Secret, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(draft.Secret, setSecretCopied), children: secretCopied ? "Copied!" : "Copy" }), u$1("button", { type: "button", onClick: () => setSecretVisible(!secretVisible), children: secretVisible ? "Hide" : "Reveal" })] })] })] });
 }
 function Input(_a) {
     var { label } = _a, attributes = __rest(_a, ["label"]);

@@ -14,18 +14,18 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var shieldAPIIDPattern = regexp.MustCompile(`^[a-z0-9-]{5,64}$`)
+var userShieldIDPattern = regexp.MustCompile(`^[a-z0-9-]{5,64}$`)
 
-func validShieldAPIID(apiID string) bool {
-	return apiID == "" || shieldAPIIDPattern.MatchString(apiID)
+func validUserShieldID(userShieldID string) bool {
+	return userShieldID == "" || userShieldIDPattern.MatchString(userShieldID)
 }
 
-func shieldAPIIDAvailable(sm *model.ShieldMapper, userID, shieldID int64, apiID string) (bool, error) {
-	if apiID == "" {
+func userShieldIDAvailable(sm *model.ShieldMapper, userID, shieldID int64, userShieldID string) (bool, error) {
+	if userShieldID == "" {
 		return true, nil
 	}
 
-	shield, err := sm.GetFromUserIDAndAPIID(userID, apiID)
+	shield, err := sm.GetFromUserIDAndUserShieldID(userID, userShieldID)
 	if err != nil {
 		return false, err
 	}
@@ -83,13 +83,13 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 		http.Error(w, "failed to parse request body", http.StatusBadRequest)
 		return
 	}
-	if !validShieldAPIID(postShield.APIID) {
+	if !validUserShieldID(postShield.UserShieldID) {
 		http.Error(w, "shield ID must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
 		return
 	}
-	available, err := shieldAPIIDAvailable(sh.sm, *id, 0, postShield.APIID)
+	available, err := userShieldIDAvailable(sh.sm, *id, 0, postShield.UserShieldID)
 	if err != nil {
-		slog.Error("error checking shield API ID", slog.Any("error", err), slog.Any("id", *id))
+		slog.Error("error checking user shield ID", slog.Any("error", err), slog.Any("id", *id))
 		http.Error(w, "database error", http.StatusInternalServerError)
 		return
 	}
@@ -108,8 +108,8 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 	cleanShield := &model.Shield{
 		UserID: *id,
 
-		APIID: postShield.APIID,
-		Name:  postShield.Name,
+		UserShieldID: postShield.UserShieldID,
+		Name:         postShield.Name,
 
 		Title: postShield.Title,
 		Text:  postShield.Text,
@@ -205,13 +205,13 @@ func (dh *DashboardShieldApiHandler) HandlePUT(w http.ResponseWriter, r *http.Re
 		http.Error(w, "failed to parse request body", http.StatusBadRequest)
 		return
 	}
-	if !validShieldAPIID(putShield.APIID) {
+	if !validUserShieldID(putShield.UserShieldID) {
 		http.Error(w, "shield ID must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
 		return
 	}
-	available, err := shieldAPIIDAvailable(dh.sm, shield.UserID, shield.ShieldID, putShield.APIID)
+	available, err := userShieldIDAvailable(dh.sm, shield.UserID, shield.ShieldID, putShield.UserShieldID)
 	if err != nil {
-		slog.Error("error checking shield API ID", slog.Any("error", err), slog.Any("id", shield.UserID))
+		slog.Error("error checking user shield ID", slog.Any("error", err), slog.Any("id", shield.UserID))
 		http.Error(w, "database error", http.StatusInternalServerError)
 		return
 	}
@@ -220,7 +220,7 @@ func (dh *DashboardShieldApiHandler) HandlePUT(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	shield.APIID = putShield.APIID
+	shield.UserShieldID = putShield.UserShieldID
 	shield.Name = putShield.Name
 
 	shield.Title = putShield.Title

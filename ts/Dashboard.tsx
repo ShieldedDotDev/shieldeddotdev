@@ -17,7 +17,7 @@ import {
 
 type Page = "dashboard" | "user";
 
-const shieldAPIIDPattern = /^[a-z0-9-]{5,64}$/;
+const userShieldIDPattern = /^[a-z0-9-]{5,64}$/;
 const apiExamples: [string, ApiExampleGeneratorInterface][] = [
 	["GitHub Action", gitHubActionExample],
 	["Curl", curlExample],
@@ -148,7 +148,7 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 			saveTimeout.current = null;
 		}
 
-		if (next.APIID !== undefined && next.APIID !== "" && !shieldAPIIDPattern.test(next.APIID)) {
+		if (next.UserShieldID !== undefined && next.UserShieldID !== "" && !userShieldIDPattern.test(next.UserShieldID)) {
 			return;
 		}
 
@@ -165,7 +165,7 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 		let next: ShieldInterface;
 		switch (input.name) {
 		case "Name":
-		case "APIID":
+		case "UserShieldID":
 		case "Title":
 		case "Text":
 			next = { ...draftRef.current, [input.name]: input.value };
@@ -194,14 +194,14 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 
 	const markdown = `![${draft.Name}](https://${env.ImgHost}/s/${draft.PublicID})`;
 	const selectedExample = example[1](env, draft.Title, draft.Text, draft.Color, draft.Secret);
-	const apiIDInvalid = draft.APIID !== undefined && draft.APIID !== "" && !shieldAPIIDPattern.test(draft.APIID);
-	const apiIDErrorID = `shield-${draft.ShieldID}-id-error`;
+	const userShieldIDInvalid = draft.UserShieldID !== undefined && draft.UserShieldID !== "" && !userShieldIDPattern.test(draft.UserShieldID);
+	const userShieldIDErrorID = `shield-${draft.ShieldID}-id-error`;
 
 	return <form class="shield--controller" onInput={handleInput}>
 		<section class="name-input">
 			<Input label="Shield Name" name="Name" value={draft.Name} />
-			<Input label="Shield ID" name="APIID" value={draft.APIID || ""} pattern="[a-z0-9\\-]{5,64}" title="Optional: 5-64 lowercase letters, digits, or hyphens" placeholder="e.g. production-status" autoComplete="off" spellcheck={false} aria-invalid={apiIDInvalid} aria-describedby={apiIDInvalid ? apiIDErrorID : undefined} />
-			{apiIDInvalid && <p id={apiIDErrorID} class="input-error" role="alert">Shield ID must be 5-64 lowercase letters, digits, or hyphens.</p>}
+			<Input label="Shield ID" name="UserShieldID" value={draft.UserShieldID || ""} pattern="[a-z0-9\\-]{5,64}" title="Optional: 5-64 lowercase letters, digits, or hyphens" placeholder="e.g. production-status" autoComplete="off" spellcheck={false} aria-invalid={userShieldIDInvalid} aria-describedby={userShieldIDInvalid ? userShieldIDErrorID : undefined} />
+			{userShieldIDInvalid && <p id={userShieldIDErrorID} class="input-error" role="alert">Shield ID must be 5-64 lowercase letters, digits, or hyphens.</p>}
 		</section>
 		<section class="shield-container"><img src={`https://${env.ImgHost}/s/${draft.PublicID}?break=${imageTick}`} /></section>
 		<section class="main-inputs">

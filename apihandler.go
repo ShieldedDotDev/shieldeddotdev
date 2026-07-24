@@ -44,13 +44,13 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		apiID := r.Header.Get("X-Shielded-Shield-ID")
-		if !validShieldAPIID(apiID) || apiID == "" {
+		userShieldID := r.Header.Get("X-Shielded-Shield-ID")
+		if !validUserShieldID(userShieldID) || userShieldID == "" {
 			http.Error(w, "X-Shielded-Shield-ID must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
 			return
 		}
 
-		shield, err = ah.sm.GetFromUserIDAndAPIID(userToken.UserID, apiID)
+		shield, err = ah.sm.GetFromUserIDAndUserShieldID(userToken.UserID, userShieldID)
 		if err != nil {
 			slog.Error("error fetching shield from user API token", slog.Any("error", err), slog.Int64("user_id", userToken.UserID))
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -70,12 +70,12 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			shield = &model.Shield{
-				UserID: userToken.UserID,
-				APIID:  apiID,
-				Name:   apiID,
-				Title:  apiID,
-				Color:  defaultColor,
-				Secret: secret,
+				UserID:       userToken.UserID,
+				UserShieldID: userShieldID,
+				Name:         userShieldID,
+				Title:        userShieldID,
+				Color:        defaultColor,
+				Secret:       secret,
 			}
 			created = true
 		}
