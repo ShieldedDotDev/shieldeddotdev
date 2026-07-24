@@ -72,7 +72,7 @@ go test ./...                              # compile/test all Go packages (there
 - Use parameterized SQL through `database/sql`, as the mappers do. Shield reads and writes must preserve the ownership checks used by the dashboard handlers.
 - Do not change public JSON field names or badge URL shapes casually. The dashboard, embedded Markdown, and external clients depend on the exported Go/TypeScript field names and host-specific routes.
 - Preserve the `NormalizeColor` path for the public update API and static badge route when adding accepted color input. It resolves named badge colors and validates 3- or 6-digit hexadecimal colors.
-- User-level API tokens are bearer credentials: generate them with `crypto/rand`, store only a one-way hash, return the plaintext only at creation, and scope dashboard reads/deletes by the authenticated user. Do not wire them into the per-shield update API unless that API's contract is explicitly changed.
+- User-level API tokens are bearer credentials: generate them with `crypto/rand`, store only a one-way hash, return the plaintext only at creation, and scope dashboard reads/deletes by the authenticated user. On the API host, `Authorization: Bearer <user-token>` requires `X-Shielded-Shield-ID`; it can update or create only that token owner's shield and records `stamp_last_used`. Preserve the legacy `Authorization: token <shield-secret>` contract unchanged.
 
 ### Database schema and migrations
 
@@ -83,10 +83,10 @@ go test ./...                              # compile/test all Go packages (there
 
 ### TypeScript
 
-- This is framework-free DOM code. Controllers own DOM creation and are attached through `AbstractBaseController`; `ShieldsModel` owns the in-memory shield list and emits rerender events.
+- The authenticated dashboard is a Preact SPA mounted from `ts/Dashboard.tsx`. Keep shield forms and user-token management declarative components with local state; do not reintroduce manual DOM attach/detach or controller-event lifecycles for dashboard behavior.
 - Requests go through `ts/api/request.ts`. It supplies the leading slash and `withCredentials`; use it rather than duplicating XMLHttpRequest handling.
 - Keep browser/API types aligned with the JSON emitted from Go. The current API uses Go-style exported field names such as `ShieldID`, `PublicID`, `Title`, and `Secret`.
-- The configured TypeScript compiler is strict and rejects unused locals/parameters. Maintain tab indentation and run `make lint` after TypeScript changes.
+- The configured TypeScript compiler is strict and rejects unused locals/parameters. Preact JSX uses the automatic runtime configured in `tsconfig.json`; maintain tab indentation and run `make lint` after TypeScript changes.
 
 ## Verification expectations
 

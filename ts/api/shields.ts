@@ -3,6 +3,7 @@ import { doRawRequest, doRequest } from "./request";
 export interface ShieldInterface {
 	ShieldID?: number;
 	PublicID?: string;
+	APIID?: string;
 	UserID: number;
 	Name: string;
 	Title: string;

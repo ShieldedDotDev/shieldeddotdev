@@ -16,13 +16,14 @@ templ DashboardPage(hosts Hosts) {
 							<a href="#/user">User settings</a>
 						</nav>
 					</article>
+					<article id="dashboard-app"></article>
 				</section>
 			</main>
 			<script type="module">
 				import { Dashboard } from '/main.js';
 
 				document.addEventListener('DOMContentLoaded', function () {
-					Dashboard(document.getElementById('dashboard'));
+					Dashboard(document.getElementById('dashboard-app'));
 				});
 			</script>
 			@Footer()

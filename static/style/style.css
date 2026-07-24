@@ -127,7 +127,7 @@ button.primary:hover, .home--app .primary.github-login:hover {
 
 .dashboard--controller > .add-button {
   display: block;
-  margin: 0 auto;
+  margin: 0 auto 1em;
   transform: scale(1.2);
 }
 .dashboard--controller > .add-button > .icon {
@@ -273,6 +273,11 @@ button.primary:hover, .home--app .primary.github-login:hover {
 }
 .dashboard--controller .shield--controller .fancy-inputs input[type=color], .dashboard--controller .shield--controller .input-container input[type=color] {
   width: 5em;
+}
+.dashboard--controller .shield--controller .input-error {
+  color: #d22937;
+  font-size: 0.85em;
+  margin-top: 0.35em;
 }
 .dashboard--controller .shield--controller .fancy-inputs > .markdown-input--controller {
   margin-bottom: 0.3em;
