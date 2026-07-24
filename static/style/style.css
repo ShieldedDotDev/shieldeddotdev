@@ -174,11 +174,11 @@ button.primary:hover, .home--app .primary.github-login:hover {
 .dashboard--controller .api-tokens--controller table th {
   font-weight: 600;
 }
-.dashboard--controller .api-tokens--controller > div:nth-of-type(1) {
+.dashboard--controller .api-tokens--controller > .created-api-token {
   display: flex;
   gap: 0.5rem;
 }
-.dashboard--controller .api-tokens--controller > div:nth-of-type(1) input {
+.dashboard--controller .api-tokens--controller > .created-api-token input {
   flex: 1;
 }
 .dashboard--controller .shield--controller {

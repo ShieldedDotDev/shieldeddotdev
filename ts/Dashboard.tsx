@@ -220,7 +220,7 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 		<section class="fancy-inputs">
 			<label>Markdown</label>
 			<div class="markdown-input--controller"><input value={markdown} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(markdown, setMarkdownCopied)}>{markdownCopied ? "Copied!" : "Copy"}</button></div>
-			<label>API Token</label>
+			<label>Legacy shield API token</label>
 			<div class="secret-input--controller"><input type={secretVisible ? "text" : "password"} value={draft.Secret} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(draft.Secret, setSecretCopied)}>{secretCopied ? "Copied!" : "Copy"}</button><button type="button" onClick={() => setSecretVisible(!secretVisible)}>{secretVisible ? "Hide" : "Reveal"}</button></div>
 		</section>
 	</form>;
@@ -290,7 +290,7 @@ function APITokens() {
 			<button type="submit" class="primary" disabled={creating}>Create token</button>
 		</form>
 		{error !== "" && <p>{error}</p>}
-		{createdToken !== "" && <div><p>Copy this token now. It will not be shown again.</p><input value={createdToken} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(createdToken, setCopied)}>{copied ? "Copied!" : "Copy"}</button></div>}
+		{createdToken !== "" && <div class="created-api-token"><p>Copy this token now. It will not be shown again.</p><input value={createdToken} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(createdToken, setCopied)}>{copied ? "Copied!" : "Copy"}</button></div>}
 		<div>
 			<h4>Active tokens</h4>
 			{tokens === null && error === "" && <p>Loading API tokens…</p>}

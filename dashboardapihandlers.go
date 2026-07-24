@@ -1,9 +1,11 @@
 package shieldeddotdev
 
 import (
+	cryptorand "crypto/rand"
 	"encoding/json"
 	"fmt"
 	"log/slog"
+	"math/big"
 	"math/rand"
 	"net/http"
 	"regexp"
@@ -98,7 +100,12 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 		return
 	}
 
-	uu := stringWithCharset(40, "abcdefghjkmnpqrstuvwxyz23456789")
+	uu, err := secureStringWithCharset(40, "abcdefghjkmnpqrstuvwxyz23456789")
+	if err != nil {
+		slog.Error("error generating shield secret", slog.Any("error", err))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
 
 	cleanShield := &model.Shield{
 		UserID: *id,
@@ -136,6 +143,19 @@ func stringWithCharset(length int, charset string) string {
 		b[i] = charset[seededRand.Intn(len(charset))]
 	}
 	return string(b)
+}
+
+func secureStringWithCharset(length int, charset string) (string, error) {
+	b := make([]byte, length)
+	limit := big.NewInt(int64(len(charset)))
+	for i := range b {
+		index, err := cryptorand.Int(cryptorand.Reader, limit)
+		if err != nil {
+			return "", err
+		}
+		b[i] = charset[index.Int64()]
+	}
+	return string(b), nil
 }
 
 type DashboardShieldApiHandler struct {

@@ -32,7 +32,7 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 	created := false
 	var err error
 
-	switch authParts[0] {
+	switch strings.ToLower(authParts[0]) {
 	case "token":
 		shield, err = ah.sm.GetFromSecret(authParts[1])
 		if err != nil {
@@ -45,7 +45,7 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
-	case "Bearer":
+	case "bearer":
 		userToken, err = ah.tm.GetFromToken(authParts[1])
 		if err != nil {
 			slog.Error("error fetching user API token", slog.Any("error", err))
@@ -76,13 +76,19 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				return
 			}
+			secret, err := secureStringWithCharset(40, "abcdefghjkmnpqrstuvwxyz23456789")
+			if err != nil {
+				slog.Error("error generating shield secret", slog.Any("error", err))
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+				return
+			}
 			shield = &model.Shield{
 				UserID: userToken.UserID,
 				APIID:  apiID,
 				Name:   apiID,
 				Title:  apiID,
 				Color:  defaultColor,
-				Secret: stringWithCharset(40, "abcdefghjkmnpqrstuvwxyz23456789"),
+				Secret: secret,
 			}
 			created = true
 		}
