@@ -6,11 +6,9 @@ import (
 	"fmt"
 	"log/slog"
 	"math/big"
-	"math/rand"
 	"net/http"
 	"regexp"
 	"strconv"
-	"time"
 
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
 	"github.com/gorilla/mux"
@@ -133,16 +131,6 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 
 	x := json.NewEncoder(w)
 	x.Encode(cleanShield)
-}
-
-var seededRand *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
-
-func stringWithCharset(length int, charset string) string {
-	b := make([]byte, length)
-	for i := range b {
-		b[i] = charset[seededRand.Intn(len(charset))]
-	}
-	return string(b)
 }
 
 func secureStringWithCharset(length int, charset string) (string, error) {

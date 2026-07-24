@@ -220,7 +220,7 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 		<section class="fancy-inputs">
 			<label>Markdown</label>
 			<div class="markdown-input--controller"><input value={markdown} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(markdown, setMarkdownCopied)}>{markdownCopied ? "Copied!" : "Copy"}</button></div>
-			<label>Legacy shield API token</label>
+			<label>This shield's API token</label>
 			<div class="secret-input--controller"><input type={secretVisible ? "text" : "password"} value={draft.Secret} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(draft.Secret, setSecretCopied)}>{secretCopied ? "Copied!" : "Copy"}</button><button type="button" onClick={() => setSecretVisible(!secretVisible)}>{secretVisible ? "Hide" : "Reveal"}</button></div>
 		</section>
 	</form>;
@@ -282,8 +282,8 @@ function APITokens() {
 	};
 
 	return <section class="api-tokens--controller">
-		<h3>API Tokens</h3>
-		<p>Create a token to update or create shields through the API.</p>
+		<h3>User API tokens</h3>
+		<p>Create a token to update or create any of your shields through the API.</p>
 		<form onSubmit={createToken}>
 			<label for="api-token-description">Description</label>
 			<input id="api-token-description" name="description" value={description} onInput={(event) => setDescription(event.currentTarget.value)} required maxLength={255} placeholder="e.g. production deploy job" />
