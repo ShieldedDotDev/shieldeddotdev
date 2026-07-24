@@ -100,18 +100,6 @@ class ShieldsApi {
     }
 }
 
-class UserAPITokensApi {
-    getTokens() {
-        return doRequest('api/tokens', 'GET', null);
-    }
-    createToken(description) {
-        return doRequest('api/tokens', 'POST', JSON.stringify({ Description: description }));
-    }
-    deleteToken(token) {
-        return doRawRequest(`api/token/${token.APITokenID}`, 'DELETE', null);
-    }
-}
-
 class AbstractBaseController {
     constructor(container, name) {
         this.container = container;
@@ -445,6 +433,164 @@ class ShieldImgRouter {
     }
 }
 
+class DashboardController extends AbstractBaseController {
+    constructor(model, env, imgr) {
+        super(document.createElement('div'), 'dashboard');
+        this.model = model;
+        this.env = env;
+        this.imgr = imgr;
+        this.addBtn = document.createElement('button');
+        this.errDialog = new ErrorDialogController();
+        this.shieldsElm = document.createElement('div');
+        this.container.append(this.addBtn, document.createElement('br'), this.shieldsElm);
+        document.body.appendChild(this.errDialog.getContainer());
+        this.addBtn.innerText = 'New shield';
+        this.addBtn.classList.add('add-button');
+        this.addBtn.classList.add('primary');
+        const plusIcon = document.createElement('span');
+        plusIcon.classList.add('icon');
+        plusIcon.textContent = '➕';
+        this.addBtn.prepend(plusIcon);
+        this.addBtn.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
+            yield this.model.newShield();
+            setTimeout(() => {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }, 100);
+        }));
+        this.render();
+    }
+    render() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.shieldsElm.innerHTML = '';
+            let shields;
+            try {
+                shields = yield this.model.getShields();
+            }
+            catch (e) {
+                console.log(e);
+                if (isRequestError(e)) {
+                    this.errDialog.show(e.ctx.responseText);
+                }
+                return;
+            }
+            for (const shield of shields) {
+                const sc = new ShieldController(shield, this.model, this.env, this.imgr);
+                sc.attach(this.shieldsElm);
+            }
+            if (shields.length === 0) {
+                const msg = document.createElement('h4');
+                msg.classList.add('no-shields');
+                msg.innerText = 'No shields yet. Click the button to get started.';
+                this.shieldsElm.appendChild(msg);
+            }
+        });
+    }
+}
+
+class EventEmitter {
+    constructor() {
+        this.listeners = new Set();
+    }
+    add(callback) {
+        this.listeners.add(callback);
+    }
+    trigger(event) {
+        this.listeners.forEach((fn) => fn(event));
+    }
+}
+
+class ShieldsModel {
+    constructor(shieldsApi) {
+        this.shieldsApi = shieldsApi;
+        this.shieldEventEmitter = new EventEmitter();
+        this.shields = [];
+        this.timeouts = {};
+    }
+    getShields() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.shields.length < 1) {
+                this.shields = yield this.shieldsApi.getShields();
+            }
+            return this.shields;
+        });
+    }
+    deleteShield(shield) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const shieldId = shield.ShieldID;
+            if (!shieldId) {
+                throw Error("Attempting to delete unpersisted shield");
+            }
+            yield this.shieldsApi.deleteShield(shield);
+            this.shields = this.shields.filter((n) => shield !== n);
+            this.shieldEventEmitter.trigger({ shield, event: "deleted" });
+        });
+    }
+    updateShield(shield, debounce = 100) {
+        const shieldId = shield.ShieldID;
+        if (!shieldId) {
+            throw Error("Attempting to update unpersisted shield");
+        }
+        let updated = false;
+        this.shields.map((n) => {
+            if (n.ShieldID == shieldId) {
+                updated = true;
+                return shield;
+            }
+            return n;
+        });
+        if (!updated) {
+            throw Error("Failed to update shield");
+        }
+        if (this.timeouts[shieldId]) {
+            clearTimeout(this.timeouts[shieldId].timeout);
+        }
+        this.shieldEventEmitter.trigger({ shield, event: "changed" });
+        return new Promise((resolve) => {
+            let resolves = [resolve];
+            if (this.timeouts[shieldId]) {
+                resolves = [...this.timeouts[shieldId].resolves, ...resolves];
+            }
+            this.timeouts[shieldId] = {
+                timeout: setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                    this.shieldEventEmitter.trigger({ shield, event: "updating" });
+                    yield this.shieldsApi.saveShield(shield);
+                    this.shieldEventEmitter.trigger({ shield, event: "updated" });
+                    for (const r of this.timeouts[shieldId].resolves) {
+                        r();
+                    }
+                    this.timeouts[shieldId].resolves = [];
+                }), debounce),
+                resolves,
+            };
+        });
+    }
+    newShield() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const shield = yield this.shieldsApi.saveShield({
+                Name: 'New Shield',
+                Title: 'New',
+                Color: '00AA55',
+                Text: 'Shield',
+            });
+            this.shields.push(shield);
+            this.shieldEventEmitter.trigger({ shield, event: "created" });
+            return shield;
+        });
+    }
+}
+
+class UserAPITokensApi {
+    getTokens() {
+        return doRequest('api/tokens', 'GET', null);
+    }
+    createToken(description) {
+        return doRequest('api/tokens', 'POST', JSON.stringify({ Description: description }));
+    }
+    deleteToken(token) {
+        return doRawRequest(`api/token/${token.APITokenID}`, 'DELETE', null);
+    }
+}
+
 class UserAPITokensController extends AbstractBaseController {
     constructor(model) {
         super(document.createElement('section'), 'api-tokens');
@@ -602,153 +748,6 @@ class UserAPITokensController extends AbstractBaseController {
     }
 }
 
-class DashboardController extends AbstractBaseController {
-    constructor(model, tokensModel, env, imgr) {
-        super(document.createElement('div'), 'dashboard');
-        this.model = model;
-        this.env = env;
-        this.imgr = imgr;
-        this.addBtn = document.createElement('button');
-        this.errDialog = new ErrorDialogController();
-        this.shieldsElm = document.createElement('div');
-        this.container.append(this.addBtn, document.createElement('br'), this.shieldsElm);
-        document.body.appendChild(this.errDialog.getContainer());
-        this.addBtn.innerText = 'New shield';
-        this.addBtn.classList.add('add-button');
-        this.addBtn.classList.add('primary');
-        const plusIcon = document.createElement('span');
-        plusIcon.classList.add('icon');
-        plusIcon.textContent = '➕';
-        this.addBtn.prepend(plusIcon);
-        this.addBtn.addEventListener('click', () => __awaiter(this, void 0, void 0, function* () {
-            yield this.model.newShield();
-            setTimeout(() => {
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-            }, 100);
-        }));
-        (new UserAPITokensController(tokensModel)).attach(this.container);
-        this.render();
-    }
-    render() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.shieldsElm.innerHTML = '';
-            let shields;
-            try {
-                shields = yield this.model.getShields();
-            }
-            catch (e) {
-                console.log(e);
-                if (isRequestError(e)) {
-                    this.errDialog.show(e.ctx.responseText);
-                }
-                return;
-            }
-            for (const shield of shields) {
-                const sc = new ShieldController(shield, this.model, this.env, this.imgr);
-                sc.attach(this.shieldsElm);
-            }
-            if (shields.length === 0) {
-                const msg = document.createElement('h4');
-                msg.classList.add('no-shields');
-                msg.innerText = 'No shields yet. Click the button to get started.';
-                this.shieldsElm.appendChild(msg);
-            }
-        });
-    }
-}
-
-class EventEmitter {
-    constructor() {
-        this.listeners = new Set();
-    }
-    add(callback) {
-        this.listeners.add(callback);
-    }
-    trigger(event) {
-        this.listeners.forEach((fn) => fn(event));
-    }
-}
-
-class ShieldsModel {
-    constructor(shieldsApi) {
-        this.shieldsApi = shieldsApi;
-        this.shieldEventEmitter = new EventEmitter();
-        this.shields = [];
-        this.timeouts = {};
-    }
-    getShields() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this.shields.length < 1) {
-                this.shields = yield this.shieldsApi.getShields();
-            }
-            return this.shields;
-        });
-    }
-    deleteShield(shield) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const shieldId = shield.ShieldID;
-            if (!shieldId) {
-                throw Error("Attempting to delete unpersisted shield");
-            }
-            yield this.shieldsApi.deleteShield(shield);
-            this.shields = this.shields.filter((n) => shield !== n);
-            this.shieldEventEmitter.trigger({ shield, event: "deleted" });
-        });
-    }
-    updateShield(shield, debounce = 100) {
-        const shieldId = shield.ShieldID;
-        if (!shieldId) {
-            throw Error("Attempting to update unpersisted shield");
-        }
-        let updated = false;
-        this.shields.map((n) => {
-            if (n.ShieldID == shieldId) {
-                updated = true;
-                return shield;
-            }
-            return n;
-        });
-        if (!updated) {
-            throw Error("Failed to update shield");
-        }
-        if (this.timeouts[shieldId]) {
-            clearTimeout(this.timeouts[shieldId].timeout);
-        }
-        this.shieldEventEmitter.trigger({ shield, event: "changed" });
-        return new Promise((resolve) => {
-            let resolves = [resolve];
-            if (this.timeouts[shieldId]) {
-                resolves = [...this.timeouts[shieldId].resolves, ...resolves];
-            }
-            this.timeouts[shieldId] = {
-                timeout: setTimeout(() => __awaiter(this, void 0, void 0, function* () {
-                    this.shieldEventEmitter.trigger({ shield, event: "updating" });
-                    yield this.shieldsApi.saveShield(shield);
-                    this.shieldEventEmitter.trigger({ shield, event: "updated" });
-                    for (const r of this.timeouts[shieldId].resolves) {
-                        r();
-                    }
-                    this.timeouts[shieldId].resolves = [];
-                }), debounce),
-                resolves,
-            };
-        });
-    }
-    newShield() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const shield = yield this.shieldsApi.saveShield({
-                Name: 'New Shield',
-                Title: 'New',
-                Color: '00AA55',
-                Text: 'Shield',
-            });
-            this.shields.push(shield);
-            this.shieldEventEmitter.trigger({ shield, event: "created" });
-            return shield;
-        });
-    }
-}
-
 class UserAPITokensModel {
     constructor(tokensApi) {
         this.tokensApi = tokensApi;
@@ -789,24 +788,55 @@ class UserAPITokensModel {
     }
 }
 
+function User(elm) {
+    const tokenSection = document.createElement('div');
+    tokenSection.classList.add('dashboard--controller');
+    elm.appendChild(tokenSection);
+    const tokensApi = new UserAPITokensApi();
+    const tokensModel = new UserAPITokensModel(tokensApi);
+    (new UserAPITokensController(tokensModel)).attach(tokenSection);
+}
+
 function Dashboard(elm) {
     return __awaiter(this, void 0, void 0, function* () {
         const authApi = new AuthedApi();
         if (!(yield authApi.isAuthed())) {
             window.location.href = '/';
+            return;
         }
         const envApi = new EnvApi();
         const env = yield envApi.getEnv();
         const imgr = new ShieldImgRouter(env);
         const sapi = new ShieldsApi();
         const sm = new ShieldsModel(sapi);
-        const tokensApi = new UserAPITokensApi();
-        const tokensModel = new UserAPITokensModel(tokensApi);
-        const dc = new DashboardController(sm, tokensModel, env, imgr);
-        dc.attach(elm);
+        const dc = new DashboardController(sm, env, imgr);
+        const dashboardPage = document.createElement('article');
+        const dashboardHeading = document.createElement('h3');
+        dashboardHeading.innerText = 'Dashboard';
+        dashboardPage.appendChild(dashboardHeading);
+        dc.attach(dashboardPage);
+        const userPage = document.createElement('article');
+        const userHeading = document.createElement('h3');
+        userHeading.innerText = 'User Settings';
+        userPage.appendChild(userHeading);
+        User(userPage);
         sm.shieldEventEmitter.add(() => {
             dc.render();
         });
+        let activePage = null;
+        function renderPage() {
+            const nextPage = window.location.hash === '#/user' ? userPage : dashboardPage;
+            if (activePage === nextPage) {
+                return;
+            }
+            if (activePage !== null) {
+                elm.removeChild(activePage);
+            }
+            elm.appendChild(nextPage);
+            activePage = nextPage;
+        }
+        window.addEventListener('hashchange', renderPage);
+        renderPage();
     });
 }
 

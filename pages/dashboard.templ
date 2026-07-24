@@ -9,9 +9,12 @@ templ DashboardPage(hosts Hosts) {
 		<body class="dashboard--app">
 			@Header()
 			<main>
-				<section>
-					<article id="dashboard">
-						<h3>Dashboard</h3>
+				<section id="dashboard">
+					<article class="dashboard-navigation">
+						<nav aria-label="Dashboard navigation">
+							<a href="#/dashboard">Shields</a>
+							<a href="#/user">User settings</a>
+						</nav>
 					</article>
 				</section>
 			</main>

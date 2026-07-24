@@ -1,4 +1,4 @@
-//go:generate go tool templ generate ../../pages
+//go:generate go tool templ generate -path ../../pages
 
 package main
 
