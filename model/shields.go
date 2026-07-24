@@ -11,6 +11,7 @@ import (
 type Shield struct {
 	ShieldID int64
 	PublicID string
+	APIID    string
 	UserID   int64
 
 	Name string
@@ -50,8 +51,8 @@ func (sm *ShieldMapper) New(userID int64) (*Shield, error) {
 func (sm *ShieldMapper) GetFromID(id int64) (*Shield, error) {
 	sh := &Shield{}
 
-	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.shield_id = ?", id)
-	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.api_id, '') AS api_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.shield_id = ?", id)
+	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.APIID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
 	case sql.ErrNoRows:
 		return nil, nil
 	case nil:
@@ -64,8 +65,8 @@ func (sm *ShieldMapper) GetFromID(id int64) (*Shield, error) {
 func (sm *ShieldMapper) GetFromPublicID(publicID string) (*Shield, error) {
 	sh := &Shield{}
 
-	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.public_id = ?", publicID)
-	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.api_id, '') AS api_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.public_id = ?", publicID)
+	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.APIID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
 	case sql.ErrNoRows:
 		return nil, nil
 	case nil:
@@ -78,8 +79,22 @@ func (sm *ShieldMapper) GetFromPublicID(publicID string) (*Shield, error) {
 func (sm *ShieldMapper) GetFromUserIDAndID(userID, id int64) (*Shield, error) {
 	sh := &Shield{}
 
-	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.user_id = ? AND s.shield_id = ?", userID, id)
-	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.api_id, '') AS api_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.user_id = ? AND s.shield_id = ?", userID, id)
+	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.APIID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
+	case sql.ErrNoRows:
+		return nil, nil
+	case nil:
+		return sh, nil
+	default:
+		return nil, err
+	}
+}
+
+func (sm *ShieldMapper) GetFromUserIDAndAPIID(userID int64, apiID string) (*Shield, error) {
+	sh := &Shield{}
+
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.api_id, '') AS api_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.user_id = ? AND s.api_id = ?", userID, apiID)
+	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.APIID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
 	case sql.ErrNoRows:
 		return nil, nil
 	case nil:
@@ -92,8 +107,8 @@ func (sm *ShieldMapper) GetFromUserIDAndID(userID, id int64) (*Shield, error) {
 func (sm *ShieldMapper) GetFromSecret(secret string) (*Shield, error) {
 	sh := &Shield{}
 
-	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.secret = ?", secret)
-	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.api_id, '') AS api_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.secret = ?", secret)
+	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.APIID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
 	case sql.ErrNoRows:
 		return nil, nil
 	case nil:
@@ -106,7 +121,7 @@ func (sm *ShieldMapper) GetFromSecret(secret string) (*Shield, error) {
 func (sm *ShieldMapper) GetFromUserID(userID int64) ([]*Shield, error) {
 	out := []*Shield{}
 
-	rows, err := sm.db.Query("SELECT s.shield_id, s.public_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.user_id = ?", userID)
+	rows, err := sm.db.Query("SELECT s.shield_id, s.public_id, COALESCE(s.api_id, '') AS api_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.user_id = ?", userID)
 	if err != nil {
 		return out, err
 	}
@@ -114,7 +129,7 @@ func (sm *ShieldMapper) GetFromUserID(userID int64) ([]*Shield, error) {
 
 	for rows.Next() {
 		sh := &Shield{}
-		err := rows.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated)
+		err := rows.Scan(&sh.ShieldID, &sh.PublicID, &sh.APIID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated)
 		if err != nil {
 			return out, err
 		}
@@ -141,8 +156,8 @@ func (sm *ShieldMapper) Save(n *Shield) error {
 	}()
 
 	if n.ShieldID > 0 {
-		_, err = tx.Exec("UPDATE shields SET user_id=?, name=?, title=?, text=?, color=?, secret=? WHERE shield_id = ?",
-			n.UserID, n.Name, n.Title, n.Text, n.Color, n.Secret, n.ShieldID)
+		_, err = tx.Exec("UPDATE shields SET user_id=?, api_id=?, name=?, title=?, text=?, color=?, secret=? WHERE shield_id = ?",
+			n.UserID, nullableString(n.APIID), n.Name, n.Title, n.Text, n.Color, n.Secret, n.ShieldID)
 		if err != nil {
 			return err
 		}
@@ -152,8 +167,8 @@ func (sm *ShieldMapper) Save(n *Shield) error {
 			return err
 		}
 		n.PublicID = p
-		res, err := tx.Exec("INSERT INTO shields (public_id, user_id, name, title, text, color, secret) VALUES (?,?,?,?,?,?,?)",
-			n.PublicID, n.UserID, n.Name, n.Title, n.Text, n.Color, n.Secret)
+		res, err := tx.Exec("INSERT INTO shields (public_id, api_id, user_id, name, title, text, color, secret) VALUES (?,?,?,?,?,?,?,?)",
+			n.PublicID, nullableString(n.APIID), n.UserID, n.Name, n.Title, n.Text, n.Color, n.Secret)
 		if err != nil {
 			return err
 		}
@@ -169,6 +184,14 @@ func (sm *ShieldMapper) Save(n *Shield) error {
 	success = true
 
 	return nil
+}
+
+func nullableString(value string) *string {
+	if value == "" {
+		return nil
+	}
+
+	return &value
 }
 
 func (sm *ShieldMapper) Delete(n *Shield) error {

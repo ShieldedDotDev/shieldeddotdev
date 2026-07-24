@@ -110,6 +110,27 @@ func (tm *UserAPITokenMapper) DeleteFromUserIDAndID(userID, apiTokenID int64) er
 	return err
 }
 
+// GetFromToken finds a token from its plaintext bearer value without exposing
+// its stored hash to callers.
+func (tm *UserAPITokenMapper) GetFromToken(plainToken string) (*UserAPIToken, error) {
+	tokenHash := sha256.Sum256([]byte(plainToken))
+	row := tm.db.QueryRow(`SELECT api_token_id, user_id, description, stamp_created, stamp_last_used FROM user_api_tokens WHERE token_hash = ?`, tokenHash[:])
+	token, err := scanUserAPIToken(row)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return token, nil
+}
+
+func (tm *UserAPITokenMapper) MarkUsed(apiTokenID int64) error {
+	_, err := tm.db.Exec(`UPDATE user_api_tokens SET stamp_last_used = CURRENT_TIMESTAMP() WHERE api_token_id = ?`, apiTokenID)
+	return err
+}
+
 type rowScanner interface {
 	Scan(dest ...any) error
 }

@@ -66,7 +66,7 @@ func main() {
 		http.RedirectHandler("https://"+rootHost, http.StatusPermanentRedirect))
 
 	ao := ro.Host(apiHost).Subrouter()
-	apih := shieldeddotdev.NewApiHandler(sm, imgHost)
+	apih := shieldeddotdev.NewApiHandler(sm, tm, imgHost)
 	ao.HandleFunc("/", apih.HandlePOST)
 
 	io := ro.Host(imgHost).Subrouter()
