@@ -18,6 +18,7 @@ Read [ARCHITECTURE.md](ARCHITECTURE.md) before changing routing, persistence, au
 | `scss/` | Authoritative Sass stylesheets. |
 | `static/` | Browser assets. `static/main.js` and `static/style/style.css` are generated from `ts/` and `scss/`; other static assets are source assets. |
 | `Makefile` | Canonical build, generation, lint, local-debug, clean, and release targets. |
+| `Caddyfile.local`, `run-local.sh` | Optional local HTTPS proxy and lifecycle script, including a disposable MySQL container. |
 
 ## Development setup
 
@@ -38,6 +39,10 @@ make debug
 ```
 
 This cleans generated assets and binaries, rebuilds with the `debug` build tag, changes the three configured host names to `local.shielded.dev`, `api.local.shielded.dev`, and `img.local.shielded.dev`, then runs `shielded-debug` on `:8686`. The server still needs a reachable MySQL instance; the default DSN is shown by `./shielded -help`.
+
+`Caddyfile.local` is an optional local HTTPS front end for `make debug`. It maps the canonical production hosts and the local-debug hosts to the one backend while rewriting the upstream `Host` header to the host expected by the Go router. Follow its `/etc/hosts` and local-CA comments before using it.
+
+After the Caddy host entries and local CA are configured, `./run-local.sh` removes any prior `shieldeddotdev-local-mysql` container, starts a fresh `mysql:8.4` container, applies every numbered `schema/*.sql` migration in order, ensures the debug user exists, builds the debug executable, starts it in the background, and runs Caddy in the foreground. Ctrl-C stops Caddy, the Go process, and the container.
 
 Useful focused commands:
 
@@ -67,13 +72,14 @@ go test ./...                              # compile/test all Go packages (there
 - Use parameterized SQL through `database/sql`, as the mappers do. Shield reads and writes must preserve the ownership checks used by the dashboard handlers.
 - Do not change public JSON field names or badge URL shapes casually. The dashboard, embedded Markdown, and external clients depend on the exported Go/TypeScript field names and host-specific routes.
 - Preserve the `NormalizeColor` path for the public update API and static badge route when adding accepted color input. It resolves named badge colors and validates 3- or 6-digit hexadecimal colors.
+- User-level API tokens are bearer credentials: generate them with `crypto/rand`, store only a one-way hash, return the plaintext only at creation, and scope dashboard reads/deletes by the authenticated user. Do not wire them into the per-shield update API unless that API's contract is explicitly changed.
 
 ### Database schema and migrations
 
 - `schema/000_BASELINE.sql` is the dump-derived baseline for a new database. It contains `DROP TABLE` statements, so do not apply it to a database that must retain data.
 - Add every schema change as a new forward-only SQL file in `schema/`, using the next zero-padded numeric prefix in application order (for example, `001_add_shield_index.sql`). Never renumber, edit, or reorder an existing migration once it may have been applied.
 - Keep migration SQL compatible with the baseline's MariaDB/MySQL dialect and preserve the `users`/`shields` foreign-key relationship unless the corresponding application behavior changes together.
-- The repository currently has SQL files but no migration runner. Record/run migrations using the deployment process until a runner is added; do not assume the Go binary applies them automatically.
+- The Go binary does not run migrations. `run-local.sh` is a local-only clean-database runner that applies every numbered migration; production deployments must use an equivalent controlled migration process.
 
 ### TypeScript
 
