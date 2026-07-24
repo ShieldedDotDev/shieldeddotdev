@@ -22,7 +22,7 @@ func NewApiHandler(sm *model.ShieldMapper, tm *model.UserAPITokenMapper, imgHost
 func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 	auth := r.Header.Get("Authorization")
 	authParts := strings.SplitN(auth, " ", 2)
-	if len(authParts) != 2 {
+	if len(authParts) != 2 || authParts[0] != "token" {
 		http.Error(w, "missing secret", http.StatusBadRequest)
 		return
 	}
@@ -32,20 +32,7 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 	created := false
 	var err error
 
-	switch strings.ToLower(authParts[0]) {
-	case "token":
-		shield, err = ah.sm.GetFromSecret(authParts[1])
-		if err != nil {
-			slog.Error("error fetching shield from secret", slog.Any("error", err))
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-			return
-		}
-		if shield == nil {
-			slog.Info("shield not found")
-			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-			return
-		}
-	case "bearer":
+	if model.IsUserAPIToken(authParts[1]) {
 		userToken, err = ah.tm.GetFromToken(authParts[1])
 		if err != nil {
 			slog.Error("error fetching user API token", slog.Any("error", err))
@@ -92,9 +79,18 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 			}
 			created = true
 		}
-	default:
-		http.Error(w, "missing secret", http.StatusBadRequest)
-		return
+	} else {
+		shield, err = ah.sm.GetFromSecret(authParts[1])
+		if err != nil {
+			slog.Error("error fetching shield from secret", slog.Any("error", err))
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		if shield == nil {
+			slog.Info("shield not found")
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+			return
+		}
 	}
 
 	err = r.ParseForm()

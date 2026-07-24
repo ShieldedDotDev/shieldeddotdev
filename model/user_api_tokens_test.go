@@ -19,3 +19,12 @@ func TestNewUserAPITokenSecret(t *testing.T) {
 		t.Fatal("token hash does not match plaintext token")
 	}
 }
+
+func TestIsUserAPIToken(t *testing.T) {
+	if !IsUserAPIToken("sdu_current") {
+		t.Fatal("user API token was not recognized")
+	}
+	if IsUserAPIToken("shield-secret") {
+		t.Fatal("per-shield token was recognized as a user API token")
+	}
+}

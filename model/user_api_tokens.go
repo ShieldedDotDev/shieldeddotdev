@@ -74,7 +74,7 @@ func (tm *UserAPITokenMapper) GetFromUserIDAndID(userID, apiTokenID int64) (*Use
 	return token, nil
 }
 
-// Create returns the public metadata and the plaintext bearer token. The
+// Create returns the public metadata and the plaintext user token. The
 // plaintext token is never stored and must be shown to the owner only now.
 func (tm *UserAPITokenMapper) Create(userID int64, description string) (*UserAPIToken, string, error) {
 	description, err := normalizeUserAPITokenDescription(description)
@@ -113,7 +113,7 @@ func (tm *UserAPITokenMapper) DeleteFromUserIDAndID(userID, apiTokenID int64) er
 	return err
 }
 
-// GetFromToken finds a token from its plaintext bearer value without exposing
+// GetFromToken finds a token from its plaintext value without exposing
 // its stored hash to callers.
 func (tm *UserAPITokenMapper) GetFromToken(plainToken string) (*UserAPIToken, error) {
 	tokenHash := sha256.Sum256([]byte(plainToken))
@@ -173,4 +173,8 @@ func newUserAPITokenSecret() (string, [sha256.Size]byte, error) {
 
 	plainToken := UserAPITokenPrefix + base64.RawURLEncoding.EncodeToString(secret)
 	return plainToken, sha256.Sum256([]byte(plainToken)), nil
+}
+
+func IsUserAPIToken(plainToken string) bool {
+	return strings.HasPrefix(plainToken, UserAPITokenPrefix)
 }
