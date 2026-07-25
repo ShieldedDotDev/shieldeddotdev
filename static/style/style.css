@@ -125,33 +125,6 @@ button.primary:hover, .home--app .primary.github-login:hover {
   border-radius: 6px;
 }
 
-.dashboard--controller .dashboard-navigation {
-  display: flex;
-  gap: 0.25rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid #d1d9e0;
-}
-.dashboard--controller .dashboard-navigation > a {
-  display: block;
-  padding: 0.5rem 0.9rem;
-  border: 1px solid #d1d9e0;
-  border-bottom: 0;
-  border-radius: 6px 6px 0 0;
-  background: #efefef;
-  color: #2a2a2a;
-  font-weight: 600;
-  text-decoration: none;
-}
-.dashboard--controller .dashboard-navigation > a:hover, .dashboard--controller .dashboard-navigation > a:focus-visible {
-  background: rgb(173.5, 184.5, 210.5);
-}
-.dashboard--controller .dashboard-navigation > a[aria-current=page] {
-  position: relative;
-  bottom: -1px;
-  padding-bottom: calc(0.5rem + 1px);
-  background: white;
-  color: #5c72a6;
-}
 .dashboard--controller > .add-button {
   display: block;
   margin: 0 auto 1em;
@@ -334,6 +307,34 @@ button.primary:hover, .home--app .primary.github-login:hover {
 }
 .dashboard--controller .shield--controller > img {
   float: right;
+}
+
+#dashboard .dashboard-navigation {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #d1d9e0;
+}
+#dashboard .dashboard-navigation > a {
+  display: block;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid #d1d9e0;
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+  background: #efefef;
+  color: #2a2a2a;
+  font-weight: 600;
+  text-decoration: none;
+}
+#dashboard .dashboard-navigation > a:hover, #dashboard .dashboard-navigation > a:focus-visible {
+  background: rgb(173.5, 184.5, 210.5);
+}
+#dashboard .dashboard-navigation > a[aria-current=page] {
+  position: relative;
+  bottom: -1px;
+  padding-bottom: calc(0.5rem + 1px);
+  background: white;
+  color: #5c72a6;
 }
 
 .home--app article p {
