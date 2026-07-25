@@ -67,6 +67,9 @@ func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request
 		http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 		return
 	}
+	if err := ah.tm.MarkUsed(userToken.APITokenID); err != nil {
+		slog.Error("error recording user API token use", slog.Any("error", err), slog.Int64("api_token_id", userToken.APITokenID))
+	}
 
 	shield, err := ah.sm.GetFromUserIDAndUserShieldID(userToken.UserID, userShieldIDs[0])
 	if err != nil {
@@ -98,7 +101,7 @@ func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request
 		}
 	}
 
-	ah.saveShieldFromForm(w, r, shield, userToken, created)
+	ah.saveShieldFromForm(w, r, shield, created)
 }
 
 func (ah *ApiHandler) handleShieldTokenPOST(w http.ResponseWriter, r *http.Request) {
@@ -123,7 +126,7 @@ func (ah *ApiHandler) handleShieldTokenPOST(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	ah.saveShieldFromForm(w, r, shield, nil, false)
+	ah.saveShieldFromForm(w, r, shield, false)
 }
 
 func apiRequestToken(w http.ResponseWriter, r *http.Request) (string, bool) {
@@ -135,7 +138,7 @@ func apiRequestToken(w http.ResponseWriter, r *http.Request) (string, bool) {
 	return authParts[1], true
 }
 
-func (ah *ApiHandler) saveShieldFromForm(w http.ResponseWriter, r *http.Request, shield *model.Shield, userToken *model.UserAPIToken, created bool) {
+func (ah *ApiHandler) saveShieldFromForm(w http.ResponseWriter, r *http.Request, shield *model.Shield, created bool) {
 	var err error
 
 	if title := r.FormValue("title"); title != "" {
@@ -160,12 +163,6 @@ func (ah *ApiHandler) saveShieldFromForm(w http.ResponseWriter, r *http.Request,
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	if userToken != nil {
-		if err := ah.tm.MarkUsed(userToken.APITokenID); err != nil {
-			slog.Error("error recording user API token use", slog.Any("error", err), slog.Int64("api_token_id", userToken.APITokenID))
-		}
-	}
-
 	w.Header().Set("Content-Type", "application/json")
 	if created {
 		w.WriteHeader(http.StatusCreated)
