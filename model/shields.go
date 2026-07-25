@@ -51,7 +51,7 @@ func (sm *ShieldMapper) New(userID int64) (*Shield, error) {
 func (sm *ShieldMapper) GetFromID(id int64) (*Shield, error) {
 	sh := &Shield{}
 
-	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.api_id, '') AS api_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.shield_id = ?", id)
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.user_shield_id, '') AS user_shield_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.shield_id = ?", id)
 	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserShieldID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
 	case sql.ErrNoRows:
 		return nil, nil
@@ -65,7 +65,7 @@ func (sm *ShieldMapper) GetFromID(id int64) (*Shield, error) {
 func (sm *ShieldMapper) GetFromPublicID(publicID string) (*Shield, error) {
 	sh := &Shield{}
 
-	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.api_id, '') AS api_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.public_id = ?", publicID)
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.user_shield_id, '') AS user_shield_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.public_id = ?", publicID)
 	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserShieldID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
 	case sql.ErrNoRows:
 		return nil, nil
@@ -79,7 +79,7 @@ func (sm *ShieldMapper) GetFromPublicID(publicID string) (*Shield, error) {
 func (sm *ShieldMapper) GetFromUserIDAndID(userID, id int64) (*Shield, error) {
 	sh := &Shield{}
 
-	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.api_id, '') AS api_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.user_id = ? AND s.shield_id = ?", userID, id)
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.user_shield_id, '') AS user_shield_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.user_id = ? AND s.shield_id = ?", userID, id)
 	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserShieldID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
 	case sql.ErrNoRows:
 		return nil, nil
@@ -93,7 +93,7 @@ func (sm *ShieldMapper) GetFromUserIDAndID(userID, id int64) (*Shield, error) {
 func (sm *ShieldMapper) GetFromUserIDAndUserShieldID(userID int64, userShieldID string) (*Shield, error) {
 	sh := &Shield{}
 
-	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.api_id, '') AS api_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.user_id = ? AND s.api_id = ?", userID, userShieldID)
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.user_shield_id, '') AS user_shield_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.user_id = ? AND s.user_shield_id = ?", userID, userShieldID)
 	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserShieldID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
 	case sql.ErrNoRows:
 		return nil, nil
@@ -107,7 +107,7 @@ func (sm *ShieldMapper) GetFromUserIDAndUserShieldID(userID int64, userShieldID 
 func (sm *ShieldMapper) GetFromSecret(secret string) (*Shield, error) {
 	sh := &Shield{}
 
-	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.api_id, '') AS api_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.secret = ?", secret)
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.user_shield_id, '') AS user_shield_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.secret = ?", secret)
 	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.UserShieldID, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
 	case sql.ErrNoRows:
 		return nil, nil
@@ -121,7 +121,7 @@ func (sm *ShieldMapper) GetFromSecret(secret string) (*Shield, error) {
 func (sm *ShieldMapper) GetFromUserID(userID int64) ([]*Shield, error) {
 	out := []*Shield{}
 
-	rows, err := sm.db.Query("SELECT s.shield_id, s.public_id, COALESCE(s.api_id, '') AS api_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.user_id = ?", userID)
+	rows, err := sm.db.Query("SELECT s.shield_id, s.public_id, COALESCE(s.user_shield_id, '') AS user_shield_id, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s WHERE s.user_id = ?", userID)
 	if err != nil {
 		return out, err
 	}
@@ -156,7 +156,7 @@ func (sm *ShieldMapper) Save(n *Shield) error {
 	}()
 
 	if n.ShieldID > 0 {
-		_, err = tx.Exec("UPDATE shields SET user_id=?, api_id=?, name=?, title=?, text=?, color=?, secret=? WHERE shield_id = ?",
+		_, err = tx.Exec("UPDATE shields SET user_id=?, user_shield_id=?, name=?, title=?, text=?, color=?, secret=? WHERE shield_id = ?",
 			n.UserID, nullableString(n.UserShieldID), n.Name, n.Title, n.Text, n.Color, n.Secret, n.ShieldID)
 		if err != nil {
 			return err
@@ -167,7 +167,7 @@ func (sm *ShieldMapper) Save(n *Shield) error {
 			return err
 		}
 		n.PublicID = p
-		res, err := tx.Exec("INSERT INTO shields (public_id, api_id, user_id, name, title, text, color, secret) VALUES (?,?,?,?,?,?,?,?)",
+		res, err := tx.Exec("INSERT INTO shields (public_id, user_shield_id, user_id, name, title, text, color, secret) VALUES (?,?,?,?,?,?,?,?)",
 			n.PublicID, nullableString(n.UserShieldID), n.UserID, n.Name, n.Title, n.Text, n.Color, n.Secret)
 		if err != nil {
 			return err
