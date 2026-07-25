@@ -207,6 +207,7 @@ func (ah *ApiHandler) writeShieldResponse(w http.ResponseWriter, shield *model.S
 		w.WriteHeader(http.StatusCreated)
 	}
 	json.NewEncoder(w).Encode(map[string]string{
-		"ShieldURL": "https://" + ah.imgHost + "/s/" + shield.PublicID,
+		"ShieldURL":    "https://" + ah.imgHost + "/s/" + shield.PublicID,
+		"ShieldUserID": shield.UserShieldID,
 	})
 }
