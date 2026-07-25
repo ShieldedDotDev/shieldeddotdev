@@ -136,6 +136,8 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 	const [draft, setDraft] = useState<ShieldInterface>(shield);
 	const draftRef = useRef(draft);
 	const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const saveInFlight = useRef(false);
+	const pendingSave = useRef<ShieldInterface | null>(null);
 	const [imageTick, setImageTick] = useState(Date.now());
 	const [example, setExample] = useState(apiExamples[0]);
 	const [markdownCopied, setMarkdownCopied] = useState(false);
@@ -146,7 +148,29 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 		if (saveTimeout.current !== null) {
 			clearTimeout(saveTimeout.current);
 		}
+		pendingSave.current = null;
 	}, []);
+
+	const flushSave = () => {
+		if (saveInFlight.current || pendingSave.current === null) {
+			saveTimeout.current = null;
+			return;
+		}
+
+		const next = pendingSave.current;
+		pendingSave.current = null;
+		saveTimeout.current = null;
+		saveInFlight.current = true;
+		void onSave(next)
+			.then(() => setImageTick(Date.now()))
+			.catch(() => undefined)
+			.finally(() => {
+				saveInFlight.current = false;
+				if (pendingSave.current !== null && saveTimeout.current === null) {
+					flushSave();
+				}
+			});
+	};
 
 	const queueSave = (next: ShieldInterface) => {
 		if (saveTimeout.current !== null) {
@@ -155,15 +179,12 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 		}
 
 		if (next.ShieldKey !== undefined && next.ShieldKey !== "" && !shieldKeyPattern.test(next.ShieldKey)) {
+			pendingSave.current = null;
 			return;
 		}
 
-		saveTimeout.current = setTimeout(() => {
-			saveTimeout.current = null;
-			void onSave(next)
-				.then(() => setImageTick(Date.now()))
-				.catch(() => undefined);
-		}, 500);
+		pendingSave.current = next;
+		saveTimeout.current = setTimeout(flushSave, 500);
 	};
 
 	const handleInput = (event: JSX.TargetedEvent<HTMLFormElement, Event>) => {
