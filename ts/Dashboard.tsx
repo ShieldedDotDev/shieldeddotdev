@@ -51,7 +51,7 @@ function DashboardApp({ env }: { env: EnvInterface }) {
 
 	if (page === "user") {
 		return <>
-			<h3>User Settings</h3>
+			<h3>User tokens</h3>
 			<div class="dashboard--controller"><APITokens /></div>
 		</>;
 	}

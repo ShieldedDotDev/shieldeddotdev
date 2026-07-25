@@ -298,7 +298,7 @@ function DashboardApp({ env }) {
         return () => window.removeEventListener("hashchange", updatePage);
     }, []);
     if (page === "user") {
-        return u$1(S, { children: [u$1("h3", { children: "User Settings" }), u$1("div", { class: "dashboard--controller", children: u$1(APITokens, {}) })] });
+        return u$1(S, { children: [u$1("h3", { children: "User tokens" }), u$1("div", { class: "dashboard--controller", children: u$1(APITokens, {}) })] });
     }
     return u$1(S, { children: [u$1("h3", { children: "Dashboard" }), u$1("div", { class: "dashboard--controller", children: u$1(Shields, { env: env }) })] });
 }
