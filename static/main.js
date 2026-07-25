@@ -297,10 +297,10 @@ function DashboardApp({ env }) {
         window.addEventListener("hashchange", updatePage);
         return () => window.removeEventListener("hashchange", updatePage);
     }, []);
-    if (page === "user") {
-        return u$1(S, { children: [u$1("h3", { children: "User tokens" }), u$1("div", { class: "dashboard--controller", children: u$1(APITokens, {}) })] });
-    }
-    return u$1(S, { children: [u$1("h3", { children: "Dashboard" }), u$1("div", { class: "dashboard--controller", children: u$1(Shields, { env: env }) })] });
+    return u$1(S, { children: [u$1(DashboardNavigation, { page: page }), page === "user" ? u$1(S, { children: [u$1("h3", { children: "User tokens" }), u$1("div", { class: "dashboard--controller", children: u$1(APITokens, {}) })] }) : u$1(S, { children: [u$1("h3", { children: "Dashboard" }), u$1("div", { class: "dashboard--controller", children: u$1(Shields, { env: env }) })] })] });
+}
+function DashboardNavigation({ page }) {
+    return u$1("nav", { class: "dashboard-navigation", "aria-label": "Dashboard navigation", children: [u$1("a", { href: "#/dashboard", "aria-current": page === "dashboard" ? "page" : undefined, children: "Shields" }), u$1("a", { href: "#/user", "aria-current": page === "user" ? "page" : undefined, children: "User tokens" })] });
 }
 function Shields({ env }) {
     const api = A(new ShieldsApi()).current;

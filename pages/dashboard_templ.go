@@ -45,7 +45,7 @@ func DashboardPage(hosts Hosts) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<main><section id=\"dashboard\"><article class=\"dashboard-navigation\"><nav aria-label=\"Dashboard navigation\"><a href=\"#/dashboard\">Shields</a> <a href=\"#/user\">User tokens</a></nav></article><article id=\"dashboard-app\"></article></section></main><script type=\"module\">\n\t\t\t\timport { Dashboard } from '/main.js';\n\n\t\t\t\tdocument.addEventListener('DOMContentLoaded', function () {\n\t\t\t\t\tDashboard(document.getElementById('dashboard-app'));\n\t\t\t\t});\n\t\t\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<main><section id=\"dashboard\"><article id=\"dashboard-app\"></article></section></main><script type=\"module\">\n\t\t\t\timport { Dashboard } from '/main.js';\n\n\t\t\t\tdocument.addEventListener('DOMContentLoaded', function () {\n\t\t\t\t\tDashboard(document.getElementById('dashboard-app'));\n\t\t\t\t});\n\t\t\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

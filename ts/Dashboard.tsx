@@ -49,17 +49,23 @@ function DashboardApp({ env }: { env: EnvInterface }) {
 		return () => window.removeEventListener("hashchange", updatePage);
 	}, []);
 
-	if (page === "user") {
-		return <>
+	return <>
+		<DashboardNavigation page={page} />
+		{page === "user" ? <>
 			<h3>User tokens</h3>
 			<div class="dashboard--controller"><APITokens /></div>
-		</>;
-	}
-
-	return <>
-		<h3>Dashboard</h3>
-		<div class="dashboard--controller"><Shields env={env} /></div>
+		</> : <>
+			<h3>Dashboard</h3>
+			<div class="dashboard--controller"><Shields env={env} /></div>
+		</>}
 	</>;
+}
+
+function DashboardNavigation({ page }: { page: Page }) {
+	return <nav class="dashboard-navigation" aria-label="Dashboard navigation">
+		<a href="#/dashboard" aria-current={page === "dashboard" ? "page" : undefined}>Shields</a>
+		<a href="#/user" aria-current={page === "user" ? "page" : undefined}>User tokens</a>
+	</nav>;
 }
 
 function Shields({ env }: { env: EnvInterface }) {
