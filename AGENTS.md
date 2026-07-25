@@ -51,7 +51,7 @@ go generate ./...                         # regenerate templ Go files
 npx sass scss:static/style                 # regenerate static/style/style.css
 npx rollup --config rollup.config.mjs      # regenerate static/main.js
 make lint                                  # runs TSLint with --fix
-go test ./...                              # compile/test all Go packages (there are currently no committed Go test files)
+go test ./...                              # compile/test all Go packages
 ```
 
 `make clean` removes binaries, generated frontend assets, release artifacts, and emitted JavaScript below `ts/`; do not run it merely to inspect a dirty worktree.
@@ -64,6 +64,10 @@ go test ./...                              # compile/test all Go packages (there
 - Edit `ts/`, never `static/main.js`. Regenerate through Rollup and include `static/main.js` when its source changes.
 - Edit `scss/`, never `static/style/style.css`. Regenerate through Sass and include the output when styles change.
 - The release binary embeds `static/` (`static.go`). A frontend or stylesheet change is therefore part of the binary release.
+
+### Review feedback
+
+- When addressing or declining a Copilot review comment, reply in its GitHub thread with the implemented change or the reason it does not apply.
 
 ### Go
 

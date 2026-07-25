@@ -1,6 +1,6 @@
 import { render } from "preact";
 import type { JSX } from "preact";
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useEffect, useId, useRef, useState } from "preact/hooks";
 
 import { AuthedApi } from "./api/authed";
 import { EnvApi, EnvInterface } from "./api/env";
@@ -202,6 +202,8 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 	const selectedExample = example[1](env, draft.Title, draft.Text, draft.Color, draft.Secret);
 	const shieldKeyInvalid = draft.ShieldKey !== undefined && draft.ShieldKey !== "" && !shieldKeyPattern.test(draft.ShieldKey);
 	const shieldKeyErrorID = `shield-${draft.ShieldID}-key-error`;
+	const markdownInputID = `shield-${draft.ShieldID}-markdown`;
+	const secretInputID = `shield-${draft.ShieldID}-secret`;
 
 	return <form class="shield--controller" onInput={handleInput}>
 		<section class="name-input">
@@ -209,7 +211,7 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 			<Input label="Shield key" name="ShieldKey" value={draft.ShieldKey || ""} pattern="[a-z0-9\\-]{5,64}" title="Optional: 5-64 lowercase letters, digits, or hyphens" placeholder="e.g. production-status" autoComplete="off" spellcheck={false} aria-invalid={shieldKeyInvalid} aria-describedby={shieldKeyInvalid ? shieldKeyErrorID : undefined} />
 			{shieldKeyInvalid && <p id={shieldKeyErrorID} class="input-error" role="alert">Shield key must be 5-64 lowercase letters, digits, or hyphens.</p>}
 		</section>
-		<section class="shield-container"><img src={`https://${env.ImgHost}/s/${draft.PublicID}?break=${imageTick}`} /></section>
+		<section class="shield-container"><img src={`https://${env.ImgHost}/s/${draft.PublicID}?break=${imageTick}`} alt={`${draft.Title}: ${draft.Text}`} /></section>
 		<section class="main-inputs">
 			<Input label="Title" name="Title" value={draft.Title} />
 			<Input label="Text" name="Text" value={draft.Text} />
@@ -224,16 +226,18 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 		</details>
 		<section class="button-container"><button type="button" class="danger" onClick={deleteShield}><span class="icon">❌</span>Delete</button></section>
 		<section class="fancy-inputs">
-			<label>Markdown</label>
-			<div class="markdown-input--controller"><input value={markdown} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(markdown, setMarkdownCopied)}>{markdownCopied ? "Copied!" : "Copy"}</button></div>
-			<label>This shield's API token</label>
-			<div class="secret-input--controller"><input type={secretVisible ? "text" : "password"} value={draft.Secret} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(draft.Secret, setSecretCopied)}>{secretCopied ? "Copied!" : "Copy"}</button><button type="button" onClick={() => setSecretVisible(!secretVisible)}>{secretVisible ? "Hide" : "Reveal"}</button></div>
+			<label for={markdownInputID}>Markdown</label>
+			<div class="markdown-input--controller"><input id={markdownInputID} value={markdown} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(markdown, setMarkdownCopied)}>{markdownCopied ? "Copied!" : "Copy"}</button></div>
+			<label for={secretInputID}>This shield's API token</label>
+			<div class="secret-input--controller"><input id={secretInputID} type={secretVisible ? "text" : "password"} value={draft.Secret} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(draft.Secret, setSecretCopied)}>{secretCopied ? "Copied!" : "Copy"}</button><button type="button" onClick={() => setSecretVisible(!secretVisible)}>{secretVisible ? "Hide" : "Reveal"}</button></div>
 		</section>
 	</form>;
 }
 
 function Input({ label, ...attributes }: JSX.InputHTMLAttributes<HTMLInputElement> & { label: string }) {
-	return <div class="input-container"><label>{label}</label><input {...attributes} /></div>;
+	const generatedID = useId();
+	const id = attributes.id || generatedID;
+	return <div class="input-container"><label for={id}>{label}</label><input {...attributes} id={id} /></div>;
 }
 
 function APITokens() {
@@ -296,7 +300,7 @@ function APITokens() {
 			<button type="submit" class="primary" disabled={creating}>Create token</button>
 		</form>
 		{error !== "" && <p>{error}</p>}
-		{createdToken !== "" && <div class="created-api-token"><p>Copy this token now. It will not be shown again.</p><input value={createdToken} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(createdToken, setCopied)}>{copied ? "Copied!" : "Copy"}</button></div>}
+		{createdToken !== "" && <div class="created-api-token"><p>Copy this token now. It will not be shown again.</p><label for="created-api-token">New API token</label><input id="created-api-token" value={createdToken} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(createdToken, setCopied)}>{copied ? "Copied!" : "Copy"}</button></div>}
 		<div>
 			<h4>Active tokens</h4>
 			{tokens === null && error === "" && <p>Loading API tokens…</p>}
