@@ -12,8 +12,6 @@ import (
 
 var (
 	errInvalidShieldColor = errors.New("invalid shield color")
-	errInvalidShieldKey   = errors.New("invalid shield key")
-	errShieldKeyInUse     = errors.New("shield key is already in use")
 )
 
 type ApiHandler struct {
@@ -34,13 +32,13 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for k := range r.Form {
-		if k != "id" && k != "shield_key" && k != "title" && k != "text" && k != "color" {
+		if k != "shield_key" && k != "title" && k != "text" && k != "color" {
 			http.Error(w, "invalid field: "+k, http.StatusBadRequest)
 			return
 		}
 	}
 
-	shieldKey := r.FormValue("id")
+	shieldKey := r.FormValue("shield_key")
 	if shieldKey != "" {
 		ah.handleUserTokenPOST(w, r, shieldKey)
 		return
@@ -51,7 +49,7 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 
 func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request, shieldKey string) {
 	if !validShieldKey(shieldKey) {
-		http.Error(w, "id must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
+		http.Error(w, "shield_key must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
 		return
 	}
 
@@ -60,7 +58,7 @@ func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request
 		return
 	}
 	if !model.IsUserAPIToken(token) {
-		http.Error(w, "id requires a user token", http.StatusBadRequest)
+		http.Error(w, "shield_key requires a user token", http.StatusBadRequest)
 		return
 	}
 
@@ -116,7 +114,7 @@ func (ah *ApiHandler) handleShieldTokenPOST(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	if model.IsUserAPIToken(token) {
-		http.Error(w, "user token requires an id", http.StatusBadRequest)
+		http.Error(w, "user token requires a shield_key", http.StatusBadRequest)
 		return
 	}
 
@@ -165,20 +163,6 @@ func (ah *ApiHandler) saveShieldFromForm(r *http.Request, shield *model.Shield) 
 		}
 		shield.Color = color
 	}
-	if shieldKey := r.FormValue("shield_key"); shieldKey != "" {
-		if !validShieldKey(shieldKey) {
-			return created, errInvalidShieldKey
-		}
-		available, err := shieldKeyAvailable(ah.sm, shield.UserID, shield.ShieldID, shieldKey)
-		if err != nil {
-			return created, err
-		}
-		if !available {
-			return created, errShieldKeyInUse
-		}
-		shield.ShieldKey = shieldKey
-	}
-
 	err := ah.sm.Save(shield)
 	if err != nil {
 		return created, err
@@ -188,11 +172,11 @@ func (ah *ApiHandler) saveShieldFromForm(r *http.Request, shield *model.Shield) 
 }
 
 func (ah *ApiHandler) handleSaveShieldError(w http.ResponseWriter, err error) {
-	if errors.Is(err, errInvalidShieldColor) || errors.Is(err, errInvalidShieldKey) {
+	if errors.Is(err, errInvalidShieldColor) {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
-	if errors.Is(err, errShieldKeyInUse) || shieldKeyInUseError(err) {
+	if shieldKeyInUseError(err) {
 		http.Error(w, err.Error(), http.StatusConflict)
 		return
 	}
