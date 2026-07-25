@@ -72,12 +72,13 @@ go test ./...                              # compile/test all Go packages (there
 - Use parameterized SQL through `database/sql`, as the mappers do. Shield reads and writes must preserve the ownership checks used by the dashboard handlers.
 - Do not change public JSON field names or badge URL shapes casually. The dashboard, embedded Markdown, and external clients depend on the exported Go/TypeScript field names and host-specific routes.
 - Preserve the `NormalizeColor` path for the public update API and static badge route when adding accepted color input. It resolves named badge colors and validates 3- or 6-digit hexadecimal colors.
-- User-level API tokens are issued with `crypto/rand`, prefix values with `sdu_`, store only a one-way hash, return the plaintext only at creation, and scope dashboard reads/deletes by the authenticated user. The API host receives both user and per-shield values as `Authorization: token <token>`; a non-empty form field `id` selects a user-token update/create and is required for `sdu_` values, while a blank or absent value requires a per-shield token. Either workflow can set a non-empty `user_shield_id` form value. Valid user-token authentication records `stamp_last_used`.
+- User-level API tokens are issued with `crypto/rand`, prefix values with `sdu_`, store only a one-way hash, return the plaintext only at creation, and scope dashboard reads/deletes by the authenticated user. The API host receives both user and per-shield values as `Authorization: token <token>`; a non-empty form field `id` selects a user-token update/create and is required for `sdu_` values, while a blank or absent value requires a per-shield token. Either workflow can set a non-empty `shield_key` form value. Valid user-token authentication records `stamp_last_used`.
 
 ### Database schema and migrations
 
 - `schema/000_BASELINE.sql` is the dump-derived baseline for a new database. It contains `DROP TABLE` statements, so do not apply it to a database that must retain data.
 - Add every schema change as a new forward-only SQL file in `schema/`, using the next zero-padded numeric prefix in application order (for example, `001_add_shield_index.sql`). Never renumber, edit, or reorder an existing migration once it may have been applied.
+- Give every new database column a `COMMENT` that states its purpose.
 - Keep migration SQL compatible with the baseline's MariaDB/MySQL dialect and preserve the `users`/`shields` foreign-key relationship unless the corresponding application behavior changes together.
 - The Go binary does not run migrations. `run-local.sh` is a local-only clean-database runner that applies every numbered migration; production deployments must use an equivalent controlled migration process.
 

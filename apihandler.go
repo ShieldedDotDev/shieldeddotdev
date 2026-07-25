@@ -11,9 +11,9 @@ import (
 )
 
 var (
-	errInvalidShieldColor  = errors.New("invalid shield color")
-	errInvalidUserShieldID = errors.New("invalid user shield ID")
-	errUserShieldIDInUse   = errors.New("user shield ID is already in use")
+	errInvalidShieldColor = errors.New("invalid shield color")
+	errInvalidShieldKey   = errors.New("invalid shield key")
+	errShieldKeyInUse     = errors.New("shield key is already in use")
 )
 
 type ApiHandler struct {
@@ -34,23 +34,23 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for k := range r.Form {
-		if k != "id" && k != "user_shield_id" && k != "title" && k != "text" && k != "color" {
+		if k != "id" && k != "shield_key" && k != "title" && k != "text" && k != "color" {
 			http.Error(w, "invalid field: "+k, http.StatusBadRequest)
 			return
 		}
 	}
 
-	userShieldID := r.FormValue("id")
-	if userShieldID != "" {
-		ah.handleUserTokenPOST(w, r, userShieldID)
+	shieldKey := r.FormValue("id")
+	if shieldKey != "" {
+		ah.handleUserTokenPOST(w, r, shieldKey)
 		return
 	}
 
 	ah.handleShieldTokenPOST(w, r)
 }
 
-func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request, userShieldID string) {
-	if !validUserShieldID(userShieldID) {
+func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request, shieldKey string) {
+	if !validShieldKey(shieldKey) {
 		http.Error(w, "id must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
 		return
 	}
@@ -78,7 +78,7 @@ func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request
 		slog.Error("error recording user API token use", slog.Any("error", err), slog.Int64("api_token_id", userToken.APITokenID))
 	}
 
-	shield, err := ah.sm.GetFromUserIDAndUserShieldID(userToken.UserID, userShieldID)
+	shield, err := ah.sm.GetFromUserIDAndShieldKey(userToken.UserID, shieldKey)
 	if err != nil {
 		slog.Error("error fetching shield from user API token", slog.Any("error", err), slog.Int64("user_id", userToken.UserID))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -92,13 +92,13 @@ func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request
 			return
 		}
 		shield = &model.Shield{
-			UserID:       userToken.UserID,
-			UserShieldID: userShieldID,
-			Name:         "New Shield",
-			Title:        "New",
-			Text:         "Shield",
-			Color:        "00AA55",
-			Secret:       secret,
+			UserID:    userToken.UserID,
+			ShieldKey: shieldKey,
+			Name:      "New Shield",
+			Title:     "New",
+			Text:      "Shield",
+			Color:     "00AA55",
+			Secret:    secret,
 		}
 	}
 
@@ -165,18 +165,18 @@ func (ah *ApiHandler) saveShieldFromForm(r *http.Request, shield *model.Shield) 
 		}
 		shield.Color = color
 	}
-	if userShieldID := r.FormValue("user_shield_id"); userShieldID != "" {
-		if !validUserShieldID(userShieldID) {
-			return created, errInvalidUserShieldID
+	if shieldKey := r.FormValue("shield_key"); shieldKey != "" {
+		if !validShieldKey(shieldKey) {
+			return created, errInvalidShieldKey
 		}
-		available, err := userShieldIDAvailable(ah.sm, shield.UserID, shield.ShieldID, userShieldID)
+		available, err := shieldKeyAvailable(ah.sm, shield.UserID, shield.ShieldID, shieldKey)
 		if err != nil {
 			return created, err
 		}
 		if !available {
-			return created, errUserShieldIDInUse
+			return created, errShieldKeyInUse
 		}
-		shield.UserShieldID = userShieldID
+		shield.ShieldKey = shieldKey
 	}
 
 	err := ah.sm.Save(shield)
@@ -188,11 +188,11 @@ func (ah *ApiHandler) saveShieldFromForm(r *http.Request, shield *model.Shield) 
 }
 
 func (ah *ApiHandler) handleSaveShieldError(w http.ResponseWriter, err error) {
-	if errors.Is(err, errInvalidShieldColor) || errors.Is(err, errInvalidUserShieldID) {
+	if errors.Is(err, errInvalidShieldColor) || errors.Is(err, errInvalidShieldKey) {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
-	if errors.Is(err, errUserShieldIDInUse) {
+	if errors.Is(err, errShieldKeyInUse) {
 		http.Error(w, err.Error(), http.StatusConflict)
 		return
 	}
@@ -207,7 +207,7 @@ func (ah *ApiHandler) writeShieldResponse(w http.ResponseWriter, shield *model.S
 		w.WriteHeader(http.StatusCreated)
 	}
 	json.NewEncoder(w).Encode(map[string]string{
-		"ShieldURL":    "https://" + ah.imgHost + "/s/" + shield.PublicID,
-		"ShieldUserID": shield.UserShieldID,
+		"ShieldURL": "https://" + ah.imgHost + "/s/" + shield.PublicID,
+		"ShieldKey": shield.ShieldKey,
 	})
 }

@@ -14,18 +14,18 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var userShieldIDPattern = regexp.MustCompile(`^[a-z0-9-]{5,64}$`)
+var shieldKeyPattern = regexp.MustCompile(`^[a-z0-9-]{5,64}$`)
 
-func validUserShieldID(userShieldID string) bool {
-	return userShieldID == "" || userShieldIDPattern.MatchString(userShieldID)
+func validShieldKey(shieldKey string) bool {
+	return shieldKey == "" || shieldKeyPattern.MatchString(shieldKey)
 }
 
-func userShieldIDAvailable(sm *model.ShieldMapper, userID, shieldID int64, userShieldID string) (bool, error) {
-	if userShieldID == "" {
+func shieldKeyAvailable(sm *model.ShieldMapper, userID, shieldID int64, shieldKey string) (bool, error) {
+	if shieldKey == "" {
 		return true, nil
 	}
 
-	shield, err := sm.GetFromUserIDAndUserShieldID(userID, userShieldID)
+	shield, err := sm.GetFromUserIDAndShieldKey(userID, shieldKey)
 	if err != nil {
 		return false, err
 	}
@@ -83,18 +83,18 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 		http.Error(w, "failed to parse request body", http.StatusBadRequest)
 		return
 	}
-	if !validUserShieldID(postShield.UserShieldID) {
-		http.Error(w, "shield ID must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
+	if !validShieldKey(postShield.ShieldKey) {
+		http.Error(w, "shield key must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
 		return
 	}
-	available, err := userShieldIDAvailable(sh.sm, *id, 0, postShield.UserShieldID)
+	available, err := shieldKeyAvailable(sh.sm, *id, 0, postShield.ShieldKey)
 	if err != nil {
-		slog.Error("error checking user shield ID", slog.Any("error", err), slog.Any("id", *id))
+		slog.Error("error checking shield key", slog.Any("error", err), slog.Any("id", *id))
 		http.Error(w, "database error", http.StatusInternalServerError)
 		return
 	}
 	if !available {
-		http.Error(w, "shield ID is already in use", http.StatusConflict)
+		http.Error(w, "shield key is already in use", http.StatusConflict)
 		return
 	}
 
@@ -108,8 +108,8 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 	cleanShield := &model.Shield{
 		UserID: *id,
 
-		UserShieldID: postShield.UserShieldID,
-		Name:         postShield.Name,
+		ShieldKey: postShield.ShieldKey,
+		Name:      postShield.Name,
 
 		Title: postShield.Title,
 		Text:  postShield.Text,
@@ -205,22 +205,22 @@ func (dh *DashboardShieldApiHandler) HandlePUT(w http.ResponseWriter, r *http.Re
 		http.Error(w, "failed to parse request body", http.StatusBadRequest)
 		return
 	}
-	if !validUserShieldID(putShield.UserShieldID) {
-		http.Error(w, "shield ID must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
+	if !validShieldKey(putShield.ShieldKey) {
+		http.Error(w, "shield key must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
 		return
 	}
-	available, err := userShieldIDAvailable(dh.sm, shield.UserID, shield.ShieldID, putShield.UserShieldID)
+	available, err := shieldKeyAvailable(dh.sm, shield.UserID, shield.ShieldID, putShield.ShieldKey)
 	if err != nil {
-		slog.Error("error checking user shield ID", slog.Any("error", err), slog.Any("id", shield.UserID))
+		slog.Error("error checking shield key", slog.Any("error", err), slog.Any("id", shield.UserID))
 		http.Error(w, "database error", http.StatusInternalServerError)
 		return
 	}
 	if !available {
-		http.Error(w, "shield ID is already in use", http.StatusConflict)
+		http.Error(w, "shield key is already in use", http.StatusConflict)
 		return
 	}
 
-	shield.UserShieldID = putShield.UserShieldID
+	shield.ShieldKey = putShield.ShieldKey
 	shield.Name = putShield.Name
 
 	shield.Title = putShield.Title
