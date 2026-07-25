@@ -3,14 +3,17 @@ package shieldeddotdev
 import (
 	cryptorand "crypto/rand"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
 	"math/big"
 	"net/http"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
+	"github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
 
@@ -31,6 +34,11 @@ func shieldKeyAvailable(sm *model.ShieldMapper, userID, shieldID int64, shieldKe
 	}
 
 	return shield == nil || shield.ShieldID == shieldID, nil
+}
+
+func shieldKeyInUseError(err error) bool {
+	var mysqlErr *mysql.MySQLError
+	return errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 && strings.Contains(mysqlErr.Message, "unq_shields_shield_key")
 }
 
 type DashboardShieldApiIndexHandler struct {
@@ -119,6 +127,10 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 	}
 
 	err = sh.sm.Save(cleanShield)
+	if shieldKeyInUseError(err) {
+		http.Error(w, "shield key is already in use", http.StatusConflict)
+		return
+	}
 	if err != nil {
 		slog.Error("error saving shield", slog.Any("error", err))
 		http.Error(w, "database error", http.StatusInternalServerError)
@@ -228,6 +240,10 @@ func (dh *DashboardShieldApiHandler) HandlePUT(w http.ResponseWriter, r *http.Re
 	shield.Color = putShield.Color
 
 	err = dh.sm.Save(shield)
+	if shieldKeyInUseError(err) {
+		http.Error(w, "shield key is already in use", http.StatusConflict)
+		return
+	}
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

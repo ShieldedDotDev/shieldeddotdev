@@ -192,7 +192,7 @@ func (ah *ApiHandler) handleSaveShieldError(w http.ResponseWriter, err error) {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
-	if errors.Is(err, errShieldKeyInUse) {
+	if errors.Is(err, errShieldKeyInUse) || shieldKeyInUseError(err) {
 		http.Error(w, err.Error(), http.StatusConflict)
 		return
 	}
