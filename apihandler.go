@@ -2,12 +2,15 @@ package shieldeddotdev
 
 import (
 	"encoding/json"
+	"errors"
 	"log/slog"
 	"net/http"
 	"strings"
 
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
 )
+
+var errInvalidShieldColor = errors.New("invalid shield color")
 
 type ApiHandler struct {
 	sm      *model.ShieldMapper
@@ -77,8 +80,7 @@ func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	created := shield == nil
-	if created {
+	if shield == nil {
 		defaultColor, err := NormalizeColor("green")
 		if err != nil {
 			slog.Error("error selecting default shield color", slog.Any("error", err))
@@ -101,7 +103,12 @@ func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request
 		}
 	}
 
-	ah.saveShieldFromForm(w, r, shield, created)
+	created, err := ah.saveShieldFromForm(r, shield)
+	if err != nil {
+		ah.handleSaveShieldError(w, err)
+		return
+	}
+	ah.writeShieldResponse(w, shield, created)
 }
 
 func (ah *ApiHandler) handleShieldTokenPOST(w http.ResponseWriter, r *http.Request) {
@@ -126,7 +133,12 @@ func (ah *ApiHandler) handleShieldTokenPOST(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	ah.saveShieldFromForm(w, r, shield, false)
+	created, err := ah.saveShieldFromForm(r, shield)
+	if err != nil {
+		ah.handleSaveShieldError(w, err)
+		return
+	}
+	ah.writeShieldResponse(w, shield, created)
 }
 
 func apiRequestToken(w http.ResponseWriter, r *http.Request) (string, bool) {
@@ -138,8 +150,8 @@ func apiRequestToken(w http.ResponseWriter, r *http.Request) (string, bool) {
 	return authParts[1], true
 }
 
-func (ah *ApiHandler) saveShieldFromForm(w http.ResponseWriter, r *http.Request, shield *model.Shield, created bool) {
-	var err error
+func (ah *ApiHandler) saveShieldFromForm(r *http.Request, shield *model.Shield) (bool, error) {
+	created := shield.ShieldID == 0
 
 	if title := r.FormValue("title"); title != "" {
 		shield.Title = title
@@ -150,19 +162,30 @@ func (ah *ApiHandler) saveShieldFromForm(w http.ResponseWriter, r *http.Request,
 	if color := r.FormValue("color"); color != "" {
 		color, err := NormalizeColor(color)
 		if err != nil {
-			slog.Error("error normalizing color", slog.Any("error", err))
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
+			return created, errInvalidShieldColor
 		}
 		shield.Color = color
 	}
 
-	err = ah.sm.Save(shield)
+	err := ah.sm.Save(shield)
 	if err != nil {
-		slog.Error("error saving shield", slog.Any("error", err))
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return created, err
+	}
+
+	return created, nil
+}
+
+func (ah *ApiHandler) handleSaveShieldError(w http.ResponseWriter, err error) {
+	if errors.Is(err, errInvalidShieldColor) {
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
+
+	slog.Error("error saving shield", slog.Any("error", err))
+	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+}
+
+func (ah *ApiHandler) writeShieldResponse(w http.ResponseWriter, shield *model.Shield, created bool) {
 	w.Header().Set("Content-Type", "application/json")
 	if created {
 		w.WriteHeader(http.StatusCreated)
