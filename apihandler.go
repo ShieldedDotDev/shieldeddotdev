@@ -85,12 +85,6 @@ func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request
 		return
 	}
 	if shield == nil {
-		defaultColor, err := NormalizeColor("green")
-		if err != nil {
-			slog.Error("error selecting default shield color", slog.Any("error", err))
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-			return
-		}
 		secret, err := secureStringWithCharset(40, "abcdefghjkmnpqrstuvwxyz23456789")
 		if err != nil {
 			slog.Error("error generating shield secret", slog.Any("error", err))
@@ -100,9 +94,10 @@ func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request
 		shield = &model.Shield{
 			UserID:       userToken.UserID,
 			UserShieldID: userShieldID,
-			Name:         userShieldID,
-			Title:        userShieldID,
-			Color:        defaultColor,
+			Name:         "New Shield",
+			Title:        "New",
+			Text:         "Shield",
+			Color:        "00AA55",
 			Secret:       secret,
 		}
 	}
