@@ -10,7 +10,11 @@ import (
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
 )
 
-var errInvalidShieldColor = errors.New("invalid shield color")
+var (
+	errInvalidShieldColor  = errors.New("invalid shield color")
+	errInvalidUserShieldID = errors.New("invalid user shield ID")
+	errUserShieldIDInUse   = errors.New("user shield ID is already in use")
+)
 
 type ApiHandler struct {
 	sm      *model.ShieldMapper
@@ -30,7 +34,7 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for k := range r.Form {
-		if k != "id" && k != "title" && k != "text" && k != "color" {
+		if k != "id" && k != "user_shield_id" && k != "title" && k != "text" && k != "color" {
 			http.Error(w, "invalid field: "+k, http.StatusBadRequest)
 			return
 		}
@@ -166,6 +170,19 @@ func (ah *ApiHandler) saveShieldFromForm(r *http.Request, shield *model.Shield) 
 		}
 		shield.Color = color
 	}
+	if userShieldID := r.FormValue("user_shield_id"); userShieldID != "" {
+		if !validUserShieldID(userShieldID) {
+			return created, errInvalidUserShieldID
+		}
+		available, err := userShieldIDAvailable(ah.sm, shield.UserID, shield.ShieldID, userShieldID)
+		if err != nil {
+			return created, err
+		}
+		if !available {
+			return created, errUserShieldIDInUse
+		}
+		shield.UserShieldID = userShieldID
+	}
 
 	err := ah.sm.Save(shield)
 	if err != nil {
@@ -176,8 +193,12 @@ func (ah *ApiHandler) saveShieldFromForm(r *http.Request, shield *model.Shield) 
 }
 
 func (ah *ApiHandler) handleSaveShieldError(w http.ResponseWriter, err error) {
-	if errors.Is(err, errInvalidShieldColor) {
+	if errors.Is(err, errInvalidShieldColor) || errors.Is(err, errInvalidUserShieldID) {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	if errors.Is(err, errUserShieldIDInUse) {
+		http.Error(w, err.Error(), http.StatusConflict)
 		return
 	}
 
