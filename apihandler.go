@@ -33,8 +33,8 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	userShieldID, hasUserShieldID := r.Form["id"]
-	if hasUserShieldID {
+	userShieldID := r.FormValue("id")
+	if userShieldID != "" {
 		ah.handleUserTokenPOST(w, r, userShieldID)
 		return
 	}
@@ -42,8 +42,8 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 	ah.handleShieldTokenPOST(w, r)
 }
 
-func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request, userShieldIDs []string) {
-	if len(userShieldIDs) != 1 || userShieldIDs[0] == "" || !validUserShieldID(userShieldIDs[0]) {
+func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request, userShieldID string) {
+	if !validUserShieldID(userShieldID) {
 		http.Error(w, "id must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
 		return
 	}
@@ -71,7 +71,7 @@ func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request
 		slog.Error("error recording user API token use", slog.Any("error", err), slog.Int64("api_token_id", userToken.APITokenID))
 	}
 
-	shield, err := ah.sm.GetFromUserIDAndUserShieldID(userToken.UserID, userShieldIDs[0])
+	shield, err := ah.sm.GetFromUserIDAndUserShieldID(userToken.UserID, userShieldID)
 	if err != nil {
 		slog.Error("error fetching shield from user API token", slog.Any("error", err), slog.Int64("user_id", userToken.UserID))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -93,9 +93,9 @@ func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request
 		}
 		shield = &model.Shield{
 			UserID:       userToken.UserID,
-			UserShieldID: userShieldIDs[0],
-			Name:         userShieldIDs[0],
-			Title:        userShieldIDs[0],
+			UserShieldID: userShieldID,
+			Name:         userShieldID,
+			Title:        userShieldID,
 			Color:        defaultColor,
 			Secret:       secret,
 		}
