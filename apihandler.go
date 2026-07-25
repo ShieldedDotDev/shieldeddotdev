@@ -32,7 +32,33 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 	created := false
 	var err error
 
-	if model.IsUserAPIToken(authParts[1]) {
+	err = r.ParseForm()
+	if err != nil {
+		slog.Error("error parsing form", slog.Any("error", err))
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+
+	for k := range r.Form {
+		if k != "id" && k != "title" && k != "text" && k != "color" {
+			http.Error(w, "invalid field: "+k, http.StatusBadRequest)
+			return
+		}
+	}
+
+	userShieldID, hasUserShieldID := r.Form["id"]
+	if hasUserShieldID {
+		if len(userShieldID) != 1 || userShieldID[0] == "" || !validUserShieldID(userShieldID[0]) {
+			http.Error(w, "id must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
+			return
+		}
+	}
+
+	if hasUserShieldID {
+		if !model.IsUserAPIToken(authParts[1]) {
+			http.Error(w, "id requires a user token", http.StatusBadRequest)
+			return
+		}
 		userToken, err = ah.tm.GetFromToken(authParts[1])
 		if err != nil {
 			slog.Error("error fetching user API token", slog.Any("error", err))
@@ -44,13 +70,7 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		userShieldID := r.Header.Get("X-Shielded-Shield-ID")
-		if !validUserShieldID(userShieldID) || userShieldID == "" {
-			http.Error(w, "X-Shielded-Shield-ID must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
-			return
-		}
-
-		shield, err = ah.sm.GetFromUserIDAndUserShieldID(userToken.UserID, userShieldID)
+		shield, err = ah.sm.GetFromUserIDAndUserShieldID(userToken.UserID, userShieldID[0])
 		if err != nil {
 			slog.Error("error fetching shield from user API token", slog.Any("error", err), slog.Int64("user_id", userToken.UserID))
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -71,15 +91,19 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 			}
 			shield = &model.Shield{
 				UserID:       userToken.UserID,
-				UserShieldID: userShieldID,
-				Name:         userShieldID,
-				Title:        userShieldID,
+				UserShieldID: userShieldID[0],
+				Name:         userShieldID[0],
+				Title:        userShieldID[0],
 				Color:        defaultColor,
 				Secret:       secret,
 			}
 			created = true
 		}
 	} else {
+		if model.IsUserAPIToken(authParts[1]) {
+			http.Error(w, "user token requires an id", http.StatusBadRequest)
+			return
+		}
 		shield, err = ah.sm.GetFromSecret(authParts[1])
 		if err != nil {
 			slog.Error("error fetching shield from secret", slog.Any("error", err))
@@ -93,19 +117,6 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = r.ParseForm()
-	if err != nil {
-		slog.Error("error parsing form", slog.Any("error", err))
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-		return
-	}
-
-	for k := range r.Form {
-		if k != "title" && k != "text" && k != "color" {
-			http.Error(w, "invalid field: "+k, http.StatusBadRequest)
-			return
-		}
-	}
 	if title := r.FormValue("title"); title != "" {
 		shield.Title = title
 	}
