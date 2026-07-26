@@ -110,11 +110,11 @@ func main() {
 	wo.HandleFunc("/api/shield/{id:[0-9]+}", sah.HandleDELETE).Methods("DELETE")
 
 	tih := shieldeddotdev.NewDashboardUserAPITokenIndexHandler(tm, jwta)
-	wo.HandleFunc("/user/tokens", tih.HandleGET).Methods("GET")
-	wo.HandleFunc("/user/tokens", tih.HandlePOST).Methods("POST")
+	wo.HandleFunc("/api/user/tokens", tih.HandleGET).Methods("GET")
+	wo.HandleFunc("/api/user/tokens", tih.HandlePOST).Methods("POST")
 
 	th := shieldeddotdev.NewDashboardUserAPITokenHandler(tm, jwta)
-	wo.HandleFunc("/user/tokens/{id:[0-9]+}", th.HandleDELETE).Methods("DELETE")
+	wo.HandleFunc("/api/user/tokens/{id:[0-9]+}", th.HandleDELETE).Methods("DELETE")
 
 	wo.HandleFunc("/env", func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]any{

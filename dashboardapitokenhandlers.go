@@ -69,7 +69,7 @@ func (th *DashboardUserAPITokenIndexHandler) HandlePOST(w http.ResponseWriter, r
 		return
 	}
 
-	w.Header().Set("Location", "/user/tokens/"+strconv.FormatInt(token.APITokenID, 10))
+	w.Header().Set("Location", "/api/user/tokens/"+strconv.FormatInt(token.APITokenID, 10))
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	if err := json.NewEncoder(w).Encode(struct {
