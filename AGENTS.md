@@ -76,7 +76,7 @@ go test ./...                              # compile/test all Go packages
 - Use parameterized SQL through `database/sql`, as the mappers do. Shield reads and writes must preserve the ownership checks used by the dashboard handlers.
 - Do not change public JSON field names or badge URL shapes casually. The dashboard, embedded Markdown, and external clients depend on the exported Go/TypeScript field names and host-specific routes.
 - Preserve the `NormalizeColor` path for the public update API and static badge route when adding accepted color input. It resolves named badge colors and validates 3- or 6-digit hexadecimal colors.
-- User-level API tokens are issued with `crypto/rand`, prefix values with `sdu_`, store only a one-way hash, return the plaintext only at creation, and scope dashboard reads/deletes by the authenticated user. The API host receives both user and per-shield values as `Authorization: token <token>`; a non-empty form field `shield_key` selects a user-token update/create and is required for `sdu_` values, while a blank or absent value requires a per-shield token. Valid user-token authentication records `stamp_last_used`.
+- User-level API tokens are issued with `crypto/rand`, prefix values with `sdu_`, store only a one-way hash, return the plaintext only at creation, and scope dashboard reads/deletes by the authenticated user. The API host receives both user and per-shield values as `Authorization: token <token>`; a non-empty form field `shield_key` selects a user-token update/create and is required for `sdu_` values, while a blank or absent value requires a per-shield token. Valid user-token authentication records `date_last_used`.
 
 ### Database schema and migrations
 

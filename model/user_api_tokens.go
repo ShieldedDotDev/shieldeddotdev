@@ -40,7 +40,7 @@ func NewUserAPITokenMapper(db *sql.DB) *UserAPITokenMapper {
 }
 
 func (tm *UserAPITokenMapper) GetFromUserID(userID int64) ([]*UserAPIToken, error) {
-	rows, err := tm.db.Query(`SELECT api_token_id, user_id, description, stamp_created, stamp_last_used FROM user_api_tokens WHERE user_id = ? ORDER BY stamp_created DESC, api_token_id DESC`, userID)
+	rows, err := tm.db.Query(`SELECT api_token_id, user_id, description, date_created, date_last_used FROM user_api_tokens WHERE user_id = ? ORDER BY date_created DESC, api_token_id DESC`, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (tm *UserAPITokenMapper) GetFromUserID(userID int64) ([]*UserAPIToken, erro
 }
 
 func (tm *UserAPITokenMapper) GetFromUserIDAndID(userID, apiTokenID int64) (*UserAPIToken, error) {
-	row := tm.db.QueryRow(`SELECT api_token_id, user_id, description, stamp_created, stamp_last_used FROM user_api_tokens WHERE user_id = ? AND api_token_id = ?`, userID, apiTokenID)
+	row := tm.db.QueryRow(`SELECT api_token_id, user_id, description, date_created, date_last_used FROM user_api_tokens WHERE user_id = ? AND api_token_id = ?`, userID, apiTokenID)
 	token, err := scanUserAPIToken(row)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
@@ -117,7 +117,7 @@ func (tm *UserAPITokenMapper) DeleteFromUserIDAndID(userID, apiTokenID int64) er
 // its stored hash to callers.
 func (tm *UserAPITokenMapper) GetFromToken(plainToken string) (*UserAPIToken, error) {
 	tokenHash := sha256.Sum256([]byte(plainToken))
-	row := tm.db.QueryRow(`SELECT api_token_id, user_id, description, stamp_created, stamp_last_used FROM user_api_tokens WHERE token_hash = ?`, tokenHash[:])
+	row := tm.db.QueryRow(`SELECT api_token_id, user_id, description, date_created, date_last_used FROM user_api_tokens WHERE token_hash = ?`, tokenHash[:])
 	token, err := scanUserAPIToken(row)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
@@ -130,7 +130,7 @@ func (tm *UserAPITokenMapper) GetFromToken(plainToken string) (*UserAPIToken, er
 }
 
 func (tm *UserAPITokenMapper) MarkUsed(apiTokenID int64) error {
-	_, err := tm.db.Exec(`UPDATE user_api_tokens SET stamp_last_used = CURRENT_TIMESTAMP() WHERE api_token_id = ?`, apiTokenID)
+	_, err := tm.db.Exec(`UPDATE user_api_tokens SET date_last_used = CURRENT_TIMESTAMP() WHERE api_token_id = ?`, apiTokenID)
 	return err
 }
 

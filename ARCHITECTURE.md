@@ -140,8 +140,8 @@ erDiagram
     int_unsigned user_id FK
     varchar_255 description
     binary_32 token_hash UK
-    timestamp stamp_created
-    timestamp stamp_last_used
+    timestamp date_created
+    timestamp date_last_used
   }
 ```
 
@@ -158,9 +158,9 @@ The mapper uses transactions for shield inserts, updates, and deletes. Reads are
 
 ### User-level API tokens
 
-`user_api_tokens` holds multiple independently revocable tokens per user. Plaintext values start with `sdu_`; their full value, including the prefix, is hashed for storage. A token has a non-empty description, a database-generated `stamp_created` timestamp, and a nullable `stamp_last_used` timestamp; `null` means it has not been used. The `001` migration records actual point-in-time fields as MySQL `TIMESTAMP` columns.
+`user_api_tokens` holds multiple independently revocable tokens per user. Plaintext values start with `sdu_`; their full value, including the prefix, is hashed for storage. A token has a non-empty description, a database-generated `date_created` timestamp, and a nullable `date_last_used` timestamp; `null` means it has not been used. The `001` migration records actual point-in-time fields as MySQL `TIMESTAMP` columns.
 
-The dashboard creates a 32-byte `crypto/rand` secret, encodes it as an `sdu_`-prefixed base64url token, and stores only its SHA-256 hash. The plaintext token is returned to the authenticated owner exactly once from `POST /api/tokens`; list responses expose only metadata. Deletion revokes a token by deleting its row. The API host receives it as `Authorization: token <token>` with a `shield_key` form field, hashes the supplied value, scopes the requested shield key to the token's user, and updates `stamp_last_used` immediately after valid token authentication.
+The dashboard creates a 32-byte `crypto/rand` secret, encodes it as an `sdu_`-prefixed base64url token, and stores only its SHA-256 hash. The plaintext token is returned to the authenticated owner exactly once from `POST /api/tokens`; list responses expose only metadata. Deletion revokes a token by deleting its row. The API host receives it as `Authorization: token <token>` with a `shield_key` form field, hashes the supplied value, scopes the requested shield key to the token's user, and updates `date_last_used` immediately after valid token authentication.
 
 ## Request flows
 
@@ -200,7 +200,7 @@ The dashboard is a single-page application. Its `#/user` client-side view contai
 
 1. An external client posts form fields to `https://api.shielded.dev/` with `Authorization: token <token>`. Per-shield values omit `shield_key` and update one shield; `sdu_` user-token values include `shield_key=<shield-key>` and can update or create a shield owned by that user.
 2. `ApiHandler` uses a non-empty `shield_key` to select user-token handling, identifies the token from its `sdu_` prefix, finds it by SHA-256 hash, then finds the owned shield by `(user_id, shield_key)`. A user-token request creates the shield when that pair does not exist. Requests with a blank or absent `shield_key` find one shield by secret.
-3. The handler validates its known form field names, records `stamp_last_used` immediately after valid user-token authentication, normalizes a supplied color, saves the row, and returns the stable public image URL.
+3. The handler validates its known form field names, records `date_last_used` immediately after valid user-token authentication, normalizes a supplied color, saves the row, and returns the stable public image URL.
 4. A README renderer requests `https://img.shielded.dev/s/<public-id>`.
 5. `ShieldHandler` loads the shield by `public_id` and writes an SVG using its title, text, and color.
 
