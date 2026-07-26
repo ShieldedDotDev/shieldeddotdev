@@ -13,7 +13,7 @@ jobs:
         id: date
 
       - name: Update Shielded.dev Badge
-        uses: shieldeddotdev/shielded-action@v1
+        uses: shieldeddotdev/shielded-action@v2
         with:
           shielded-token: ${{ secrets.SHIELDED_TOKEN }}
           text: ${{ steps.date.outputs.builddate }}
