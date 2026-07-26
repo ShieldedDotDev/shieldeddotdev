@@ -6,7 +6,7 @@ export default defineConfig({
 		browser: true,
 	},
 	rules: {
-		// Disabled to maintain parity with the previous tslint configuration
+		// Disabled to match rules that were explicitly turned off in tslint.json
 		"eqeqeq": "off",
 		"no-empty": "off",
 		"no-bitwise": "off",

@@ -1,4 +1,4 @@
-//go:generate go tool templ generate ../../pages
+//go:generate go tool templ generate -path ../../pages
 
 package main
 
@@ -59,13 +59,14 @@ func main() {
 
 	um := model.NewUserMapper(db)
 	sm := model.NewShieldMapper(db)
+	tm := model.NewUserAPITokenMapper(db)
 
 	ro := mux.NewRouter()
 	ro.PathPrefix("/").Host("www." + rootHost).Handler(
 		http.RedirectHandler("https://"+rootHost, http.StatusPermanentRedirect))
 
 	ao := ro.Host(apiHost).Subrouter()
-	apih := shieldeddotdev.NewApiHandler(sm, imgHost)
+	apih := shieldeddotdev.NewApiHandler(sm, tm, imgHost)
 	ao.HandleFunc("/", apih.HandlePOST)
 
 	io := ro.Host(imgHost).Subrouter()
@@ -81,7 +82,7 @@ func main() {
 	wo := ro.Host(rootHost).Subrouter()
 	wo.Handle("/", templ.Handler(pages.IndexPage(hosts))).Methods(http.MethodGet, http.MethodHead)
 	wo.Handle("/index.html", templ.Handler(pages.IndexPage(hosts))).Methods(http.MethodGet, http.MethodHead)
-	wo.Handle("/dashboard.html", templ.Handler(pages.DashboardPage(hosts))).Methods(http.MethodGet, http.MethodHead)
+	wo.Handle("/dashboard", templ.Handler(pages.DashboardPage(hosts))).Methods(http.MethodGet, http.MethodHead)
 	wo.Handle("/privacy.html", templ.Handler(pages.PrivacyPage(hosts))).Methods(http.MethodGet, http.MethodHead)
 
 	uuu, err := uuid.NewV4()
@@ -107,6 +108,13 @@ func main() {
 	sah := shieldeddotdev.NewDashboardShieldApiHandler(sm, jwta)
 	wo.HandleFunc("/api/shield/{id:[0-9]+}", sah.HandlePUT).Methods("PUT")
 	wo.HandleFunc("/api/shield/{id:[0-9]+}", sah.HandleDELETE).Methods("DELETE")
+
+	tih := shieldeddotdev.NewDashboardUserAPITokenIndexHandler(tm, jwta)
+	wo.HandleFunc("/api/user/tokens", tih.HandleGET).Methods("GET")
+	wo.HandleFunc("/api/user/tokens", tih.HandlePOST).Methods("POST")
+
+	th := shieldeddotdev.NewDashboardUserAPITokenHandler(tm, jwta)
+	wo.HandleFunc("/api/user/tokens/{id:[0-9]+}", th.HandleDELETE).Methods("DELETE")
 
 	wo.HandleFunc("/env", func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]any{

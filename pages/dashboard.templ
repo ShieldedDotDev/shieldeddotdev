@@ -9,17 +9,15 @@ templ DashboardPage(hosts Hosts) {
 		<body class="dashboard--app">
 			@Header()
 			<main>
-				<section>
-					<article id="dashboard">
-						<h3>Dashboard</h3>
-					</article>
+				<section id="dashboard">
+					<article id="dashboard-app"></article>
 				</section>
 			</main>
 			<script type="module">
 				import { Dashboard } from '/main.js';
 
 				document.addEventListener('DOMContentLoaded', function () {
-					Dashboard(document.getElementById('dashboard'));
+					Dashboard(document.getElementById('dashboard-app'));
 				});
 			</script>
 			@Footer()

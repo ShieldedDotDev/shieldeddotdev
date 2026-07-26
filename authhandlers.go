@@ -35,7 +35,7 @@ func (ah *DebugAuthHandler) LoginHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	http.Redirect(w, r, "/dashboard.html", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/dashboard", http.StatusTemporaryRedirect)
 }
 
 type GitHubAuthHandler struct {
@@ -134,7 +134,7 @@ func (ah *GitHubAuthHandler) CallbackHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	http.Redirect(w, r, "/dashboard.html", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/dashboard", http.StatusTemporaryRedirect)
 }
 
 type JwtAuth struct {

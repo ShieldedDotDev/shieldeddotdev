@@ -8,15 +8,15 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: 'go.mod'
 
       - name: Install Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
 
       - name: Install Dependencies
         run: make deps

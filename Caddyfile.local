@@ -1,0 +1,55 @@
+# Local HTTPS front end for `make debug`.
+#
+# The Go process listens on 127.0.0.1:8686 and routes by Host. It expects these
+# development hosts, which are injected by the Makefile's debug target:
+#   local.shielded.dev
+#   api.local.shielded.dev
+#   img.local.shielded.dev
+#
+# The canonical production names and local.<service> aliases are also accepted.
+# Caddy sets the upstream Host to the development host in every case, allowing
+# the Go router to select the correct subrouter.
+#
+# Add these names to /etc/hosts before starting Caddy:
+#   127.0.0.1 shielded.dev api.shielded.dev img.shielded.dev
+#   127.0.0.1 local.shielded.dev api.local.shielded.dev img.local.shielded.dev
+#   127.0.0.1 local.api.shielded.dev local.img.shielded.dev
+#
+# Start the backend with `make debug`, then run:
+#   caddy run --config Caddyfile.local
+#
+# Caddy's internal CA issues the local TLS certificates. Trust its root CA when
+# your browser or operating system does not already trust it.
+
+(root_app) {
+	tls internal
+	reverse_proxy 127.0.0.1:8686 {
+		header_up Host local.shielded.dev
+	}
+}
+
+(api_app) {
+	tls internal
+	reverse_proxy 127.0.0.1:8686 {
+		header_up Host api.local.shielded.dev
+	}
+}
+
+(image_app) {
+	tls internal
+	reverse_proxy 127.0.0.1:8686 {
+		header_up Host img.local.shielded.dev
+	}
+}
+
+shielded.dev, local.shielded.dev {
+	import root_app
+}
+
+api.shielded.dev, api.local.shielded.dev, local.api.shielded.dev {
+	import api_app
+}
+
+img.shielded.dev, img.local.shielded.dev, local.img.shielded.dev {
+	import image_app
+}

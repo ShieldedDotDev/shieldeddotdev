@@ -47,7 +47,7 @@ export class ApiExampleController extends AbstractBaseController {
 
 }
 
-function curlExample(
+export function curlExample(
 	env: EnvInterface,
 	title: string,
 	text: string,
@@ -66,7 +66,7 @@ function addslashes_single_quotes(str: string) {
 	return `${str}`.replace(/\\/g, '\\$&').replace(/'/g, "\\'");
 };
 
-function phpExample(
+export function phpExample(
 	env: EnvInterface,
 	title: string,
 	text: string,
@@ -97,7 +97,7 @@ if( curl_getinfo($ch, CURLINFO_HTTP_CODE) === 200 ) {
 }`
 }
 
-function jsExample(
+export function jsExample(
 	env: EnvInterface,
 	title: string,
 	text: string,
@@ -126,7 +126,7 @@ fetch('https://${env.ApiHost}', {
 });`
 }
 
-function gitHubActionExample(
+export function gitHubActionExample(
 	_: EnvInterface,
 	title: string,
 	text: string,
