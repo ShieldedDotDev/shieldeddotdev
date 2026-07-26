@@ -77,13 +77,13 @@ class ShieldsApi {
 
 class UserAPITokensApi {
     getTokens() {
-        return doRequest('api/tokens', 'GET', null);
+        return doRequest('user/tokens', 'GET', null);
     }
     createToken(description) {
-        return doRequest('api/tokens', 'POST', JSON.stringify({ Description: description }));
+        return doRequest('user/tokens', 'POST', JSON.stringify({ Description: description }));
     }
     deleteToken(token) {
-        return doRawRequest(`api/token/${token.APITokenID}`, 'DELETE', null);
+        return doRawRequest(`user/tokens/${token.APITokenID}`, 'DELETE', null);
     }
 }
 

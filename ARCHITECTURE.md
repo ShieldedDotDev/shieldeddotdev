@@ -71,9 +71,9 @@ For local HTTPS, `Caddyfile.local` accepts both the three canonical names and th
 | `/api/shields` | POST | Creates a new shield for the current user and returns it as JSON with `201 Created`. |
 | `/api/shield/{id}` | PUT | Updates an existing shield only after looking it up by both authenticated owner ID and shield ID. |
 | `/api/shield/{id}` | DELETE | Deletes an owned shield and returns `204 No Content`. |
-| `/api/tokens` | GET | Returns the current user's API-token metadata. Plaintext token values and hashes are never returned. |
-| `/api/tokens` | POST | Creates a user-level API token from a required description. Returns its metadata and plaintext token once with `201 Created`. |
-| `/api/token/{id}` | DELETE | Revokes an owned user-level API token and returns `204 No Content`. |
+| `/user/tokens` | GET | Returns the current user's API-token metadata. Plaintext token values and hashes are never returned. |
+| `/user/tokens` | POST | Creates a user-level API token from a required description. Returns its metadata and plaintext token once with `201 Created`. |
+| `/user/tokens/{id}` | DELETE | Revokes an owned user-level API token and returns `204 No Content`. |
 | `/env` | no method restriction | Returns the configured root/API/image hosts as JSON for browser code. |
 | all remaining paths | local: no method restriction; production: no method restriction | Serves the static asset filesystem. |
 
@@ -160,7 +160,7 @@ The mapper uses transactions for shield inserts, updates, and deletes. Reads are
 
 `user_api_tokens` holds multiple independently revocable tokens per user. Plaintext values start with `sdu_`; their full value, including the prefix, is hashed for storage. A token has a non-empty description, a database-generated `date_created` timestamp, and a nullable `date_last_used` timestamp; `null` means it has not been used. The `001` migration records actual point-in-time fields as MySQL `TIMESTAMP` columns.
 
-The dashboard creates a 32-byte `crypto/rand` secret, encodes it as an `sdu_`-prefixed base64url token, and stores only its SHA-256 hash. The plaintext token is returned to the authenticated owner exactly once from `POST /api/tokens`; list responses expose only metadata. Deletion revokes a token by deleting its row. The API host receives it as `Authorization: token <token>` with a `shield_key` form field, hashes the supplied value, scopes the requested shield key to the token's user, and updates `date_last_used` immediately after valid token authentication.
+The dashboard creates a 32-byte `crypto/rand` secret, encodes it as an `sdu_`-prefixed base64url token, and stores only its SHA-256 hash. The plaintext token is returned to the authenticated owner exactly once from `POST /user/tokens`; list responses expose only metadata. Deletion revokes a token by deleting its row. The API host receives it as `Authorization: token <token>` with a `shield_key` form field, hashes the supplied value, scopes the requested shield key to the token's user, and updates `date_last_used` immediately after valid token authentication.
 
 ## Request flows
 

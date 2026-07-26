@@ -14,14 +14,14 @@ export interface CreatedUserAPITokenInterface extends UserAPITokenInterface {
 
 export class UserAPITokensApi {
 	public getTokens() {
-		return doRequest<UserAPITokenInterface[]>('api/tokens', 'GET', null);
+		return doRequest<UserAPITokenInterface[]>('user/tokens', 'GET', null);
 	}
 
 	public createToken(description: string) {
-		return doRequest<CreatedUserAPITokenInterface>('api/tokens', 'POST', JSON.stringify({ Description: description }));
+		return doRequest<CreatedUserAPITokenInterface>('user/tokens', 'POST', JSON.stringify({ Description: description }));
 	}
 
 	public deleteToken(token: UserAPITokenInterface) {
-		return doRawRequest(`api/token/${token.APITokenID}`, 'DELETE', null);
+		return doRawRequest(`user/tokens/${token.APITokenID}`, 'DELETE', null);
 	}
 }
