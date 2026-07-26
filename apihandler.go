@@ -177,7 +177,7 @@ func (ah *ApiHandler) handleSaveShieldError(w http.ResponseWriter, err error) {
 		return
 	}
 	if shieldKeyInUseError(err) {
-		http.Error(w, err.Error(), http.StatusConflict)
+		http.Error(w, "shield key is already in use", http.StatusConflict)
 		return
 	}
 
