@@ -1,17 +1,45 @@
 package shieldeddotdev
 
 import (
+	cryptorand "crypto/rand"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log/slog"
-	"math/rand"
+	"math/big"
 	"net/http"
+	"regexp"
 	"strconv"
-	"time"
+	"strings"
 
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
+	"github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
+
+var shieldKeyPattern = regexp.MustCompile(`^[a-z0-9-]{3,64}$`)
+
+func validShieldKey(shieldKey string) bool {
+	return shieldKey == "" || shieldKeyPattern.MatchString(shieldKey)
+}
+
+func shieldKeyAvailable(sm *model.ShieldMapper, userID, shieldID int64, shieldKey string) (bool, error) {
+	if shieldKey == "" {
+		return true, nil
+	}
+
+	shield, err := sm.GetFromUserIDAndShieldKey(userID, shieldKey)
+	if err != nil {
+		return false, err
+	}
+
+	return shield == nil || shield.ShieldID == shieldID, nil
+}
+
+func shieldKeyInUseError(err error) bool {
+	var mysqlErr *mysql.MySQLError
+	return errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 && strings.Contains(mysqlErr.Message, "unq_shields_shield_key")
+}
 
 type DashboardShieldApiIndexHandler struct {
 	sm      *model.ShieldMapper
@@ -63,13 +91,33 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 		http.Error(w, "failed to parse request body", http.StatusBadRequest)
 		return
 	}
+	if !validShieldKey(postShield.ShieldKey) {
+		http.Error(w, "shield key must be 3-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
+		return
+	}
+	available, err := shieldKeyAvailable(sh.sm, *id, 0, postShield.ShieldKey)
+	if err != nil {
+		slog.Error("error checking shield key", slog.Any("error", err), slog.Any("id", *id))
+		http.Error(w, "database error", http.StatusInternalServerError)
+		return
+	}
+	if !available {
+		http.Error(w, "shield key is already in use", http.StatusConflict)
+		return
+	}
 
-	uu := stringWithCharset(40, "abcdefghjkmnpqrstuvwxyz23456789")
+	uu, err := secureStringWithCharset(40, "abcdefghjkmnpqrstuvwxyz23456789")
+	if err != nil {
+		slog.Error("error generating shield secret", slog.Any("error", err))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
 
 	cleanShield := &model.Shield{
 		UserID: *id,
 
-		Name: postShield.Name,
+		ShieldKey: postShield.ShieldKey,
+		Name:      postShield.Name,
 
 		Title: postShield.Title,
 		Text:  postShield.Text,
@@ -79,6 +127,10 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 	}
 
 	err = sh.sm.Save(cleanShield)
+	if shieldKeyInUseError(err) {
+		http.Error(w, "shield key is already in use", http.StatusConflict)
+		return
+	}
 	if err != nil {
 		slog.Error("error saving shield", slog.Any("error", err))
 		http.Error(w, "database error", http.StatusInternalServerError)
@@ -93,14 +145,17 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 	x.Encode(cleanShield)
 }
 
-var seededRand *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
-
-func stringWithCharset(length int, charset string) string {
+func secureStringWithCharset(length int, charset string) (string, error) {
 	b := make([]byte, length)
+	limit := big.NewInt(int64(len(charset)))
 	for i := range b {
-		b[i] = charset[seededRand.Intn(len(charset))]
+		index, err := cryptorand.Int(cryptorand.Reader, limit)
+		if err != nil {
+			return "", err
+		}
+		b[i] = charset[index.Int64()]
 	}
-	return string(b)
+	return string(b), nil
 }
 
 type DashboardShieldApiHandler struct {
@@ -162,7 +217,22 @@ func (dh *DashboardShieldApiHandler) HandlePUT(w http.ResponseWriter, r *http.Re
 		http.Error(w, "failed to parse request body", http.StatusBadRequest)
 		return
 	}
+	if !validShieldKey(putShield.ShieldKey) {
+		http.Error(w, "shield key must be 3-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
+		return
+	}
+	available, err := shieldKeyAvailable(dh.sm, shield.UserID, shield.ShieldID, putShield.ShieldKey)
+	if err != nil {
+		slog.Error("error checking shield key", slog.Any("error", err), slog.Any("id", shield.UserID))
+		http.Error(w, "database error", http.StatusInternalServerError)
+		return
+	}
+	if !available {
+		http.Error(w, "shield key is already in use", http.StatusConflict)
+		return
+	}
 
+	shield.ShieldKey = putShield.ShieldKey
 	shield.Name = putShield.Name
 
 	shield.Title = putShield.Title
@@ -170,6 +240,10 @@ func (dh *DashboardShieldApiHandler) HandlePUT(w http.ResponseWriter, r *http.Re
 	shield.Color = putShield.Color
 
 	err = dh.sm.Save(shield)
+	if shieldKeyInUseError(err) {
+		http.Error(w, "shield key is already in use", http.StatusConflict)
+		return
+	}
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
