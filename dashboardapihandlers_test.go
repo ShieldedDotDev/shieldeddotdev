@@ -13,9 +13,9 @@ func TestValidShieldKey(t *testing.T) {
 		valid     bool
 	}{
 		{name: "empty is optional", shieldKey: "", valid: true},
-		{name: "minimum length", shieldKey: "abcd-", valid: true},
+		{name: "minimum length", shieldKey: "abc", valid: true},
 		{name: "maximum length", shieldKey: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", valid: true},
-		{name: "too short", shieldKey: "abcd", valid: false},
+		{name: "too short", shieldKey: "ab", valid: false},
 		{name: "too long", shieldKey: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", valid: false},
 		{name: "uppercase", shieldKey: "Release-1", valid: false},
 		{name: "underscore", shieldKey: "release_1", valid: false},

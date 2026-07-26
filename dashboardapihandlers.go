@@ -17,7 +17,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var shieldKeyPattern = regexp.MustCompile(`^[a-z0-9-]{5,64}$`)
+var shieldKeyPattern = regexp.MustCompile(`^[a-z0-9-]{3,64}$`)
 
 func validShieldKey(shieldKey string) bool {
 	return shieldKey == "" || shieldKeyPattern.MatchString(shieldKey)
@@ -92,7 +92,7 @@ func (sh *DashboardShieldApiIndexHandler) HandlePOST(w http.ResponseWriter, r *h
 		return
 	}
 	if !validShieldKey(postShield.ShieldKey) {
-		http.Error(w, "shield key must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
+		http.Error(w, "shield key must be 3-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
 		return
 	}
 	available, err := shieldKeyAvailable(sh.sm, *id, 0, postShield.ShieldKey)
@@ -218,7 +218,7 @@ func (dh *DashboardShieldApiHandler) HandlePUT(w http.ResponseWriter, r *http.Re
 		return
 	}
 	if !validShieldKey(putShield.ShieldKey) {
-		http.Error(w, "shield key must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
+		http.Error(w, "shield key must be 3-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
 		return
 	}
 	available, err := shieldKeyAvailable(dh.sm, shield.UserID, shield.ShieldID, putShield.ShieldKey)

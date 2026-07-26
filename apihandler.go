@@ -49,7 +49,7 @@ func (ah *ApiHandler) HandlePOST(w http.ResponseWriter, r *http.Request) {
 
 func (ah *ApiHandler) handleUserTokenPOST(w http.ResponseWriter, r *http.Request, shieldKey string) {
 	if !validShieldKey(shieldKey) {
-		http.Error(w, "shield_key must be 5-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
+		http.Error(w, "shield_key must be 3-64 lowercase letters, digits, or hyphens", http.StatusBadRequest)
 		return
 	}
 

@@ -152,7 +152,7 @@ erDiagram
 
 The mapper uses transactions for shield inserts, updates, and deletes. Reads are direct `QueryRow`/`Query` calls. `UserMapper.Save` uses MySQL `INSERT ... ON DUPLICATE KEY UPDATE`. The baseline has primary keys on `users.user_id` and `shields.shield_id`, unique keys on `shields.public_id` and `shields.secret`, an index on `shields.user_id`, and a cascading foreign key from shields to users.
 
-`shield_key` stores the optional `ShieldKey`. When set, it must be 5-64 lowercase letters, digits, or hyphens; the dashboard rejects duplicate keys and the `002` migration makes its `(user_id, shield_key)` pair unique. The API host receives it as a `shield_key` form field for user-token requests, without exposing the internal numeric `shield_id` or changing the per-shield token API.
+`shield_key` stores the optional `ShieldKey`. When set, it must be 3-64 lowercase letters, digits, or hyphens; the dashboard rejects duplicate keys and the `002` migration makes its `(user_id, shield_key)` pair unique. The API host receives it as a `shield_key` form field for user-token requests, without exposing the internal numeric `shield_id` or changing the per-shield token API.
 
 `000_BASELINE.sql` contains `DROP TABLE IF EXISTS` before its table definitions and is suitable only for initializing or deliberately replacing a database. It is not a safe upgrade migration. Subsequent migrations must use the next numeric prefix (for example, `001_add_example.sql`) and must not be renamed, reordered, or changed after application.
 

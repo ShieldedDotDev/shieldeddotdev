@@ -20,7 +20,7 @@ func TestApiHandlerRejectsIDFormField(t *testing.T) {
 }
 
 func TestApiHandlerValidatesShieldKeyBeforeAuthentication(t *testing.T) {
-	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader("shield_key=bad"))
+	req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader("shield_key=ab"))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	response := httptest.NewRecorder()
 
@@ -29,7 +29,7 @@ func TestApiHandlerValidatesShieldKeyBeforeAuthentication(t *testing.T) {
 	if response.Code != http.StatusBadRequest {
 		t.Errorf("status = %d, want %d", response.Code, http.StatusBadRequest)
 	}
-	if got, want := response.Body.String(), "shield_key must be 5-64 lowercase letters, digits, or hyphens\n"; got != want {
+	if got, want := response.Body.String(), "shield_key must be 3-64 lowercase letters, digits, or hyphens\n"; got != want {
 		t.Errorf("body = %q, want %q", got, want)
 	}
 }
