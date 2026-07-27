@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set current date as env variable
-        run: echo "builddate=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
+        run: echo "builddate=$(TZ=America/Chicago date +'%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_OUTPUT
         id: date
 
       - name: Update Shielded.dev Badge
