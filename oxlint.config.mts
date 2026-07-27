@@ -11,5 +11,7 @@ export default defineConfig({
 		"no-empty": "off",
 		"no-bitwise": "off",
 		"no-console": "off",
+		// TSLint did not enforce unused variables.
+		"no-unused-vars": "off",
 	},
 });
