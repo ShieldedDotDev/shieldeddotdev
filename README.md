@@ -42,7 +42,7 @@ The **User tokens** page can create a token for several shields. Give each shiel
 
 ```sh
 curl -X POST https://api.shielded.dev/ \
-  -H 'Authorization: token sdu_<your-user-token>' \
+  -H 'Authorization: token <your-full-user-token>' \
   --data-urlencode 'shield_key=main-build' \
   --data-urlencode 'text=passing'
 ```
@@ -66,14 +66,12 @@ You need:
 Start with a new database. `schema/000_BASELINE.sql` removes its tables before it creates them. Do not use it on a database that holds data you need.
 
 ```sh
-mysql shielded < schema/000_BASELINE.sql
-
 for file in schema/[0-9][0-9][0-9]_*.sql; do
 	mysql shielded < "$file"
 done
 ```
 
-Use your normal MySQL login details for those commands. Apply the numbered files after the baseline, in order.
+Use your normal MySQL login details for those commands. The loop starts with the baseline. It applies every later numbered file in order.
 
 Build the program with your three public host names. This follows the same `-X` pattern used by the Makefile for local work.
 
