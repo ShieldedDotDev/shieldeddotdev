@@ -1,4 +1,4 @@
 # Generated browser and templ output
 pages/*_templ.go linguist-generated=true
 static/main.js linguist-generated=true
-static/style/style.css linguist-generated=true
+static/style/** linguist-generated=true
