@@ -27,5 +27,13 @@ jobs:
       - name: Build
         run: make clean release
 
+      - name: Check generated TypeScript is clean
+        run: |
+          if ! git diff --quiet -- static/main.js; then
+            git diff -- static/main.js
+            echo "::error::static/main.js has uncommitted changes after build"
+            exit 1
+          fi
+
       - name: Test
         run: go test ./...
