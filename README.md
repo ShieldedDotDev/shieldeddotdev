@@ -1,4 +1,4 @@
 # shieldeddotdev
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/ShieldedDotDev/shieldeddotdev)](https://goreportcard.com/report/github.com/ShieldedDotDev/shieldeddotdev)
+[![CI](https://github.com/ShieldedDotDev/shieldeddotdev/actions/workflows/ci.yml/badge.svg)](https://github.com/ShieldedDotDev/shieldeddotdev/actions/workflows/ci.yml)
 ![Last Update](https://img.shielded.dev/s/ewh)
