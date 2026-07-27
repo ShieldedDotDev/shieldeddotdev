@@ -27,5 +27,14 @@ jobs:
       - name: Build
         run: make clean release
 
+      - name: Check generated assets are clean
+        run: |
+          if [ -n "$(git status --porcelain --untracked-files=all -- static pages)" ]; then
+            git status --short -- static pages
+            git diff -- static pages
+            echo "::error::Generated assets have uncommitted changes after build"
+            exit 1
+          fi
+
       - name: Test
         run: go test ./...

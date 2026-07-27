@@ -46,7 +46,7 @@ class AuthedApi {
             await doRequest('api/authed', 'GET', null);
             return true;
         }
-        catch (e) {
+        catch (_a) {
             return false;
         }
     }
@@ -100,7 +100,7 @@ class AbstractBaseController {
         try {
             elm.removeChild(this.container);
         }
-        catch (e) {
+        catch (_a) {
             return false;
         }
         return true;
