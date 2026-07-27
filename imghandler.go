@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"strconv"
 
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
 	"github.com/gorilla/mux"
@@ -34,10 +35,45 @@ func (sh *ShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	renderShield(w, s)
+}
+
+type KeyedShieldHandler struct {
+	sm *model.ShieldMapper
+}
+
+func NewKeyedShieldHandler(sm *model.ShieldMapper) *KeyedShieldHandler {
+	return &KeyedShieldHandler{sm}
+}
+
+func (sh *KeyedShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userID, err := strconv.ParseInt(vars["userID"], 10, 64)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
+	s, err := sh.sm.GetFromUserIDAndShieldKey(userID, vars["shieldKey"])
+	if err != nil {
+		slog.Info("error fetching shield from user id and shield key", slog.Any("error", err))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	if s == nil {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
+	renderShield(w, s)
+}
+
+func renderShield(w http.ResponseWriter, s *model.Shield) {
 	w.Header().Set("Content-Type", "image/svg+xml")
 	w.Header().Set("Cache-Control", "no-cache")
 
-	err = badge.Render(s.Title, s.Text, badge.Color("#"+s.Color), w)
+	err := badge.Render(s.Title, s.Text, badge.Color("#"+s.Color), w)
 	if err != nil {
 		slog.Error("error rendering shield", slog.Any("error", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
