@@ -35,7 +35,10 @@ func (sh *ShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	renderShield(w, s)
+	if err := renderShield(w, s); err != nil {
+		slog.Error("error rendering shield", slog.Any("error", err))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
 }
 
 type KeyedShieldHandler struct {
@@ -66,19 +69,17 @@ func (sh *KeyedShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	renderShield(w, s)
+	if err := renderShield(w, s); err != nil {
+		slog.Error("error rendering shield", slog.Any("error", err))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
 }
 
-func renderShield(w http.ResponseWriter, s *model.Shield) {
+func renderShield(w http.ResponseWriter, s *model.Shield) error {
 	w.Header().Set("Content-Type", "image/svg+xml")
 	w.Header().Set("Cache-Control", "no-cache")
 
-	err := badge.Render(s.Title, s.Text, badge.Color("#"+s.Color), w)
-	if err != nil {
-		slog.Error("error rendering shield", slog.Any("error", err))
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
-	}
+	return badge.Render(s.Title, s.Text, badge.Color("#"+s.Color), w)
 }
 
 type StaticShieldHandler struct{}
