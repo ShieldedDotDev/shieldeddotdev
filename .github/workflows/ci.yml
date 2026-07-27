@@ -27,11 +27,11 @@ jobs:
       - name: Build
         run: make clean release
 
-      - name: Check generated TypeScript is clean
+      - name: Check generated assets are clean
         run: |
-          if ! git diff --quiet -- static/main.js; then
-            git diff -- static/main.js
-            echo "::error::static/main.js has uncommitted changes after build"
+          if ! git diff --quiet -- static pages; then
+            git diff -- static pages
+            echo "::error::Generated assets have uncommitted changes after build"
             exit 1
           fi
 
