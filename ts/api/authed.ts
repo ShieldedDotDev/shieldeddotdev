@@ -6,7 +6,7 @@ export class AuthedApi {
 			await doRequest<{}>('api/authed', 'GET', null);
 
 			return true;
-		} catch (e) {
+		} catch {
 			return false;
 		}
 	}

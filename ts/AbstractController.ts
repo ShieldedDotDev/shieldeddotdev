@@ -15,7 +15,7 @@ export abstract class AbstractBaseController<T extends HTMLElement = HTMLElement
 	public detach(elm: HTMLElement): boolean {
 		try {
 			elm.removeChild(this.container);
-		} catch (e) {
+		} catch {
 			return false;
 		}
 
