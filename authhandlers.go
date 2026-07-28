@@ -65,10 +65,13 @@ func (ah *GitHubAuthHandler) LoginHandler(w http.ResponseWriter, r *http.Request
 	u1 := uuid.Must(uuid.NewV4())
 
 	cookie := &http.Cookie{
-		Expires: time.Now().Add(15 * time.Minute),
-		Name:    "gh-auth-state",
-		Value:   u1.String(),
-		Path:    "/",
+		Expires:  time.Now().Add(15 * time.Minute),
+		Name:     "gh-auth-state",
+		Value:    u1.String(),
+		Path:     "/",
+		Secure:   true,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
 	}
 	http.SetCookie(w, cookie)
 
@@ -159,6 +162,7 @@ func (j *JwtAuth) Authorize(w http.ResponseWriter, uid int64) error {
 
 		Secure:   true,
 		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
 	}
 
 	http.SetCookie(w, cookie)
