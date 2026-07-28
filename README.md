@@ -20,7 +20,7 @@ Your public badge uses a stable image address like this:
 ![Build](https://img.shielded.dev/s/your-public-id)
 ```
 
-The shield page gives you the real address. It also gives you a private update token. Keep that token out of your README, source code, public logs.
+The shield page gives you the real address. It also gives you a private update token. Keep that token out of your README, source code, or public logs.
 
 ### Update a shield from a script
 
