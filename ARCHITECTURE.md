@@ -98,10 +98,10 @@ Both endpoints return `image/svg+xml`. The public ID is the lookup key exposed i
 
 Production login uses GitHub OAuth with scope `user:email`.
 
-1. `/github/login` generates a UUID, puts it in the `gh-auth-state` cookie with a 15-minute expiry, and redirects to GitHub.
+1. `/github/login` generates a UUID, puts it in the `gh-auth-state` cookie with a 15-minute expiry, `Secure`, `HttpOnly`, and `SameSite=Lax` attributes, and redirects to GitHub.
 2. `/github/callback` compares the returned `state` to that cookie, exchanges `code` for an OAuth token, and fetches the authenticated GitHub profile.
 3. `UserMapper.Save` inserts or updates the GitHub user ID, login, and email in MySQL.
-4. `JwtAuth.Authorize` issues an HS256 JWT whose registered ID claim is the numeric GitHub user ID. It is stored in the `auth` cookie for 36 hours with `Secure` and `HttpOnly` flags.
+4. `JwtAuth.Authorize` issues an HS256 JWT whose registered ID claim is the numeric GitHub user ID. It is stored in the `auth` cookie for 36 hours with `Secure`, `HttpOnly`, and `SameSite=Lax` attributes.
 5. Dashboard API handlers call `JwtAuth.GetAuth`; their data access is scoped by user ID, not just shield ID.
 
 In local mode, `DebugAuthHandler` bypasses GitHub and signs in a fixed `{UserID: 1, Login: "debug"}` user. No database user row is written by that debug-login path.
@@ -242,6 +242,6 @@ These are descriptions of behavior visible in the code, useful when planning cha
 - `DashboardShieldApiIndexHandler` and `DashboardShieldApiHandler` accept raw JSON fields without server-side color or content validation; the API-host handler and static badge route do validate colors.
 - The programmatic update endpoint's route has no explicit HTTP-method constraint even though its handler is named `HandlePOST`.
 - Public IDs use `math/rand` seeded with time. Per-shield update secrets and user-level API tokens use `crypto/rand`; user-token values are stored as SHA-256 hashes.
-- The implementation does not set `SameSite` on the OAuth state or auth cookies, and the OAuth state cookie is not explicitly marked `HttpOnly` or `Secure`.
+- Authentication cookies are host-only because no `Domain` attribute is set. The dashboard and its authenticated APIs share the main host, while the API and image subdomains do not need the browser authentication cookie.
 
 Treat changes to any of these behaviors as compatibility/security work: update the affected server handler, browser client, public documentation, and verification coverage together.
