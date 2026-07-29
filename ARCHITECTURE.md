@@ -90,7 +90,7 @@ The endpoint is deliberately field-partial: omitted or empty form values leave t
 | Route | Behavior |
 | --- | --- |
 | `/s/{pid}` | Loads the shield by public ID (`[a-z0-9]{3,128}`) and renders an SVG with `go-badge`. It sets `Cache-Control: no-cache`, so a stable public URL reflects updates promptly. |
-| `/u/{userID}/{shieldKey}` | Loads a shield by its numeric owner ID plus its shield key (`[a-z0-9-]{3,64}`), then renders the same no-cache SVG. |
+| `/u/{login}/{shieldKey}` | Loads a shield by its owner’s GitHub login plus its shield key (`[a-z0-9-]{3,64}`), then renders the same no-cache SVG. |
 | `/s` | Renders an ephemeral SVG from query `title`, `text`, and `color`; default color is `green`. It validates/normalizes color and sends a 30-day cache policy. Nothing is persisted. |
 
 Both endpoints return `image/svg+xml`. The public ID is the lookup key exposed in Markdown; the shield secret is the write credential and never appears in a badge URL.

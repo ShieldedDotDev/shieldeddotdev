@@ -71,7 +71,7 @@ func main() {
 
 	io := ro.Host(imgHost).Subrouter()
 	io.Handle("/s/{pid:[a-z0-9]{3,128}}", shieldeddotdev.NewShieldHandler(sm))
-	io.Handle("/u/{userID:[0-9]+}/{shieldKey:[a-z0-9-]{3,64}}", shieldeddotdev.NewKeyedShieldHandler(sm))
+	io.Handle("/u/{login:[A-Za-z0-9-]{1,39}}/{shieldKey:[a-z0-9-]{3,64}}", shieldeddotdev.NewKeyedShieldHandler(sm))
 	io.Handle("/s", &shieldeddotdev.StaticShieldHandler{})
 
 	hosts := pages.Hosts{

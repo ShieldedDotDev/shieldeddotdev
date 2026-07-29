@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"strconv"
 
 	"github.com/ShieldedDotDev/shieldeddotdev/model"
 	"github.com/gorilla/mux"
@@ -51,15 +50,9 @@ func NewKeyedShieldHandler(sm *model.ShieldMapper) *KeyedShieldHandler {
 
 func (sh *KeyedShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	userID, err := strconv.ParseInt(vars["userID"], 10, 64)
+	s, err := sh.sm.GetFromUserLoginAndShieldKey(vars["login"], vars["shieldKey"])
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-		return
-	}
-
-	s, err := sh.sm.GetFromUserIDAndShieldKey(userID, vars["shieldKey"])
-	if err != nil {
-		slog.Info("error fetching shield from user id and shield key", slog.Any("error", err))
+		slog.Info("error fetching shield from user login and shield key", slog.Any("error", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
