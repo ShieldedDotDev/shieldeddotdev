@@ -37,8 +37,6 @@ var (
 	logSource = flag.Bool("log-source", false, "log output includes source code location")
 )
 
-const keyedShieldPath = "/u/{login:[^/]{1,255}}/{shieldKey:[a-z0-9-]{3,64}}"
-
 func init() {
 	flag.Parse()
 	slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
@@ -73,7 +71,7 @@ func main() {
 
 	io := ro.Host(imgHost).Subrouter()
 	io.Handle("/s/{pid:[a-z0-9]{3,128}}", shieldeddotdev.NewShieldHandler(sm))
-	io.Handle(keyedShieldPath, shieldeddotdev.NewKeyedShieldHandler(sm))
+	io.Handle("/u/{login:[^/]{1,255}}/{shieldKey:[a-z0-9-]{3,64}}", shieldeddotdev.NewKeyedShieldHandler(sm))
 	io.Handle("/s", &shieldeddotdev.StaticShieldHandler{})
 
 	hosts := pages.Hosts{
