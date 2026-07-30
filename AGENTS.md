@@ -72,6 +72,7 @@ go test ./...                              # compile/test all Go packages
 ### Go
 
 - Run `gofmt` on each changed Go file and preserve the existing package split: root package `shieldeddotdev` contains HTTP/application behavior, while `model` contains database access.
+- Prefer returning an error from helpers instead of handling it there. Let the caller add context, log the error, and choose the response.
 - Keep route setup in `cmd/shielded/main.go`; keep request parsing/validation and HTTP responses in the applicable handler.
 - Use parameterized SQL through `database/sql`, as the mappers do. Shield reads and writes must preserve the ownership checks used by the dashboard handlers.
 - Do not change public JSON field names or badge URL shapes casually. The dashboard, embedded Markdown, and external clients depend on the exported Go/TypeScript field names and host-specific routes.

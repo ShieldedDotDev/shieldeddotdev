@@ -24,7 +24,7 @@ func (sh *ShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	s, err := sh.sm.GetFromPublicID(idst)
 	if err != nil {
-		slog.Info("error fetching shield from public id", slog.Any("error", err))
+		slog.Error("error fetching shield from public id", slog.Any("error", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
@@ -34,15 +34,45 @@ func (sh *ShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "image/svg+xml")
-	w.Header().Set("Cache-Control", "no-cache")
-
-	err = badge.Render(s.Title, s.Text, badge.Color("#"+s.Color), w)
-	if err != nil {
+	if err := renderShield(w, s); err != nil {
 		slog.Error("error rendering shield", slog.Any("error", err))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
+}
+
+type KeyedShieldHandler struct {
+	sm *model.ShieldMapper
+}
+
+func NewKeyedShieldHandler(sm *model.ShieldMapper) *KeyedShieldHandler {
+	return &KeyedShieldHandler{sm}
+}
+
+func (sh *KeyedShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	s, err := sh.sm.GetFromUserLoginAndShieldKey(vars["login"], vars["shieldKey"])
+	if err != nil {
+		slog.Error("error fetching shield from user login and shield key", slog.Any("error", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
+
+	if s == nil {
+		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+
+	if err := renderShield(w, s); err != nil {
+		slog.Error("error rendering shield", slog.Any("error", err))
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
+}
+
+func renderShield(w http.ResponseWriter, s *model.Shield) error {
+	w.Header().Set("Content-Type", "image/svg+xml")
+	w.Header().Set("Cache-Control", "no-cache")
+
+	return badge.Render(s.Title, s.Text, badge.Color("#"+s.Color), w)
 }
 
 type StaticShieldHandler struct{}

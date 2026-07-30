@@ -104,6 +104,20 @@ func (sm *ShieldMapper) GetFromUserIDAndShieldKey(userID int64, shieldKey string
 	}
 }
 
+func (sm *ShieldMapper) GetFromUserLoginAndShieldKey(login, shieldKey string) (*Shield, error) {
+	sh := &Shield{}
+
+	row := sm.db.QueryRow("SELECT s.shield_id, s.public_id, COALESCE(s.shield_key, '') AS shield_key, s.user_id, s.name, s.title, s.text, s.color, s.secret, s.stamp_created, s.stamp_updated FROM shields AS s INNER JOIN users AS u ON u.user_id = s.user_id WHERE u.login = ? AND s.shield_key = ?", login, shieldKey)
+	switch err := row.Scan(&sh.ShieldID, &sh.PublicID, &sh.ShieldKey, &sh.UserID, &sh.Name, &sh.Title, &sh.Text, &sh.Color, &sh.Secret, &sh.Created, &sh.Updated); err {
+	case sql.ErrNoRows:
+		return nil, nil
+	case nil:
+		return sh, nil
+	default:
+		return nil, err
+	}
+}
+
 func (sm *ShieldMapper) GetFromSecret(secret string) (*Shield, error) {
 	sh := &Shield{}
 
