@@ -24,7 +24,7 @@ func (sh *ShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	s, err := sh.sm.GetFromPublicID(idst)
 	if err != nil {
-		slog.Info("error fetching shield from public id", slog.Any("error", err))
+		slog.Error("error fetching shield from public id", slog.Any("error", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
@@ -52,7 +52,7 @@ func (sh *KeyedShieldHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	vars := mux.Vars(r)
 	s, err := sh.sm.GetFromUserLoginAndShieldKey(vars["login"], vars["shieldKey"])
 	if err != nil {
-		slog.Info("error fetching shield from user login and shield key", slog.Any("error", err))
+		slog.Error("error fetching shield from user login and shield key", slog.Any("error", err))
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
