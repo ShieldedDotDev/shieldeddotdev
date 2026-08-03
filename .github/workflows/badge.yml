@@ -7,14 +7,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SHIELDED_TOKEN: '${{ secrets.SHIELDED_USER_TOKEN }}'
     steps:
       - name: Set current date as env variable
         run: echo "builddate=$(TZ=America/Chicago date +'%Y-%m-%d %H:%M:%S %Z')" >> $GITHUB_OUTPUT
         id: date
 
       - name: Update Shielded.dev Badge
-        uses: shieldeddotdev/shielded-action@v2
+        uses: shieldeddotdev/shielded-action@v3
         with:
-          shielded-token: ${{ secrets.SHIELDED_USER_TOKEN }}
           shielded-key: "shieldeddotdev-last-update"
           text: ${{ steps.date.outputs.builddate }}
