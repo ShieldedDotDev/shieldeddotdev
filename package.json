@@ -5,7 +5,7 @@
     "type": "git",
     "url": "git+https://github.com/ShieldedDotDev/shieldeddotdev.git"
   },
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "bugs": {
     "url": "https://github.com/ShieldedDotDev/shieldeddotdev/issues"
   },
