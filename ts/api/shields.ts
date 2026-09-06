@@ -14,18 +14,18 @@ export interface ShieldInterface {
 
 export class ShieldsApi {
 	public getShields() {
-		return doRequest<ShieldInterface[]>('api/shields', 'GET', null);
+		return doRequest<ShieldInterface[]>("api/shields", "GET", null);
 	}
 
 	public saveShield(n: Partial<ShieldInterface>) {
 		if (n.ShieldID) {
-			return doRequest<ShieldInterface>(`api/shield/${n.ShieldID}`, 'PUT', JSON.stringify(n));
+			return doRequest<ShieldInterface>(`api/shield/${n.ShieldID}`, "PUT", JSON.stringify(n));
 		} else {
-			return doRequest<ShieldInterface>('api/shields', 'POST', JSON.stringify(n));
+			return doRequest<ShieldInterface>("api/shields", "POST", JSON.stringify(n));
 		}
 	}
 
 	public deleteShield(n: ShieldInterface) {
-		return doRawRequest(`api/shield/${n.ShieldID}`, 'DELETE', JSON.stringify(n));
+		return doRawRequest(`api/shield/${n.ShieldID}`, "DELETE", JSON.stringify(n));
 	}
 }

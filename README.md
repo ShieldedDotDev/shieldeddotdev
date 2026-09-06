@@ -121,5 +121,6 @@ Useful checks:
 
 ```sh
 make lint
+make fmt
 go test ./...
 ```

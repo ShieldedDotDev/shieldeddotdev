@@ -40,7 +40,6 @@ body {
 
 	color: variables.$textColor;
 
-
 	> header {
 		margin: 1em auto;
 		border-radius: 10px;
@@ -48,7 +47,7 @@ body {
 		font-size: 2em;
 		font-weight: bold;
 
-		background: linear-gradient(0deg, rgba(187, 187, 187, .1), transparent), variables.$darkBg;
+		background: linear-gradient(0deg, rgba(187, 187, 187, 0.1), transparent), variables.$darkBg;
 		color: variables.$darkBgText;
 		overflow: hidden;
 
@@ -71,7 +70,11 @@ body {
 		}
 
 		%headerTitle {
-			font-family: DejaVu Sans, Verdana, Geneva, sans-serif;
+			font-family:
+				DejaVu Sans,
+				Verdana,
+				Geneva,
+				sans-serif;
 			font-size: 32px;
 			font-weight: 300;
 			line-height: 1;
@@ -102,7 +105,7 @@ body {
 			grid-area: subtitle;
 			padding-right: 1em;
 
-			background: linear-gradient(0deg, rgba(187, 187, 187, .1), transparent), variables.$hot;
+			background: linear-gradient(0deg, rgba(187, 187, 187, 0.1), transparent), variables.$hot;
 			border-left: 3px solid rgb(255 255 255 / 10%);
 
 			@media screen and (min-width: #{variables.$pageWidth}) {

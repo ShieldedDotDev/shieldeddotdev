@@ -11,9 +11,9 @@ export function isRequestError(e: any): e is RequestErrorInterface {
 
 export async function doRequest<T>(
 	endpoint: string,
-	method: string = 'GET',
+	method: string = "GET",
 	body: string | null = null,
-	mods: RequestModInterface = () => { },
+	mods: RequestModInterface = () => {},
 ): Promise<T> {
 	const text = await doRawRequest(endpoint, method, body, mods);
 	return new Promise<T>((resolve) => {
@@ -24,9 +24,9 @@ export async function doRequest<T>(
 
 export function doRawRequest(
 	endpoint: string,
-	method: string = 'GET',
+	method: string = "GET",
 	body: string | null = null,
-	mods: RequestModInterface = () => { },
+	mods: RequestModInterface = () => {},
 ): Promise<string> {
 	const request = new XMLHttpRequest();
 	request.open(method, `/${endpoint}`, true);
@@ -34,7 +34,7 @@ export function doRawRequest(
 	mods(request);
 
 	return new Promise<string>((resolve, reject) => {
-		request.addEventListener('load', function(e) {
+		request.addEventListener("load", function (e) {
 			if (this.status >= 200 && this.status < 400) {
 				resolve(this.responseText);
 			} else {
@@ -44,7 +44,7 @@ export function doRawRequest(
 
 		request.withCredentials = true;
 
-		request.addEventListener('error', function(e) {
+		request.addEventListener("error", function (e) {
 			reject({ ctx: this, event: e } as RequestErrorInterface);
 		});
 		if (body) {

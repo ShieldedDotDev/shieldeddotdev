@@ -7,20 +7,22 @@ export interface ApiExampleGeneratorInterface {
 }
 
 export class ApiExampleController extends AbstractBaseController {
+	private preElm = document.createElement("pre");
+	private codeElm = document.createElement("code");
 
-	private preElm = document.createElement('pre');
-	private codeElm = document.createElement('code');
-
-	private examplesElm = document.createElement('ul');
+	private examplesElm = document.createElement("ul");
 
 	private examples: [string, ApiExampleGeneratorInterface, HTMLLIElement][] = [
-		['GitHub Action', gitHubActionExample, document.createElement('li')],
-		['Curl', curlExample, document.createElement('li')],
-		['JS', jsExample, document.createElement('li')],
-		['PHP', phpExample, document.createElement('li')],
+		["GitHub Action", gitHubActionExample, document.createElement("li")],
+		["Curl", curlExample, document.createElement("li")],
+		["JS", jsExample, document.createElement("li")],
+		["PHP", phpExample, document.createElement("li")],
 	];
 
-	constructor(private env: EnvInterface, private shield: ShieldInterface | null = null) {
+	constructor(
+		private env: EnvInterface,
+		private shield: ShieldInterface | null = null,
+	) {
 		super(document.createElement("div"), "api-example");
 
 		this.container.appendChild(this.examplesElm);
@@ -28,7 +30,7 @@ export class ApiExampleController extends AbstractBaseController {
 		for (const example of this.examples) {
 			this.examplesElm.appendChild(example[2]);
 			example[2].textContent = example[0];
-			example[2].addEventListener('click', () => this.selectExample(example));
+			example[2].addEventListener("click", () => this.selectExample(example));
 		}
 
 		this.selectExample(this.examples[0]);
@@ -39,12 +41,17 @@ export class ApiExampleController extends AbstractBaseController {
 
 	private selectExample(example: [string, ApiExampleGeneratorInterface, HTMLLIElement]) {
 		for (const ex of this.examples) {
-			ex[2].classList.remove('selected');
+			ex[2].classList.remove("selected");
 		}
-		this.codeElm.textContent = example[1](this.env, this.shield?.Title ?? 'Shielded.dev', this.shield?.Text ?? 'Rocks', this.shield?.Color ?? '0011aa', this.shield?.Secret ?? '<secret>');
-		example[2].classList.add('selected');
+		this.codeElm.textContent = example[1](
+			this.env,
+			this.shield?.Title ?? "Shielded.dev",
+			this.shield?.Text ?? "Rocks",
+			this.shield?.Color ?? "0011aa",
+			this.shield?.Secret ?? "<secret>",
+		);
+		example[2].classList.add("selected");
 	}
-
 }
 
 export function curlExample(
@@ -52,26 +59,26 @@ export function curlExample(
 	title: string,
 	text: string,
 	color: string,
-	token: string
+	token: string,
 ) {
 	return `curl -X "POST" "https://${env.ApiHost}" \\
 	-H 'Authorization: token ${addslashes_single_quotes(token)}' \\
 	-H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' \\
 	--data-urlencode 'title=${addslashes_single_quotes(title)}' \\
 	--data-urlencode 'text=${addslashes_single_quotes(text)}' \\
-	--data-urlencode 'color=${addslashes_single_quotes(color)}'`
+	--data-urlencode 'color=${addslashes_single_quotes(color)}'`;
 }
 
 function addslashes_single_quotes(str: string) {
-	return `${str}`.replace(/\\/g, '\\$&').replace(/'/g, "\\'");
-};
+	return `${str}`.replace(/\\/g, "\\$&").replace(/'/g, "\\'");
+}
 
 export function phpExample(
 	env: EnvInterface,
 	title: string,
 	text: string,
 	color: string,
-	token: string
+	token: string,
 ) {
 	return `<?php
 
@@ -87,14 +94,14 @@ curl_setopt_array($ch, [
 		'color' => ${JSON.stringify(color)},
 	],
 	CURLOPT_HTTPHEADER     => [
-		${JSON.stringify('Authorization: token ' + token)},
+		${JSON.stringify("Authorization: token " + token)},
 	],
 ]);
 
 curl_exec($ch);
 if( curl_getinfo($ch, CURLINFO_HTTP_CODE) === 200 ) {
 	//ok
-}`
+}`;
 }
 
 export function jsExample(
@@ -102,7 +109,7 @@ export function jsExample(
 	title: string,
 	text: string,
 	color: string,
-	token: string
+	token: string,
 ) {
 	return `const params = new URLSearchParams();
 
@@ -114,7 +121,7 @@ fetch('https://${env.ApiHost}', {
 	method: 'POST',
 	headers: {
 		'Content-Type': 'application/x-www-form-urlencoded',
-		'Authorization': ${JSON.stringify('token ' + token)},
+		'Authorization': ${JSON.stringify("token " + token)},
 	},
 	body: params
 })
@@ -123,7 +130,7 @@ fetch('https://${env.ApiHost}', {
 })
 .catch((error) => {
 	console.error('Error:', error);
-});`
+});`;
 }
 
 export function gitHubActionExample(
@@ -131,7 +138,7 @@ export function gitHubActionExample(
 	title: string,
 	text: string,
 	color: string,
-	token: string
+	token: string,
 ) {
 	return `name: Update Shield
 on:
@@ -152,5 +159,5 @@ jobs:
           shielded-token: ${JSON.stringify(token)}
           title: ${JSON.stringify(title)}
           text: ${JSON.stringify(text)}
-          color: ${JSON.stringify(color)}`
+          color: ${JSON.stringify(color)}`;
 }

@@ -3,8 +3,13 @@ export interface ControllerInterface<T extends HTMLElement> {
 	getContainer(): T;
 }
 
-export abstract class AbstractBaseController<T extends HTMLElement = HTMLElement> implements ControllerInterface<T> {
-	constructor(protected container: T, private name: string) {
+export abstract class AbstractBaseController<
+	T extends HTMLElement = HTMLElement,
+> implements ControllerInterface<T> {
+	constructor(
+		protected container: T,
+		private name: string,
+	) {
 		this.container.classList.add(`${this.name}--controller`);
 	}
 
@@ -29,5 +34,4 @@ export abstract class AbstractBaseController<T extends HTMLElement = HTMLElement
 	public getName() {
 		return this.name;
 	}
-
 }

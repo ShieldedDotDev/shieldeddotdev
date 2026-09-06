@@ -7,19 +7,19 @@ var t,r,u,i,o=0,f=[],c=l$1,e=c.__b,a=c.__r,v=c.diffed,l=c.__c,m=c.unmount,p=c.__
 function isRequestError(e) {
     return e.ctx && e.event;
 }
-async function doRequest(endpoint, method = 'GET', body = null, mods = () => { }) {
+async function doRequest(endpoint, method = "GET", body = null, mods = () => { }) {
     const text = await doRawRequest(endpoint, method, body, mods);
     return new Promise((resolve) => {
         const data = JSON.parse(text);
         resolve(data);
     });
 }
-function doRawRequest(endpoint, method = 'GET', body = null, mods = () => { }) {
+function doRawRequest(endpoint, method = "GET", body = null, mods = () => { }) {
     const request = new XMLHttpRequest();
     request.open(method, `/${endpoint}`, true);
     mods(request);
     return new Promise((resolve, reject) => {
-        request.addEventListener('load', function (e) {
+        request.addEventListener("load", function (e) {
             if (this.status >= 200 && this.status < 400) {
                 resolve(this.responseText);
             }
@@ -28,7 +28,7 @@ function doRawRequest(endpoint, method = 'GET', body = null, mods = () => { }) {
             }
         });
         request.withCredentials = true;
-        request.addEventListener('error', function (e) {
+        request.addEventListener("error", function (e) {
             reject({ ctx: this, event: e });
         });
         if (body) {
@@ -43,7 +43,7 @@ function doRawRequest(endpoint, method = 'GET', body = null, mods = () => { }) {
 class AuthedApi {
     async isAuthed() {
         try {
-            await doRequest('api/authed', 'GET', null);
+            await doRequest("api/authed", "GET", null);
             return true;
         }
         catch (_a) {
@@ -54,36 +54,36 @@ class AuthedApi {
 
 class EnvApi {
     getEnv() {
-        return doRequest('env', 'GET', null);
+        return doRequest("env", "GET", null);
     }
 }
 
 class ShieldsApi {
     getShields() {
-        return doRequest('api/shields', 'GET', null);
+        return doRequest("api/shields", "GET", null);
     }
     saveShield(n) {
         if (n.ShieldID) {
-            return doRequest(`api/shield/${n.ShieldID}`, 'PUT', JSON.stringify(n));
+            return doRequest(`api/shield/${n.ShieldID}`, "PUT", JSON.stringify(n));
         }
         else {
-            return doRequest('api/shields', 'POST', JSON.stringify(n));
+            return doRequest("api/shields", "POST", JSON.stringify(n));
         }
     }
     deleteShield(n) {
-        return doRawRequest(`api/shield/${n.ShieldID}`, 'DELETE', JSON.stringify(n));
+        return doRawRequest(`api/shield/${n.ShieldID}`, "DELETE", JSON.stringify(n));
     }
 }
 
 class UserAPITokensApi {
     getTokens() {
-        return doRequest('api/user/tokens', 'GET', null);
+        return doRequest("api/user/tokens", "GET", null);
     }
     createToken(description) {
-        return doRequest('api/user/tokens', 'POST', JSON.stringify({ Description: description }));
+        return doRequest("api/user/tokens", "POST", JSON.stringify({ Description: description }));
     }
     deleteToken(token) {
-        return doRawRequest(`api/user/tokens/${token.APITokenID}`, 'DELETE', null);
+        return doRawRequest(`api/user/tokens/${token.APITokenID}`, "DELETE", null);
     }
 }
 
@@ -118,20 +118,20 @@ class ApiExampleController extends AbstractBaseController {
         super(document.createElement("div"), "api-example");
         this.env = env;
         this.shield = shield;
-        this.preElm = document.createElement('pre');
-        this.codeElm = document.createElement('code');
-        this.examplesElm = document.createElement('ul');
+        this.preElm = document.createElement("pre");
+        this.codeElm = document.createElement("code");
+        this.examplesElm = document.createElement("ul");
         this.examples = [
-            ['GitHub Action', gitHubActionExample, document.createElement('li')],
-            ['Curl', curlExample, document.createElement('li')],
-            ['JS', jsExample, document.createElement('li')],
-            ['PHP', phpExample, document.createElement('li')],
+            ["GitHub Action", gitHubActionExample, document.createElement("li")],
+            ["Curl", curlExample, document.createElement("li")],
+            ["JS", jsExample, document.createElement("li")],
+            ["PHP", phpExample, document.createElement("li")],
         ];
         this.container.appendChild(this.examplesElm);
         for (const example of this.examples) {
             this.examplesElm.appendChild(example[2]);
             example[2].textContent = example[0];
-            example[2].addEventListener('click', () => this.selectExample(example));
+            example[2].addEventListener("click", () => this.selectExample(example));
         }
         this.selectExample(this.examples[0]);
         this.container.appendChild(this.preElm);
@@ -140,10 +140,10 @@ class ApiExampleController extends AbstractBaseController {
     selectExample(example) {
         var _a, _b, _c, _d, _e, _f, _g, _h;
         for (const ex of this.examples) {
-            ex[2].classList.remove('selected');
+            ex[2].classList.remove("selected");
         }
-        this.codeElm.textContent = example[1](this.env, (_b = (_a = this.shield) === null || _a === void 0 ? void 0 : _a.Title) !== null && _b !== void 0 ? _b : 'Shielded.dev', (_d = (_c = this.shield) === null || _c === void 0 ? void 0 : _c.Text) !== null && _d !== void 0 ? _d : 'Rocks', (_f = (_e = this.shield) === null || _e === void 0 ? void 0 : _e.Color) !== null && _f !== void 0 ? _f : '0011aa', (_h = (_g = this.shield) === null || _g === void 0 ? void 0 : _g.Secret) !== null && _h !== void 0 ? _h : '<secret>');
-        example[2].classList.add('selected');
+        this.codeElm.textContent = example[1](this.env, (_b = (_a = this.shield) === null || _a === void 0 ? void 0 : _a.Title) !== null && _b !== void 0 ? _b : "Shielded.dev", (_d = (_c = this.shield) === null || _c === void 0 ? void 0 : _c.Text) !== null && _d !== void 0 ? _d : "Rocks", (_f = (_e = this.shield) === null || _e === void 0 ? void 0 : _e.Color) !== null && _f !== void 0 ? _f : "0011aa", (_h = (_g = this.shield) === null || _g === void 0 ? void 0 : _g.Secret) !== null && _h !== void 0 ? _h : "<secret>");
+        example[2].classList.add("selected");
     }
 }
 function curlExample(env, title, text, color, token) {
@@ -155,7 +155,7 @@ function curlExample(env, title, text, color, token) {
 	--data-urlencode 'color=${addslashes_single_quotes(color)}'`;
 }
 function addslashes_single_quotes(str) {
-    return `${str}`.replace(/\\/g, '\\$&').replace(/'/g, "\\'");
+    return `${str}`.replace(/\\/g, "\\$&").replace(/'/g, "\\'");
 }
 function phpExample(env, title, text, color, token) {
     return `<?php
@@ -172,7 +172,7 @@ curl_setopt_array($ch, [
 		'color' => ${JSON.stringify(color)},
 	],
 	CURLOPT_HTTPHEADER     => [
-		${JSON.stringify('Authorization: token ' + token)},
+		${JSON.stringify("Authorization: token " + token)},
 	],
 ]);
 
@@ -192,7 +192,7 @@ fetch('https://${env.ApiHost}', {
 	method: 'POST',
 	headers: {
 		'Content-Type': 'application/x-www-form-urlencoded',
-		'Authorization': ${JSON.stringify('token ' + token)},
+		'Authorization': ${JSON.stringify("token " + token)},
 	},
 	body: params
 })
@@ -238,11 +238,11 @@ async function Dashboard(elm) {
         return;
     }
     const authApi = new AuthedApi();
-    if (!await authApi.isAuthed()) {
+    if (!(await authApi.isAuthed())) {
         window.location.href = "/";
         return;
     }
-    const env = await (new EnvApi()).getEnv();
+    const env = await new EnvApi().getEnv();
     R(u$1(DashboardApp, { env: env }), elm);
 }
 function DashboardApp({ env }) {
@@ -252,17 +252,18 @@ function DashboardApp({ env }) {
         window.addEventListener("hashchange", updatePage);
         return () => window.removeEventListener("hashchange", updatePage);
     }, []);
-    return u$1(S, { children: [u$1(DashboardNavigation, { page: page }), page === "user" ? u$1(S, { children: [u$1("h3", { children: "User tokens" }), u$1("div", { class: "dashboard--controller", children: u$1(APITokens, {}) })] }) : u$1(S, { children: [u$1("h3", { children: "Dashboard" }), u$1("div", { class: "dashboard--controller", children: u$1(Shields, { env: env }) })] })] });
+    return (u$1(S, { children: [u$1(DashboardNavigation, { page: page }), page === "user" ? (u$1(S, { children: [u$1("h3", { children: "User tokens" }), u$1("div", { class: "dashboard--controller", children: u$1(APITokens, {}) })] })) : (u$1(S, { children: [u$1("h3", { children: "Dashboard" }), u$1("div", { class: "dashboard--controller", children: u$1(Shields, { env: env }) })] }))] }));
 }
 function DashboardNavigation({ page }) {
-    return u$1("nav", { class: "dashboard-navigation", "aria-label": "Dashboard navigation", children: [u$1("a", { href: "#/dashboard", "aria-current": page === "dashboard" ? "page" : undefined, children: "Shields" }), u$1("a", { href: "#/user", "aria-current": page === "user" ? "page" : undefined, children: "User tokens" })] });
+    return (u$1("nav", { class: "dashboard-navigation", "aria-label": "Dashboard navigation", children: [u$1("a", { href: "#/dashboard", "aria-current": page === "dashboard" ? "page" : undefined, children: "Shields" }), u$1("a", { href: "#/user", "aria-current": page === "user" ? "page" : undefined, children: "User tokens" })] }));
 }
 function Shields({ env }) {
     const api = A(new ShieldsApi()).current;
     const [shields, setShields] = d(null);
     const [error, setError] = d("");
     h(() => {
-        void api.getShields()
+        void api
+            .getShields()
             .then(setShields)
             .catch((requestError) => setError(errorMessage(requestError)));
     }, [api]);
@@ -303,7 +304,8 @@ function Shields({ env }) {
             setError(errorMessage(requestError));
         }
     };
-    return u$1(S, { children: [u$1("button", { type: "button", class: "add-button primary", onClick: createShield, children: [u$1("span", { class: "icon", children: "\u2795" }), "New shield"] }), error !== "" && u$1("p", { children: error }), shields === null && error === "" && u$1("p", { children: "Loading shields\u2026" }), shields !== null && shields.map((shield) => u$1(ShieldForm, { shield: shield, env: env, onSave: saveShield, onDelete: deleteShield }, shield.ShieldID)), shields !== null && shields.length === 0 && u$1("h4", { class: "no-shields", children: "No shields yet. Click the button to get started." })] });
+    return (u$1(S, { children: [u$1("button", { type: "button", class: "add-button primary", onClick: createShield, children: [u$1("span", { class: "icon", children: "\u2795" }), "New shield"] }), error !== "" && u$1("p", { children: error }), shields === null && error === "" && u$1("p", { children: "Loading shields\u2026" }), shields !== null &&
+                shields.map((shield) => (u$1(ShieldForm, { shield: shield, env: env, onSave: saveShield, onDelete: deleteShield }, shield.ShieldID))), shields !== null && shields.length === 0 && (u$1("h4", { class: "no-shields", children: "No shields yet. Click the button to get started." }))] }));
 }
 function ShieldForm({ shield, env, onSave, onDelete }) {
     const [draft, setDraft] = d(shield);
@@ -346,7 +348,9 @@ function ShieldForm({ shield, env, onSave, onDelete }) {
             clearTimeout(saveTimeout.current);
             saveTimeout.current = null;
         }
-        if (next.ShieldKey !== undefined && next.ShieldKey !== "" && !shieldKeyPattern.test(next.ShieldKey)) {
+        if (next.ShieldKey !== undefined &&
+            next.ShieldKey !== "" &&
+            !shieldKeyPattern.test(next.ShieldKey)) {
             pendingSave.current = null;
             return;
         }
@@ -384,16 +388,18 @@ function ShieldForm({ shield, env, onSave, onDelete }) {
     };
     const markdown = `![${draft.Name}](https://${env.ImgHost}/s/${draft.PublicID})`;
     const selectedExample = example[1](env, draft.Title, draft.Text, draft.Color, draft.Secret);
-    const shieldKeyInvalid = draft.ShieldKey !== undefined && draft.ShieldKey !== "" && !shieldKeyPattern.test(draft.ShieldKey);
+    const shieldKeyInvalid = draft.ShieldKey !== undefined &&
+        draft.ShieldKey !== "" &&
+        !shieldKeyPattern.test(draft.ShieldKey);
     const shieldKeyErrorID = `shield-${draft.ShieldID}-key-error`;
     const markdownInputID = `shield-${draft.ShieldID}-markdown`;
     const secretInputID = `shield-${draft.ShieldID}-secret`;
-    return u$1("form", { class: "shield--controller", onInput: handleInput, children: [u$1("section", { class: "name-input", children: [u$1(Input, { label: "Shield Name", name: "Name", value: draft.Name }), u$1(Input, { label: "Shield key", name: "ShieldKey", value: draft.ShieldKey || "", pattern: "[a-z0-9\\\\-]{3,64}", title: "Optional: 3-64 lowercase letters, digits, or hyphens", placeholder: "e.g. production-status", autoComplete: "off", spellcheck: false, "aria-invalid": shieldKeyInvalid, "aria-describedby": shieldKeyInvalid ? shieldKeyErrorID : undefined }), shieldKeyInvalid && u$1("p", { id: shieldKeyErrorID, class: "input-error", role: "alert", children: "Shield key must be 3-64 lowercase letters, digits, or hyphens." })] }), u$1("section", { class: "shield-container", children: u$1("img", { src: `https://${env.ImgHost}/s/${draft.PublicID}?break=${imageTick}`, alt: `${draft.Title}: ${draft.Text}` }) }), u$1("section", { class: "main-inputs", children: [u$1(Input, { label: "Title", name: "Title", value: draft.Title }), u$1(Input, { label: "Text", name: "Text", value: draft.Text }), u$1(Input, { label: "Color", name: "Color", value: `#${draft.Color.replace(/^#/, "")}`, type: "color", title: "Must be a hex color code" })] }), u$1("details", { class: "api-example", children: [u$1("summary", { children: "API Call Examples" }), u$1("div", { class: "api-example--controller", children: [u$1("ul", { children: apiExamples.map((item) => u$1("li", { class: item[0] === example[0] ? "selected" : "", onClick: () => setExample(item), children: item[0] }, item[0])) }), u$1("pre", { children: u$1("code", { children: selectedExample }) })] })] }), u$1("section", { class: "button-container", children: u$1("button", { type: "button", class: "danger", onClick: deleteShield, children: [u$1("span", { class: "icon", children: "\u274C" }), "Delete"] }) }), u$1("section", { class: "fancy-inputs", children: [u$1("label", { for: markdownInputID, children: "Markdown" }), u$1("div", { class: "markdown-input--controller", children: [u$1("input", { id: markdownInputID, value: markdown, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(markdown, setMarkdownCopied), children: markdownCopied ? "Copied!" : "Copy" })] }), u$1("label", { for: secretInputID, children: "This shield's API token" }), u$1("div", { class: "secret-input--controller", children: [u$1("input", { id: secretInputID, type: secretVisible ? "text" : "password", value: draft.Secret, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(draft.Secret, setSecretCopied), children: secretCopied ? "Copied!" : "Copy" }), u$1("button", { type: "button", onClick: () => setSecretVisible(!secretVisible), children: secretVisible ? "Hide" : "Reveal" })] })] })] });
+    return (u$1("form", { class: "shield--controller", onInput: handleInput, children: [u$1("section", { class: "name-input", children: [u$1(Input, { label: "Shield Name", name: "Name", value: draft.Name }), u$1(Input, { label: "Shield key", name: "ShieldKey", value: draft.ShieldKey || "", pattern: "[a-z0-9\\\\-]{3,64}", title: "Optional: 3-64 lowercase letters, digits, or hyphens", placeholder: "e.g. production-status", autoComplete: "off", spellcheck: false, "aria-invalid": shieldKeyInvalid, "aria-describedby": shieldKeyInvalid ? shieldKeyErrorID : undefined }), shieldKeyInvalid && (u$1("p", { id: shieldKeyErrorID, class: "input-error", role: "alert", children: "Shield key must be 3-64 lowercase letters, digits, or hyphens." }))] }), u$1("section", { class: "shield-container", children: u$1("img", { src: `https://${env.ImgHost}/s/${draft.PublicID}?break=${imageTick}`, alt: `${draft.Title}: ${draft.Text}` }) }), u$1("section", { class: "main-inputs", children: [u$1(Input, { label: "Title", name: "Title", value: draft.Title }), u$1(Input, { label: "Text", name: "Text", value: draft.Text }), u$1(Input, { label: "Color", name: "Color", value: `#${draft.Color.replace(/^#/, "")}`, type: "color", title: "Must be a hex color code" })] }), u$1("details", { class: "api-example", children: [u$1("summary", { children: "API Call Examples" }), u$1("div", { class: "api-example--controller", children: [u$1("ul", { children: apiExamples.map((item) => (u$1("li", { class: item[0] === example[0] ? "selected" : "", onClick: () => setExample(item), children: item[0] }, item[0]))) }), u$1("pre", { children: u$1("code", { children: selectedExample }) })] })] }), u$1("section", { class: "button-container", children: u$1("button", { type: "button", class: "danger", onClick: deleteShield, children: [u$1("span", { class: "icon", children: "\u274C" }), "Delete"] }) }), u$1("section", { class: "fancy-inputs", children: [u$1("label", { for: markdownInputID, children: "Markdown" }), u$1("div", { class: "markdown-input--controller", children: [u$1("input", { id: markdownInputID, value: markdown, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(markdown, setMarkdownCopied), children: markdownCopied ? "Copied!" : "Copy" })] }), u$1("label", { for: secretInputID, children: "This shield's API token" }), u$1("div", { class: "secret-input--controller", children: [u$1("input", { id: secretInputID, type: secretVisible ? "text" : "password", value: draft.Secret, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(draft.Secret, setSecretCopied), children: secretCopied ? "Copied!" : "Copy" }), u$1("button", { type: "button", onClick: () => setSecretVisible(!secretVisible), children: secretVisible ? "Hide" : "Reveal" })] })] })] }));
 }
 function Input({ label, ...attributes }) {
     const generatedID = g();
     const id = attributes.id || generatedID;
-    return u$1("div", { class: "input-container", children: [u$1("label", { for: id, children: label }), u$1("input", { ...attributes, id: id })] });
+    return (u$1("div", { class: "input-container", children: [u$1("label", { for: id, children: label }), u$1("input", { ...attributes, id: id })] }));
 }
 function APITokens() {
     const api = A(new UserAPITokensApi()).current;
@@ -404,7 +410,8 @@ function APITokens() {
     const [error, setError] = d("");
     const [creating, setCreating] = d(false);
     h(() => {
-        void api.getTokens()
+        void api
+            .getTokens()
             .then(setTokens)
             .catch((requestError) => setError(errorMessage(requestError)));
     }, [api]);
@@ -444,7 +451,7 @@ function APITokens() {
             setError(errorMessage(requestError));
         }
     };
-    return u$1("section", { class: "api-tokens--controller", children: [u$1("h3", { children: "User API tokens" }), u$1("p", { children: "Create a token to update or create any of your shields through the API." }), u$1("form", { onSubmit: createToken, children: [u$1("label", { for: "api-token-description", children: "Description" }), u$1("input", { id: "api-token-description", name: "description", value: description, onInput: (event) => setDescription(event.currentTarget.value), required: true, maxLength: 255, placeholder: "e.g. production deploy job" }), u$1("button", { type: "submit", class: "primary", disabled: creating, children: "Create token" })] }), error !== "" && u$1("p", { children: error }), createdToken !== "" && u$1("div", { class: "created-api-token", children: [u$1("p", { children: "Copy this token now. It will not be shown again." }), u$1("label", { for: "created-api-token", children: "New API token" }), u$1("input", { id: "created-api-token", value: createdToken, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(createdToken, setCopied), children: copied ? "Copied!" : "Copy" })] }), u$1("div", { children: [u$1("h4", { children: "Active tokens" }), tokens === null && error === "" && u$1("p", { children: "Loading API tokens\u2026" }), tokens !== null && tokens.length === 0 && u$1("p", { children: "No API tokens yet." }), tokens !== null && tokens.length > 0 && u$1("table", { children: [u$1("thead", { children: u$1("tr", { children: [u$1("th", { children: "Description" }), u$1("th", { children: "Created" }), u$1("th", { children: "Last used" }), u$1("th", {})] }) }), u$1("tbody", { children: tokens.map((token) => u$1("tr", { children: [u$1("td", { children: token.Description }), u$1("td", { children: formatTimestamp(token.Created) }), u$1("td", { children: token.LastUsed === null ? "Never" : formatTimestamp(token.LastUsed) }), u$1("td", { children: u$1("button", { type: "button", class: "danger", onClick: () => revokeToken(token), children: "Revoke" }) })] }, token.APITokenID)) })] })] })] });
+    return (u$1("section", { class: "api-tokens--controller", children: [u$1("h3", { children: "User API tokens" }), u$1("p", { children: "Create a token to update or create any of your shields through the API." }), u$1("form", { onSubmit: createToken, children: [u$1("label", { for: "api-token-description", children: "Description" }), u$1("input", { id: "api-token-description", name: "description", value: description, onInput: (event) => setDescription(event.currentTarget.value), required: true, maxLength: 255, placeholder: "e.g. production deploy job" }), u$1("button", { type: "submit", class: "primary", disabled: creating, children: "Create token" })] }), error !== "" && u$1("p", { children: error }), createdToken !== "" && (u$1("div", { class: "created-api-token", children: [u$1("p", { children: "Copy this token now. It will not be shown again." }), u$1("label", { for: "created-api-token", children: "New API token" }), u$1("input", { id: "created-api-token", value: createdToken, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(createdToken, setCopied), children: copied ? "Copied!" : "Copy" })] })), u$1("div", { children: [u$1("h4", { children: "Active tokens" }), tokens === null && error === "" && u$1("p", { children: "Loading API tokens\u2026" }), tokens !== null && tokens.length === 0 && u$1("p", { children: "No API tokens yet." }), tokens !== null && tokens.length > 0 && (u$1("table", { children: [u$1("thead", { children: u$1("tr", { children: [u$1("th", { children: "Description" }), u$1("th", { children: "Created" }), u$1("th", { children: "Last used" }), u$1("th", {})] }) }), u$1("tbody", { children: tokens.map((token) => (u$1("tr", { children: [u$1("td", { children: token.Description }), u$1("td", { children: formatTimestamp(token.Created) }), u$1("td", { children: token.LastUsed === null ? "Never" : formatTimestamp(token.LastUsed) }), u$1("td", { children: u$1("button", { type: "button", class: "danger", onClick: () => revokeToken(token), children: "Revoke" }) })] }, token.APITokenID))) })] }))] })] }));
 }
 function currentPage() {
     return window.location.hash === "#/user" ? "user" : "dashboard";

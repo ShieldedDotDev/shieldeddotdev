@@ -2,11 +2,9 @@
 @use "shared";
 
 %home {
-
 	article {
-
 		p {
-			margin: .6em 0;
+			margin: 0.6em 0;
 		}
 
 		&.callout {
@@ -20,7 +18,6 @@
 		&.api-examples {
 			text-align: left;
 		}
-
 
 		&.home-core {
 			display: grid;
@@ -41,7 +38,7 @@
 				grid-area: examples;
 
 				li {
-					padding: .4em 0;
+					padding: 0.4em 0;
 				}
 			}
 
@@ -96,8 +93,5 @@
 		&:hover {
 			background-color: variables.$primaryControlHover;
 		}
-
-
 	}
-
 }
