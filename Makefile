@@ -63,6 +63,10 @@ $(RELEASE_DIR): clean $(RELEASE_DIR)/linux_amd64/$(BIN) $(RELEASE_DIR)/darwin_am
 lint:
 	./node_modules/.bin/oxlint -c oxlint.config.mts --fix --deny-warnings ts/
 
+.PHONY: fmt
+fmt:
+	./node_modules/.bin/oxfmt -c .oxfmtrc.json ts/ scss/
+
 .PHONY: debug
 debug: clean $(STATIC_SOURCES) $(STATIC_DIR)/main.js
 	$(MAKE) BIN=$(BIN_DEBUG) BUILDTAGS="debug" LDADDIT="-X main.rootHost=local.shielded.dev -X main.apiHost=api.local.shielded.dev -X main.imgHost=img.local.shielded.dev" build

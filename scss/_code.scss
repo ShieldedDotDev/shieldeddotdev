@@ -13,10 +13,11 @@ code {
 
 pre {
 	line-height: 1.4em;
-	font-family: Menlo,
-	Monaco,
-	Courier New,
-	monospace;
+	font-family:
+		Menlo,
+		Monaco,
+		Courier New,
+		monospace;
 	@include mixins.force-wrap();
 	font-size: 0.8rem;
 	padding: 1.125em;
@@ -28,14 +29,14 @@ pre {
 }
 
 code {
-	font-family: Menlo,
-	Monaco,
-	Courier New,
-	monospace;
+	font-family:
+		Menlo,
+		Monaco,
+		Courier New,
+		monospace;
 }
 
 .api-example--controller {
-
 	display: grid;
 	grid-template-rows: 1fr;
 
@@ -71,7 +72,6 @@ code {
 		&:first-child {
 			border-left: none;
 		}
-
 
 		padding: 1em;
 		cursor: pointer;

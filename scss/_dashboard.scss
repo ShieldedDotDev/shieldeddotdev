@@ -3,7 +3,6 @@
 @use "shared";
 
 %dashboard {
-
 	> .add-button {
 		display: block;
 		margin: 0 auto 1em;
@@ -79,7 +78,6 @@
 
 	.shield--controller {
 		display: grid;
-		
 
 		@media screen and (min-width: #{variables.$pageWidth}) {
 			grid-template-areas: "ni img" "mi fi" "api api" "bc bc";
@@ -93,7 +91,6 @@
 		@media screen and (max-width: #{variables.$pageWidth - 1}) {
 			grid-template-areas: "ni" "img" "mi" "fi" "api" "bc";
 		}
-		
 
 		%right {
 		}
@@ -110,7 +107,7 @@
 
 		> .button-container {
 			grid-area: bc;
-			background-color: rgba(255, 255, 255, .3);
+			background-color: rgba(255, 255, 255, 0.3);
 		}
 
 		> .fancy-inputs {
@@ -125,8 +122,8 @@
 
 		> .api-example {
 			grid-area: api;
-			background-color: rgba(0, 0, 0, .1);
-			box-shadow: inset 0 0 1px 0px rgba(0, 0, 0, .3)
+			background-color: rgba(0, 0, 0, 0.1);
+			box-shadow: inset 0 0 1px 0px rgba(0, 0, 0, 0.3);
 		}
 	}
 
@@ -140,9 +137,10 @@
 
 		margin-bottom: 1rem;
 
-		input, button {
-
-			&:focus, &:active {
+		input,
+		button {
+			&:focus,
+			&:active {
 				box-shadow: color.scale(variables.$hot, $alpha: -40%) 0 0 0 3px;
 				outline: none;
 			}
@@ -164,7 +162,7 @@
 			justify-content: flex-start;
 
 			> button {
-				margin: .1em;
+				margin: 0.1em;
 			}
 		}
 
@@ -203,7 +201,7 @@
 			input {
 				width: 100%;
 
-				&[type="color"]{
+				&[type="color"] {
 					width: 5em;
 				}
 			}
@@ -228,7 +226,7 @@
 			@extend %input-container;
 
 			> .markdown-input--controller {
-				margin-bottom: .3em;
+				margin-bottom: 0.3em;
 			}
 		}
 
