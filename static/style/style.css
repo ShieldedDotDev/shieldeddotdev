@@ -620,14 +620,10 @@ button.primary:hover {
   border-radius: 6px;
 }
 
-pre,
-code {
+pre {
   background: #555;
   color: white;
   font-family: Consolas, "Courier New", Courier, monospace;
-}
-
-pre {
   line-height: 1.4em;
   font-family: Menlo, Monaco, Courier New, monospace;
   white-space: pre;
@@ -645,9 +641,16 @@ pre {
 pre > code {
   white-space: pre-wrap;
   background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
 }
 
 code {
+  background: rgb(241.96, 243.72, 247.88);
+  color: #2a2a2a;
+  padding: 0.08em 0.25em;
+  border-radius: 0.2em;
   font-family: Menlo, Monaco, Courier New, monospace;
 }
 
