@@ -1,6 +1,6 @@
 import { render } from "preact";
 import type { JSX } from "preact";
-import { useEffect, useId, useRef, useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 
 import { AuthedApi } from "./api/authed";
 import { EnvApi, EnvInterface } from "./api/env";
@@ -14,6 +14,8 @@ import {
 	jsExample,
 	phpExample,
 } from "./Controllers/ApiExampleController";
+import { CopyableInput } from "./components/CopyableInput";
+import { Input } from "./components/Input";
 
 type Page = "dashboard" | "user";
 
@@ -140,7 +142,6 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 	const pendingSave = useRef<ShieldInterface | null>(null);
 	const [imageTick, setImageTick] = useState(Date.now());
 	const [example, setExample] = useState(apiExamples[0]);
-	const [markdownCopied, setMarkdownCopied] = useState(false);
 	const [secretCopied, setSecretCopied] = useState(false);
 	const [secretVisible, setSecretVisible] = useState(false);
 
@@ -223,7 +224,6 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 	const selectedExample = example[1](env, draft.Title, draft.Text, draft.Color, draft.Secret);
 	const shieldKeyInvalid = draft.ShieldKey !== undefined && draft.ShieldKey !== "" && !shieldKeyPattern.test(draft.ShieldKey);
 	const shieldKeyErrorID = `shield-${draft.ShieldID}-key-error`;
-	const markdownInputID = `shield-${draft.ShieldID}-markdown`;
 	const secretInputID = `shield-${draft.ShieldID}-secret`;
 
 	return <form class="shield--controller" onInput={handleInput}>
@@ -247,18 +247,11 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 		</details>
 		<section class="button-container"><button type="button" class="danger" onClick={deleteShield}><span class="icon">❌</span>Delete</button></section>
 		<section class="fancy-inputs">
-			<label for={markdownInputID}>Markdown</label>
-			<div class="markdown-input--controller"><input id={markdownInputID} value={markdown} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(markdown, setMarkdownCopied)}>{markdownCopied ? "Copied!" : "Copy"}</button></div>
+			<CopyableInput label="Markdown" value={markdown} />
 			<label for={secretInputID}>This shield's API token</label>
 			<div class="secret-input--controller"><input id={secretInputID} type={secretVisible ? "text" : "password"} value={draft.Secret} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(draft.Secret, setSecretCopied)}>{secretCopied ? "Copied!" : "Copy"}</button><button type="button" onClick={() => setSecretVisible(!secretVisible)}>{secretVisible ? "Hide" : "Reveal"}</button></div>
 		</section>
 	</form>;
-}
-
-function Input({ label, ...attributes }: JSX.InputHTMLAttributes<HTMLInputElement> & { label: string }) {
-	const generatedID = useId();
-	const id = attributes.id || generatedID;
-	return <div class="input-container"><label for={id}>{label}</label><input {...attributes} id={id} /></div>;
 }
 
 function APITokens() {

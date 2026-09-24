@@ -226,6 +226,29 @@ jobs:
           color: ${JSON.stringify(color)}`;
 }
 
+function CopyableInput({ label, value, id: suppliedID }) {
+    const generatedID = g();
+    const id = suppliedID || generatedID;
+    const [copied, setCopied] = d(false);
+    h(() => setCopied(false), [value]);
+    const copy = async () => {
+        try {
+            await navigator.clipboard.writeText(value);
+            setCopied(true);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
+    return u$1(S, { children: [u$1("label", { for: id, children: label }), u$1("div", { class: "markdown-input--controller", children: [u$1("input", { id: id, value: value, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: copy, children: copied ? "Copied!" : "Copy" })] })] });
+}
+
+function Input({ label, ...attributes }) {
+    const generatedID = g();
+    const id = attributes.id || generatedID;
+    return u$1("div", { class: "input-container", children: [u$1("label", { for: id, children: label }), u$1("input", { ...attributes, id: id })] });
+}
+
 const shieldKeyPattern = /^[a-z0-9-]{3,64}$/;
 const apiExamples = [
     ["GitHub Action", gitHubActionExample],
@@ -313,7 +336,6 @@ function ShieldForm({ shield, env, onSave, onDelete }) {
     const pendingSave = A(null);
     const [imageTick, setImageTick] = d(Date.now());
     const [example, setExample] = d(apiExamples[0]);
-    const [markdownCopied, setMarkdownCopied] = d(false);
     const [secretCopied, setSecretCopied] = d(false);
     const [secretVisible, setSecretVisible] = d(false);
     h(() => () => {
@@ -386,14 +408,8 @@ function ShieldForm({ shield, env, onSave, onDelete }) {
     const selectedExample = example[1](env, draft.Title, draft.Text, draft.Color, draft.Secret);
     const shieldKeyInvalid = draft.ShieldKey !== undefined && draft.ShieldKey !== "" && !shieldKeyPattern.test(draft.ShieldKey);
     const shieldKeyErrorID = `shield-${draft.ShieldID}-key-error`;
-    const markdownInputID = `shield-${draft.ShieldID}-markdown`;
     const secretInputID = `shield-${draft.ShieldID}-secret`;
-    return u$1("form", { class: "shield--controller", onInput: handleInput, children: [u$1("section", { class: "name-input", children: [u$1(Input, { label: "Shield Name", name: "Name", value: draft.Name }), u$1(Input, { label: "Shield key", name: "ShieldKey", value: draft.ShieldKey || "", pattern: "[a-z0-9\\\\-]{3,64}", title: "Optional: 3-64 lowercase letters, digits, or hyphens", placeholder: "e.g. production-status", autoComplete: "off", spellcheck: false, "aria-invalid": shieldKeyInvalid, "aria-describedby": shieldKeyInvalid ? shieldKeyErrorID : undefined }), shieldKeyInvalid && u$1("p", { id: shieldKeyErrorID, class: "input-error", role: "alert", children: "Shield key must be 3-64 lowercase letters, digits, or hyphens." })] }), u$1("section", { class: "shield-container", children: u$1("img", { src: `https://${env.ImgHost}/s/${draft.PublicID}?break=${imageTick}`, alt: `${draft.Title}: ${draft.Text}` }) }), u$1("section", { class: "main-inputs", children: [u$1(Input, { label: "Title", name: "Title", value: draft.Title }), u$1(Input, { label: "Text", name: "Text", value: draft.Text }), u$1(Input, { label: "Color", name: "Color", value: `#${draft.Color.replace(/^#/, "")}`, type: "color", title: "Must be a hex color code" })] }), u$1("details", { class: "api-example", children: [u$1("summary", { children: "API Call Examples" }), u$1("div", { class: "api-example--controller", children: [u$1("ul", { children: apiExamples.map((item) => u$1("li", { class: item[0] === example[0] ? "selected" : "", onClick: () => setExample(item), children: item[0] }, item[0])) }), u$1("pre", { children: u$1("code", { children: selectedExample }) })] })] }), u$1("section", { class: "button-container", children: u$1("button", { type: "button", class: "danger", onClick: deleteShield, children: [u$1("span", { class: "icon", children: "\u274C" }), "Delete"] }) }), u$1("section", { class: "fancy-inputs", children: [u$1("label", { for: markdownInputID, children: "Markdown" }), u$1("div", { class: "markdown-input--controller", children: [u$1("input", { id: markdownInputID, value: markdown, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(markdown, setMarkdownCopied), children: markdownCopied ? "Copied!" : "Copy" })] }), u$1("label", { for: secretInputID, children: "This shield's API token" }), u$1("div", { class: "secret-input--controller", children: [u$1("input", { id: secretInputID, type: secretVisible ? "text" : "password", value: draft.Secret, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(draft.Secret, setSecretCopied), children: secretCopied ? "Copied!" : "Copy" }), u$1("button", { type: "button", onClick: () => setSecretVisible(!secretVisible), children: secretVisible ? "Hide" : "Reveal" })] })] })] });
-}
-function Input({ label, ...attributes }) {
-    const generatedID = g();
-    const id = attributes.id || generatedID;
-    return u$1("div", { class: "input-container", children: [u$1("label", { for: id, children: label }), u$1("input", { ...attributes, id: id })] });
+    return u$1("form", { class: "shield--controller", onInput: handleInput, children: [u$1("section", { class: "name-input", children: [u$1(Input, { label: "Shield Name", name: "Name", value: draft.Name }), u$1(Input, { label: "Shield key", name: "ShieldKey", value: draft.ShieldKey || "", pattern: "[a-z0-9\\\\-]{3,64}", title: "Optional: 3-64 lowercase letters, digits, or hyphens", placeholder: "e.g. production-status", autoComplete: "off", spellcheck: false, "aria-invalid": shieldKeyInvalid, "aria-describedby": shieldKeyInvalid ? shieldKeyErrorID : undefined }), shieldKeyInvalid && u$1("p", { id: shieldKeyErrorID, class: "input-error", role: "alert", children: "Shield key must be 3-64 lowercase letters, digits, or hyphens." })] }), u$1("section", { class: "shield-container", children: u$1("img", { src: `https://${env.ImgHost}/s/${draft.PublicID}?break=${imageTick}`, alt: `${draft.Title}: ${draft.Text}` }) }), u$1("section", { class: "main-inputs", children: [u$1(Input, { label: "Title", name: "Title", value: draft.Title }), u$1(Input, { label: "Text", name: "Text", value: draft.Text }), u$1(Input, { label: "Color", name: "Color", value: `#${draft.Color.replace(/^#/, "")}`, type: "color", title: "Must be a hex color code" })] }), u$1("details", { class: "api-example", children: [u$1("summary", { children: "API Call Examples" }), u$1("div", { class: "api-example--controller", children: [u$1("ul", { children: apiExamples.map((item) => u$1("li", { class: item[0] === example[0] ? "selected" : "", onClick: () => setExample(item), children: item[0] }, item[0])) }), u$1("pre", { children: u$1("code", { children: selectedExample }) })] })] }), u$1("section", { class: "button-container", children: u$1("button", { type: "button", class: "danger", onClick: deleteShield, children: [u$1("span", { class: "icon", children: "\u274C" }), "Delete"] }) }), u$1("section", { class: "fancy-inputs", children: [u$1(CopyableInput, { label: "Markdown", value: markdown }), u$1("label", { for: secretInputID, children: "This shield's API token" }), u$1("div", { class: "secret-input--controller", children: [u$1("input", { id: secretInputID, type: secretVisible ? "text" : "password", value: draft.Secret, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(draft.Secret, setSecretCopied), children: secretCopied ? "Copied!" : "Copy" }), u$1("button", { type: "button", onClick: () => setSecretVisible(!secretVisible), children: secretVisible ? "Hide" : "Reveal" })] })] })] });
 }
 function APITokens() {
     const api = A(new UserAPITokensApi()).current;
@@ -465,98 +481,35 @@ async function copy(value, setCopied) {
     }
 }
 
-class StaticBadgeGeneratorController extends AbstractBaseController {
-    constructor(env) {
-        super(document.createElement("div"), "static-badge-generator");
-        this.env = env;
-        this.updateTimeout = null;
-        const form = document.createElement("form");
-        form.addEventListener("submit", (event) => event.preventDefault());
-        const inputs = document.createElement("section");
-        inputs.classList.add("main-inputs");
-        this.titleInput = this.addInput(inputs, "Title", "title", "text", "Build");
-        this.textInput = this.addInput(inputs, "Text", "text", "text", "passing");
-        this.colorInput = this.addInput(inputs, "Color", "color", "color", "#00aa55");
-        this.colorInput.title = "Must be a hex color code";
-        form.appendChild(inputs);
-        const preview = document.createElement("section");
-        preview.classList.add("shield-container");
-        this.preview = document.createElement("img");
-        preview.appendChild(this.preview);
-        const markdown = document.createElement("section");
-        markdown.classList.add("fancy-inputs");
-        const markdownLabel = document.createElement("label");
-        markdownLabel.htmlFor = "static-badge-generator-markdown";
-        markdownLabel.textContent = "Markdown";
-        const markdownInputContainer = document.createElement("div");
-        markdownInputContainer.classList.add("markdown-input--controller");
-        this.markdownInput = document.createElement("input");
-        this.markdownInput.id = markdownLabel.htmlFor;
-        this.markdownInput.readOnly = true;
-        this.markdownInput.addEventListener("click", () => this.markdownInput.select());
-        this.copyButton = document.createElement("button");
-        this.copyButton.type = "button";
-        this.copyButton.textContent = "Copy";
-        this.copyButton.addEventListener("click", () => void this.copyMarkdown());
-        markdownInputContainer.append(this.markdownInput, this.copyButton);
-        markdown.append(markdownLabel, markdownInputContainer);
-        this.container.append(form, preview, markdown);
-        this.updatePreview();
-    }
-    addInput(parent, labelText, name, type, value) {
-        const container = document.createElement("div");
-        container.classList.add("input-container");
-        const input = document.createElement("input");
-        input.id = `static-badge-generator-${name}`;
-        input.name = name;
-        input.type = type;
-        input.value = value;
-        input.addEventListener("input", () => this.schedulePreview());
-        const label = document.createElement("label");
-        label.htmlFor = input.id;
-        label.textContent = labelText;
-        container.append(label, input);
-        parent.appendChild(container);
-        return input;
-    }
-    schedulePreview() {
-        if (this.updateTimeout !== null) {
-            window.clearTimeout(this.updateTimeout);
-        }
-        this.updateTimeout = window.setTimeout(() => {
-            this.updateTimeout = null;
-            this.updatePreview();
-        }, 400);
-    }
-    updatePreview() {
-        const title = this.titleInput.value;
-        const text = this.textInput.value;
-        const url = this.staticBadgeURL();
-        this.preview.src = url;
-        this.preview.alt = [title, text].filter(Boolean).join(": ") || "Static badge";
-        this.markdownInput.value = `![${this.markdownAlt(title)}](${url})`;
-        this.copyButton.textContent = "Copy";
-    }
-    staticBadgeURL() {
-        const params = new URLSearchParams({
-            title: this.titleInput.value,
-            text: this.textInput.value,
-            color: this.colorInput.value,
-        });
-        return `https://${this.env.ImgHost}/s?${params}`;
-    }
-    markdownAlt(title) {
-        return (title || "Badge").replace(/[\\[\]]/g, "\\$&");
-    }
-    async copyMarkdown() {
-        try {
-            await navigator.clipboard.writeText(this.markdownInput.value);
-            this.copyButton.textContent = "Copied!";
-        }
-        catch (error) {
-            console.error(error);
-        }
-    }
+const defaultOptions = {
+    title: "Build",
+    text: "passing",
+    color: "#00aa55",
+};
+function StaticBadgeGenerator({ env }) {
+    const [options, setOptions] = d(defaultOptions);
+    const [generatedOptions, setGeneratedOptions] = d(defaultOptions);
+    h(() => {
+        const updateTimeout = window.setTimeout(() => setGeneratedOptions(options), 400);
+        return () => window.clearTimeout(updateTimeout);
+    }, [options]);
+    const badgeURL = staticBadgeURL(env, generatedOptions);
+    const markdown = `![${markdownAlt(generatedOptions.title)}](${badgeURL})`;
+    return u$1("div", { class: "static-badge-generator--controller", children: [u$1("form", { onSubmit: (event) => event.preventDefault(), children: u$1("section", { class: "main-inputs", children: [u$1(Input, { label: "Title", name: "title", value: options.title, onInput: (event) => setOptions((current) => ({ ...current, title: event.currentTarget.value })) }), u$1(Input, { label: "Text", name: "text", value: options.text, onInput: (event) => setOptions((current) => ({ ...current, text: event.currentTarget.value })) }), u$1(Input, { label: "Color", name: "color", type: "color", value: options.color, title: "Must be a hex color code", onInput: (event) => setOptions((current) => ({ ...current, color: event.currentTarget.value })) })] }) }), u$1("section", { class: "shield-container", children: u$1("img", { src: badgeURL, alt: [generatedOptions.title, generatedOptions.text].filter(Boolean).join(": ") || "Static badge" }) }), u$1("section", { class: "fancy-inputs", children: u$1(CopyableInput, { label: "Markdown", value: markdown }) })] });
+}
+function mountStaticBadgeGenerator(elm, env) {
+    R(u$1(StaticBadgeGenerator, { env: env }), elm);
+}
+function staticBadgeURL(env, options) {
+    const params = new URLSearchParams({
+        title: options.title,
+        text: options.text,
+        color: options.color,
+    });
+    return `https://${env.ImgHost}/s?${params}`;
+}
+function markdownAlt(title) {
+    return (title || "Badge").replace(/[\\[\]]/g, "\\$&");
 }
 
 async function Home(apiExampleElm, staticBadgeGeneratorElm) {
@@ -564,8 +517,7 @@ async function Home(apiExampleElm, staticBadgeGeneratorElm) {
     const env = await envApi.getEnv();
     const apiExample = new ApiExampleController(env);
     apiExample.attach(apiExampleElm);
-    const staticBadgeGenerator = new StaticBadgeGeneratorController(env);
-    staticBadgeGenerator.attach(staticBadgeGeneratorElm);
+    mountStaticBadgeGenerator(staticBadgeGeneratorElm, env);
 }
 
 export { Dashboard, Home };

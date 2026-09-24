@@ -1,6 +1,6 @@
 import { EnvApi } from "./api/env";
 import { ApiExampleController } from "./Controllers/ApiExampleController";
-import { StaticBadgeGeneratorController } from "./Controllers/StaticBadgeGeneratorController";
+import { mountStaticBadgeGenerator } from "./components/StaticBadgeGenerator";
 
 export async function Home(apiExampleElm : HTMLElement, staticBadgeGeneratorElm: HTMLElement) {
 	const envApi = new EnvApi();
@@ -9,6 +9,5 @@ export async function Home(apiExampleElm : HTMLElement, staticBadgeGeneratorElm:
 	const apiExample = new ApiExampleController(env);
 	apiExample.attach(apiExampleElm);
 
-	const staticBadgeGenerator = new StaticBadgeGeneratorController(env);
-	staticBadgeGenerator.attach(staticBadgeGeneratorElm);
+	mountStaticBadgeGenerator(staticBadgeGeneratorElm, env);
 }
