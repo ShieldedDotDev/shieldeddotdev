@@ -120,7 +120,7 @@ button.primary:hover, .home--app .primary.github-login:hover {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
 }
 
-.home--app article.home-core > .getting-started, .dashboard--controller .api-tokens--controller, .dashboard--controller .shield--controller {
+.home--app article.api-docs-section, .home--app article.home-core > .getting-started, .dashboard--controller .api-tokens--controller, .dashboard--controller .shield--controller {
   border: 1px solid #d1d9e0;
   border-radius: 6px;
 }
@@ -346,6 +346,19 @@ button.primary:hover, .home--app .primary.github-login:hover {
   text-align: center;
 }
 .home--app article.api-examples {
+  text-align: left;
+}
+.home--app article.api-docs-section {
+  background: rgba(229.6, 229.6, 229.6, 0.25);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.065);
+  padding: 1.5em;
+}
+.home--app article.api-docs-section > h1,
+.home--app article.api-docs-section > h2 {
+  margin-bottom: 0.75em;
+}
+.home--app article.api-docs-section > h3 {
+  padding: 1.25em 0 0.5em;
   text-align: left;
 }
 .home--app article.home-core {
@@ -620,14 +633,10 @@ button.primary:hover {
   border-radius: 6px;
 }
 
-pre,
-code {
+pre {
   background: #555;
   color: white;
   font-family: Consolas, "Courier New", Courier, monospace;
-}
-
-pre {
   line-height: 1.4em;
   font-family: Menlo, Monaco, Courier New, monospace;
   white-space: pre;
@@ -645,9 +654,16 @@ pre {
 pre > code {
   white-space: pre-wrap;
   background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
 }
 
 code {
+  background: rgb(241.96, 243.72, 247.88);
+  color: #2a2a2a;
+  padding: 0.08em 0.25em;
+  border-radius: 0.2em;
   font-family: Menlo, Monaco, Courier New, monospace;
 }
 

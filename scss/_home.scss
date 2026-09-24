@@ -21,6 +21,24 @@
 			text-align: left;
 		}
 
+		&.api-docs-section {
+			@extend %bordered-box;
+
+			background: rgba(variables.$lightSpace, 0.25);
+			box-shadow: 0 1px 3px variables.$shade;
+			padding: 1.5em;
+
+			> h1,
+			> h2 {
+				margin-bottom: 0.75em;
+			}
+
+			> h3 {
+				padding: 1.25em 0 0.5em;
+				text-align: left;
+			}
+		}
+
 
 		&.home-core {
 			display: grid;

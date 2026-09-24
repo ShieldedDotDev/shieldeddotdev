@@ -3,15 +3,11 @@
 @use "variables";
 @use "shared";
 
-pre,
-code {
+pre {
 	background: variables.$darkBg;
 	color: variables.$darkBgText;
 
 	font-family: Consolas, "Courier New", Courier, monospace;
-}
-
-pre {
 	line-height: 1.4em;
 	font-family: Menlo,
 	Monaco,
@@ -24,10 +20,18 @@ pre {
 	> code {
 		white-space: pre-wrap;
 		background: transparent;
+		color: inherit;
+		padding: 0;
+		border-radius: 0;
 	}
 }
 
 code {
+	background: color.mix(variables.$hot, white, 8%);
+	color: variables.$textColor;
+	padding: 0.08em 0.25em;
+	border-radius: 0.2em;
+
 	font-family: Menlo,
 	Monaco,
 	Courier New,

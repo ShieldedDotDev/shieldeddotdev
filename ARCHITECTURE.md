@@ -63,6 +63,7 @@ For local HTTPS, `Caddyfile.local` accepts both the three canonical names and th
 | --- | --- | --- |
 | `/`, `/index.html` | GET, HEAD | Renders `pages.IndexPage`. |
 | `/dashboard` | GET, HEAD | Renders `pages.DashboardPage`; the browser app redirects unauthenticated visitors after checking `/api/authed`. |
+| `/api.html` | GET, HEAD | Renders `pages.ApiDocsPage`. |
 | `/privacy.html` | GET, HEAD | Renders `pages.PrivacyPage`. |
 | `/github/login` | no method restriction | Starts GitHub OAuth in production; signs in the debug user in local mode. |
 | `/github/callback` | no method restriction; production only | Validates OAuth state, exchanges the code, fetches the GitHub user, saves it, signs a JWT cookie, and redirects to the dashboard. |
