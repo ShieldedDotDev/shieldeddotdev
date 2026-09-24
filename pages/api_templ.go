@@ -58,7 +58,7 @@ func ApiDocsPage(hosts Hosts) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "/\" \\&#10;-H 'Authorization: token &lt;your-shield-token&gt;' \\&#10;--data-urlencode 'title=Build' \\&#10;--data-urlencode 'text=passing' \\&#10;--data-urlencode 'color=00aa55'</code></pre><h3 id=\"user-tokens\">User tokens</h3><p>A user token is an account-wide token created in the <a href=\"/dashboard#/user\">dashboard</a>. It starts with <code>sdu_</code> and can update multiple shields that you own.</p><p>Every user-token request must include <code>shield_key</code> to select the shield. A shield key contains 3 to 64 lowercase letters, digits, or hyphens. If that key does not exist yet for the token owner, the request creates a shield and returns <code>201 Created</code>.</p><pre><code>curl --request POST \"https://")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "/\" \\&#10;-H 'Authorization: token &lt;your-shield-token&gt;' \\&#10;--data-urlencode 'title=Build' \\&#10;--data-urlencode 'text=passing' \\&#10;--data-urlencode 'color=00aa55'</code></pre><h3 id=\"user-tokens\">User tokens</h3><p>A user token is an account-wide token created in the <a href=\"/dashboard#/user\">dashboard</a>. Its complete value already starts with <code>sdu_</code>; copy and use it unchanged. A user token can update multiple shields that you own.</p><p>Every user-token request must include <code>shield_key</code> to select the shield. A shield key contains 3 to 64 lowercase letters, digits, or hyphens. If that key does not exist yet for the token owner, the request creates a shield and returns <code>201 Created</code>.</p><pre><code>curl --request POST \"https://")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -71,7 +71,7 @@ func ApiDocsPage(hosts Hosts) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "/\" \\&#10;-H 'Authorization: token sdu_&lt;your-user-token&gt;' \\&#10;--data-urlencode 'shield_key=main-build' \\&#10;--data-urlencode 'text=passing'</code></pre><h2 id=\"update-a-shield\">Update a shield</h2><p><code>POST https://")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "/\" \\&#10;-H 'Authorization: token &lt;your-user-token&gt;' \\&#10;--data-urlencode 'shield_key=main-build' \\&#10;--data-urlencode 'text=passing'</code></pre><h2 id=\"update-a-shield\">Update a shield</h2><p><code>POST https://")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
