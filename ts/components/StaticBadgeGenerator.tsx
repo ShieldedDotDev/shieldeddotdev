@@ -50,7 +50,7 @@ function staticBadgeURL(env: EnvInterface, options: StaticBadgeOptions) {
 	const params = new URLSearchParams({
 		title: options.title,
 		text: options.text,
-		color: options.color,
+		color: options.color.replace(/^#/, ""),
 	});
 	return `https://${env.ImgHost}/s?${params}`;
 }
