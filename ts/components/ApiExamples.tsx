@@ -27,7 +27,7 @@ export function ApiExamples({ env, title = "Shielded.dev", text = "Rocks", color
 	const example = selectedExample[1](env, title, text, color, token);
 
 	return <div class="api-example--controller">
-		<ul>{apiExamples.map((item) => <li key={item[0]} class={item[0] === selectedExample[0] ? "selected" : ""} onClick={() => setSelectedExample(item)}>{item[0]}</li>)}</ul>
+		<ul aria-label="API example format">{apiExamples.map((item) => <li key={item[0]}><button type="button" aria-pressed={item[0] === selectedExample[0]} onClick={() => setSelectedExample(item)}>{item[0]}</button></li>)}</ul>
 		<pre><code>{example}</code></pre>
 	</div>;
 }

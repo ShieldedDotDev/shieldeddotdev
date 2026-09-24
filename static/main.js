@@ -96,7 +96,7 @@ const apiExamples = [
 function ApiExamples({ env, title = "Shielded.dev", text = "Rocks", color = "0011aa", token = "<secret>" }) {
     const [selectedExample, setSelectedExample] = d(apiExamples[0]);
     const example = selectedExample[1](env, title, text, color, token);
-    return u$1("div", { class: "api-example--controller", children: [u$1("ul", { children: apiExamples.map((item) => u$1("li", { class: item[0] === selectedExample[0] ? "selected" : "", onClick: () => setSelectedExample(item), children: item[0] }, item[0])) }), u$1("pre", { children: u$1("code", { children: example }) })] });
+    return u$1("div", { class: "api-example--controller", children: [u$1("ul", { "aria-label": "API example format", children: apiExamples.map((item) => u$1("li", { children: u$1("button", { type: "button", "aria-pressed": item[0] === selectedExample[0], onClick: () => setSelectedExample(item), children: item[0] }) }, item[0])) }), u$1("pre", { children: u$1("code", { children: example }) })] });
 }
 function mountApiExamples(elm, env) {
     R(u$1(ApiExamples, { env: env }), elm);
@@ -435,14 +435,15 @@ const defaultOptions = {
 };
 function StaticBadgeGenerator({ env }) {
     const [options, setOptions] = d(defaultOptions);
-    const [generatedOptions, setGeneratedOptions] = d(defaultOptions);
+    const [previewOptions, setPreviewOptions] = d(defaultOptions);
     h(() => {
-        const updateTimeout = window.setTimeout(() => setGeneratedOptions(options), 400);
+        const updateTimeout = window.setTimeout(() => setPreviewOptions(options), 400);
         return () => window.clearTimeout(updateTimeout);
     }, [options]);
-    const badgeURL = staticBadgeURL(env, generatedOptions);
-    const markdown = `![${markdownAlt(generatedOptions.title)}](${badgeURL})`;
-    return u$1("div", { class: "static-badge-generator--controller", children: [u$1("form", { onSubmit: (event) => event.preventDefault(), children: u$1("section", { class: "main-inputs", children: [u$1(Input, { label: "Title", name: "title", value: options.title, onInput: (event) => setOptions((current) => ({ ...current, title: event.currentTarget.value })) }), u$1(Input, { label: "Text", name: "text", value: options.text, onInput: (event) => setOptions((current) => ({ ...current, text: event.currentTarget.value })) }), u$1(Input, { label: "Color", name: "color", type: "color", value: options.color, title: "Must be a hex color code", onInput: (event) => setOptions((current) => ({ ...current, color: event.currentTarget.value })) })] }) }), u$1("section", { class: "shield-container", children: u$1("img", { src: badgeURL, alt: [generatedOptions.title, generatedOptions.text].filter(Boolean).join(": ") || "Static badge" }) }), u$1("section", { class: "fancy-inputs", children: u$1(CopyableInput, { label: "Markdown", value: markdown }) })] });
+    const badgeURL = staticBadgeURL(env, options);
+    const previewURL = staticBadgeURL(env, previewOptions);
+    const markdown = `![${markdownAlt(options.title)}](${badgeURL})`;
+    return u$1("div", { class: "static-badge-generator--controller", children: [u$1("form", { onSubmit: (event) => event.preventDefault(), children: u$1("section", { class: "main-inputs", children: [u$1(Input, { label: "Title", name: "title", value: options.title, onInput: (event) => setOptions((current) => ({ ...current, title: event.currentTarget.value })) }), u$1(Input, { label: "Text", name: "text", value: options.text, onInput: (event) => setOptions((current) => ({ ...current, text: event.currentTarget.value })) }), u$1(Input, { label: "Color", name: "color", type: "color", value: options.color, title: "Must be a hex color code", onInput: (event) => setOptions((current) => ({ ...current, color: event.currentTarget.value })) })] }) }), u$1("section", { class: "shield-container", children: u$1("img", { src: previewURL, alt: [options.title, options.text].filter(Boolean).join(": ") || "Static badge" }) }), u$1("section", { class: "fancy-inputs", children: u$1(CopyableInput, { label: "Markdown", value: markdown }) })] });
 }
 function mountStaticBadgeGenerator(elm, env) {
     R(u$1(StaticBadgeGenerator, { env: env }), elm);

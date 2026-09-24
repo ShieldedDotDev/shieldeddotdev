@@ -19,15 +19,16 @@ const defaultOptions: StaticBadgeOptions = {
 
 export function StaticBadgeGenerator({ env }: { env: EnvInterface }) {
 	const [options, setOptions] = useState(defaultOptions);
-	const [generatedOptions, setGeneratedOptions] = useState(defaultOptions);
+	const [previewOptions, setPreviewOptions] = useState(defaultOptions);
 
 	useEffect(() => {
-		const updateTimeout = window.setTimeout(() => setGeneratedOptions(options), 400);
+		const updateTimeout = window.setTimeout(() => setPreviewOptions(options), 400);
 		return () => window.clearTimeout(updateTimeout);
 	}, [options]);
 
-	const badgeURL = staticBadgeURL(env, generatedOptions);
-	const markdown = `![${markdownAlt(generatedOptions.title)}](${badgeURL})`;
+	const badgeURL = staticBadgeURL(env, options);
+	const previewURL = staticBadgeURL(env, previewOptions);
+	const markdown = `![${markdownAlt(options.title)}](${badgeURL})`;
 
 	return <div class="static-badge-generator--controller">
 		<form onSubmit={(event) => event.preventDefault()}>
@@ -37,7 +38,7 @@ export function StaticBadgeGenerator({ env }: { env: EnvInterface }) {
 				<Input label="Color" name="color" type="color" value={options.color} title="Must be a hex color code" onInput={(event) => setOptions((current) => ({ ...current, color: event.currentTarget.value }))} />
 			</section>
 		</form>
-		<section class="shield-container"><img src={badgeURL} alt={[generatedOptions.title, generatedOptions.text].filter(Boolean).join(": ") || "Static badge"} /></section>
+		<section class="shield-container"><img src={previewURL} alt={[options.title, options.text].filter(Boolean).join(": ") || "Static badge"} /></section>
 		<section class="fancy-inputs"><CopyableInput label="Markdown" value={markdown} /></section>
 	</div>;
 }
