@@ -73,6 +73,13 @@ templ IndexPage(hosts Hosts) {
 					</article>
 				</section>
 				<section>
+					<article class="static-badge-generator">
+						<h3>Static Badge Generator</h3>
+						<p>Create a fixed README badge by choosing its title, text, and color.</p>
+						<div id="static-badge-generator"></div>
+					</article>
+				</section>
+				<section>
 					<article class="api-examples">
 						<h3>API examples</h3>
 						<div id="api-example"></div>
@@ -92,7 +99,7 @@ templ IndexPage(hosts Hosts) {
 				import { Home } from '/main.js';
 
 				document.addEventListener('DOMContentLoaded', function () {
-					Home(document.getElementById('api-example'));
+					Home(document.getElementById('api-example'), document.getElementById('static-badge-generator'));
 				});
 			</script>
 			@Footer()

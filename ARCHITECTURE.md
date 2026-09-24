@@ -214,7 +214,7 @@ Because badge content is rendered from the database on every public image reques
 
 The static frontend has two entry functions exported from `ts/main.ts`:
 
-- `Home` calls `/env` and mounts API usage examples on the home page.
+- `Home` calls `/env` and mounts API usage examples plus the static badge generator on the home page.
 - `Dashboard` checks `/api/authed`, retrieves `/env`, and mounts the authenticated Preact dashboard, including its `#/user` API-token view.
 
 The authenticated frontend uses Preact with a small hash-based route switch and local component state; there is no separate state store library or server-side JSON API versioning. Browser requests use `XMLHttpRequest` in `ts/api/request.ts` with credentials enabled; JSON request bodies are sent by the dashboard handlers even though they do not explicitly set a `Content-Type` header.

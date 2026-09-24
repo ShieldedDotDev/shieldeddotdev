@@ -21,6 +21,10 @@
 			text-align: left;
 		}
 
+		&.static-badge-generator {
+			text-align: left;
+		}
+
 		&.api-docs-section {
 			@extend %bordered-box;
 
@@ -90,6 +94,75 @@
 						margin-bottom: 0;
 					}
 				}
+			}
+		}
+	}
+
+	.static-badge-generator--controller {
+		display: grid;
+		grid-template-areas: "inputs preview" "markdown markdown";
+		grid-template-columns: 1fr 1fr;
+
+		border: 1px solid variables.$hot;
+		border-radius: 5px;
+		overflow: hidden;
+
+		@media screen and (max-width: #{variables.$pageWidth - 1}) {
+			grid-template-areas: "inputs" "preview" "markdown";
+			grid-template-columns: 1fr;
+		}
+
+		> form {
+			grid-area: inputs;
+			padding: 1em;
+
+			> .input-container {
+				margin-bottom: 0.75em;
+
+				> label {
+					display: block;
+					margin-bottom: 0.4em;
+					font-size: 14px;
+					font-weight: 600;
+				}
+
+				> input {
+					width: 100%;
+
+					&[type="color"] {
+						width: 5em;
+						padding: 0;
+					}
+				}
+			}
+		}
+
+		> .preview {
+			grid-area: preview;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 8em;
+			padding: 1em;
+			background: rgba(variables.$lightSpace, 0.25);
+
+			> img {
+				max-width: 100%;
+			}
+		}
+
+		> .markdown {
+			grid-area: markdown;
+			border-top: 1px solid variables.$border;
+			padding: 1em;
+
+			> h4 {
+				margin-bottom: 0.5em;
+				font-weight: 600;
+			}
+
+			> pre {
+				margin: 0;
 			}
 		}
 	}

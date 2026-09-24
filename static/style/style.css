@@ -348,6 +348,9 @@ button.primary:hover, .home--app .primary.github-login:hover {
 .home--app article.api-examples {
   text-align: left;
 }
+.home--app article.static-badge-generator {
+  text-align: left;
+}
 .home--app article.api-docs-section {
   background: rgba(229.6, 229.6, 229.6, 0.25);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.065);
@@ -402,6 +405,64 @@ button.primary:hover, .home--app .primary.github-login:hover {
 }
 .home--app article.home-core > .getting-started > p:last-child {
   margin-bottom: 0;
+}
+.home--app .static-badge-generator--controller {
+  display: grid;
+  grid-template-areas: "inputs preview" "markdown markdown";
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid #5c72a6;
+  border-radius: 5px;
+  overflow: hidden;
+}
+@media screen and (max-width: 799px) {
+  .home--app .static-badge-generator--controller {
+    grid-template-areas: "inputs" "preview" "markdown";
+    grid-template-columns: 1fr;
+  }
+}
+.home--app .static-badge-generator--controller > form {
+  grid-area: inputs;
+  padding: 1em;
+}
+.home--app .static-badge-generator--controller > form > .input-container {
+  margin-bottom: 0.75em;
+}
+.home--app .static-badge-generator--controller > form > .input-container > label {
+  display: block;
+  margin-bottom: 0.4em;
+  font-size: 14px;
+  font-weight: 600;
+}
+.home--app .static-badge-generator--controller > form > .input-container > input {
+  width: 100%;
+}
+.home--app .static-badge-generator--controller > form > .input-container > input[type=color] {
+  width: 5em;
+  padding: 0;
+}
+.home--app .static-badge-generator--controller > .preview {
+  grid-area: preview;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 8em;
+  padding: 1em;
+  background: rgba(229.6, 229.6, 229.6, 0.25);
+}
+.home--app .static-badge-generator--controller > .preview > img {
+  max-width: 100%;
+}
+.home--app .static-badge-generator--controller > .markdown {
+  grid-area: markdown;
+  border-top: 1px solid #d1d9e0;
+  padding: 1em;
+}
+.home--app .static-badge-generator--controller > .markdown > h4 {
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+.home--app .static-badge-generator--controller > .markdown > pre {
+  margin: 0;
 }
 .home--app .github-login {
   display: inline-block;
