@@ -45,14 +45,14 @@ func ApiDocsPage(hosts Hosts) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<main><section><article><h1 id=\"api-docs\">API Docs</h1><p>Use the Shielded.dev API to update README badges from your build, release, or deployment process.</p><h2 id=\"authorization\">Authorization</h2><p>Every update uses an <code>Authorization: token &lt;token&gt;</code> header. Choose a token based on whether the request should update one shield or several.</p><h3 id=\"shield-tokens\">Shield tokens</h3><p>A shield token is the private update token shown for one shield in the dashboard. It can update only that shield. Do not send <code>shield_key</code> with a shield token.</p><pre><code>curl --request POST \"https://")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<main><section><article class=\"api-docs-section\"><h1 id=\"api-docs\">API Docs</h1><p>Use the Shielded.dev API to update README badges from your build, release, or deployment process.</p></article></section><section><article class=\"api-docs-section\"><h2 id=\"authorization\">Authorization</h2><p>Every update uses an <code>Authorization: token &lt;token&gt;</code> header. Choose a token based on whether the request should update one shield or several.</p><h3 id=\"shield-tokens\">Shield tokens</h3><p>A shield token is the private update token shown for one shield in the dashboard. It can update only that shield. Do not send <code>shield_key</code> with a shield token.</p><pre><code>curl --request POST \"https://")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(hosts.ApiHost)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `api.templ`, Line: 22, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `api.templ`, Line: 26, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -65,20 +65,20 @@ func ApiDocsPage(hosts Hosts) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(hosts.ApiHost)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `api.templ`, Line: 27, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `api.templ`, Line: 31, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "/\" \\&#10;-H 'Authorization: token &lt;your-user-token&gt;' \\&#10;--data-urlencode 'shield_key=main-build' \\&#10;--data-urlencode 'text=passing'</code></pre><h2 id=\"update-a-shield\">Update a shield</h2><p><code>POST https://")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "/\" \\&#10;-H 'Authorization: token &lt;your-user-token&gt;' \\&#10;--data-urlencode 'shield_key=main-build' \\&#10;--data-urlencode 'text=passing'</code></pre></article></section><section><article class=\"api-docs-section\"><h2 id=\"update-a-shield\">Update a shield</h2><p><code>POST https://")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(hosts.ApiHost)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `api.templ`, Line: 30, Col: 43}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `api.templ`, Line: 38, Col: 43}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -91,20 +91,20 @@ func ApiDocsPage(hosts Hosts) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(hosts.ImgHost)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `api.templ`, Line: 33, Col: 59}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `api.templ`, Line: 41, Col: 59}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "/s/abc123\",\"ShieldKey\":\"\"&#125;</code></pre><h3 id=\"request-fields\">Request fields</h3><ul><li><code>title</code> — optional badge label.</li><li><code>text</code> — optional badge value.</li><li><code>color</code> — optional named badge color or a 3- or 6-digit hexadecimal color, with or without <code>#</code>.</li><li><code>shield_key</code> — required only with an <code>sdu_</code> user token; do not use it with a per-shield token.</li></ul><p>Other form fields are rejected. Invalid input returns <code>400 Bad Request</code>; an unknown user token returns <code>401 Unauthorized</code>, and an unknown per-shield token returns <code>404 Not Found</code>.</p><h2 id=\"public-badge-urls\">Public badge URLs</h2><p>Embed a stable public badge in a README with its public ID:</p><pre><code>![Build](https://")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "/s/abc123\",\"ShieldKey\":\"\"&#125;</code></pre><h3 id=\"request-fields\">Request fields</h3><ul><li><code>title</code> — optional badge label.</li><li><code>text</code> — optional badge value.</li><li><code>color</code> — optional named badge color or a 3- or 6-digit hexadecimal color, with or without <code>#</code>.</li><li><code>shield_key</code> — required only with an <code>sdu_</code> user token; do not use it with a per-shield token.</li></ul><p>Other form fields are rejected. Invalid input returns <code>400 Bad Request</code>; an unknown user token returns <code>401 Unauthorized</code>, and an unknown per-shield token returns <code>404 Not Found</code>.</p></article></section><section><article class=\"api-docs-section\"><h2 id=\"public-badge-urls\">Public badge URLs</h2><p>Embed a stable public badge in a README with its public ID:</p><pre><code>![Build](https://")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(hosts.ImgHost)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `api.templ`, Line: 46, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `api.templ`, Line: 58, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -117,26 +117,26 @@ func ApiDocsPage(hosts Hosts) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(hosts.ImgHost)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `api.templ`, Line: 48, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `api.templ`, Line: 60, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "/u/&lt;owner-login&gt;/&lt;shield-key&gt;)</code></pre><p>Both URLs return SVG and always reflect the current shield values.</p><h2 id=\"temporary-badges\">Temporary badges</h2><p>Create an SVG without saving a shield by passing values in the query string:</p><pre><code>https://")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "/u/&lt;owner-login&gt;/&lt;shield-key&gt;)</code></pre><p>Both URLs return SVG and always reflect the current shield values.</p></article></section><section><article class=\"api-docs-section\"><h2 id=\"temporary-badges\">Temporary badges</h2><p>Create an SVG without saving a shield by passing values in the query string:</p><pre><code>https://")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(hosts.ImgHost)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `api.templ`, Line: 53, Col: 40}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `api.templ`, Line: 69, Col: 40}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "/s?title=Build&amp;text=passing&amp;color=green</code></pre><p><code>title</code> and <code>text</code> are optional. The color defaults to <code>green</code>; it accepts the same color formats as the update API. Temporary badges are cached for 30 days.</p><h2 id=\"keep-tokens-private\">Keep tokens private</h2><p>Update tokens can change a shield. Store them in your CI or deployment secret store, never in a README, repository, or public log. Badge titles and values are public.</p></article></section></main>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "/s?title=Build&amp;text=passing&amp;color=green</code></pre><p><code>title</code> and <code>text</code> are optional. The color defaults to <code>green</code>; it accepts the same color formats as the update API. Temporary badges are cached for 30 days.</p></article></section><section><article class=\"api-docs-section\"><h2 id=\"keep-tokens-private\">Keep tokens private</h2><p>Update tokens can change a shield. Store them in your CI or deployment secret store, never in a README, repository, or public log. Badge titles and values are public.</p></article></section></main>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
