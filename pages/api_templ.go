@@ -45,7 +45,7 @@ func ApiDocsPage(hosts Hosts) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<main><section><article class=\"api-docs-section\"><h1 id=\"api-docs\">API Docs</h1><p>Use the Shielded.dev API to update README badges from your build, release, or deployment process.</p></article></section><section><article class=\"api-docs-section\"><h2 id=\"authorization\">Authorization</h2><p>Every update uses an <code>Authorization: token &lt;token&gt;</code> header. Choose a token based on whether the request should update one shield or several.</p><h3 id=\"shield-tokens\">Shield tokens</h3><p>A shield token is the private update token shown for one shield in the dashboard. It can update only that shield. Do not send <code>shield_key</code> with a shield token.</p><pre><code>curl --request POST \"https://")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<main><section><article><h1 id=\"api-docs\">API Docs</h1><p>Use the Shielded.dev API to update README badges from your build, release, or deployment process.</p></article></section><section><article class=\"api-docs-section\"><h2 id=\"authorization\">Authorization</h2><p>Every update uses an <code>Authorization: token &lt;token&gt;</code> header. Choose a token based on whether the request should update one shield or several.</p><h3 id=\"shield-tokens\">Shield tokens</h3><p>A shield token is the private update token shown for one shield in the dashboard. It can update only that shield. Do not send <code>shield_key</code> with a shield token.</p><pre><code>curl --request POST \"https://")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -24,7 +24,7 @@
 		&.api-docs-section {
 			@extend %bordered-box;
 
-			background: variables.$lightSpace;
+			background: rgba(variables.$lightSpace, 0.25);
 			box-shadow: 0 1px 3px variables.$shade;
 			padding: 1.5em;
 

@@ -349,7 +349,7 @@ button.primary:hover, .home--app .primary.github-login:hover {
   text-align: left;
 }
 .home--app article.api-docs-section {
-  background: rgb(229.6, 229.6, 229.6);
+  background: rgba(229.6, 229.6, 229.6, 0.25);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.065);
   padding: 1.5em;
 }
