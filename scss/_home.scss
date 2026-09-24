@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "variables";
 @use "shared";
 
@@ -112,38 +113,57 @@
 			grid-template-columns: 1fr;
 		}
 
+		input, button {
+			&:focus, &:active {
+				box-shadow: color.scale(variables.$hot, $alpha: -40%) 0 0 0 3px;
+				outline: none;
+			}
+
+			&:active {
+				box-shadow: color.scale(variables.$hot, $alpha: -10%) 0 0 0 3px;
+			}
+		}
+
+		input[type="color"] {
+			padding: 0;
+		}
+
 		> form {
 			grid-area: inputs;
-			padding: 1em;
 
-			> .input-container {
-				margin-bottom: 0.75em;
+			> .main-inputs {
+				padding: 1em;
 
-				> label {
-					display: block;
-					margin-bottom: 0.4em;
-					font-size: 14px;
-					font-weight: 600;
-				}
+				> .input-container {
+					margin-bottom: 0.75em;
 
-				> input {
-					width: 100%;
+					> label {
+						display: block;
+						margin-bottom: 0.4em;
+						font-size: 14px;
+						font-weight: 600;
+					}
 
-					&[type="color"] {
-						width: 5em;
-						padding: 0;
+					> input {
+						width: 100%;
+
+						&[type="color"] {
+							width: 5em;
+						}
 					}
 				}
 			}
 		}
 
-		> .preview {
+		> .shield-container {
 			grid-area: preview;
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			max-width: 100%;
+			overflow: auto;
 			min-height: 8em;
-			padding: 1em;
+			padding: 0.5em;
 			background: rgba(variables.$lightSpace, 0.25);
 
 			> img {
@@ -151,18 +171,32 @@
 			}
 		}
 
-		> .markdown {
+		> .fancy-inputs {
 			grid-area: markdown;
 			border-top: 1px solid variables.$border;
 			padding: 1em;
 
-			> h4 {
+			> label {
+				display: block;
 				margin-bottom: 0.5em;
+				font-size: 14px;
 				font-weight: 600;
 			}
 
-			> pre {
-				margin: 0;
+			> .markdown-input--controller {
+				display: flex;
+
+				> input {
+					flex-grow: 1;
+				}
+
+				> button {
+					border-left: 0;
+					padding-left: 0.5em;
+					padding-right: 0.5em;
+					border-radius: 0 0.4em 0.4em 0;
+					white-space: nowrap;
+				}
 			}
 		}
 	}

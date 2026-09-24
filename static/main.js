@@ -472,25 +472,38 @@ class StaticBadgeGeneratorController extends AbstractBaseController {
         this.updateTimeout = null;
         const form = document.createElement("form");
         form.addEventListener("submit", (event) => event.preventDefault());
-        this.titleInput = this.addInput(form, "Title", "title", "text", "Build");
-        this.textInput = this.addInput(form, "Text", "text", "text", "passing");
-        this.colorInput = this.addInput(form, "Color", "color", "color", "#00aa55");
-        const preview = document.createElement("div");
-        preview.classList.add("preview");
+        const inputs = document.createElement("section");
+        inputs.classList.add("main-inputs");
+        this.titleInput = this.addInput(inputs, "Title", "title", "text", "Build");
+        this.textInput = this.addInput(inputs, "Text", "text", "text", "passing");
+        this.colorInput = this.addInput(inputs, "Color", "color", "color", "#00aa55");
+        this.colorInput.title = "Must be a hex color code";
+        form.appendChild(inputs);
+        const preview = document.createElement("section");
+        preview.classList.add("shield-container");
         this.preview = document.createElement("img");
         preview.appendChild(this.preview);
-        const markdown = document.createElement("div");
-        markdown.classList.add("markdown");
-        const markdownTitle = document.createElement("h4");
-        markdownTitle.textContent = "Markdown";
-        const pre = document.createElement("pre");
-        this.markdown = document.createElement("code");
-        pre.appendChild(this.markdown);
-        markdown.append(markdownTitle, pre);
+        const markdown = document.createElement("section");
+        markdown.classList.add("fancy-inputs");
+        const markdownLabel = document.createElement("label");
+        markdownLabel.htmlFor = "static-badge-generator-markdown";
+        markdownLabel.textContent = "Markdown";
+        const markdownInputContainer = document.createElement("div");
+        markdownInputContainer.classList.add("markdown-input--controller");
+        this.markdownInput = document.createElement("input");
+        this.markdownInput.id = markdownLabel.htmlFor;
+        this.markdownInput.readOnly = true;
+        this.markdownInput.addEventListener("click", () => this.markdownInput.select());
+        this.copyButton = document.createElement("button");
+        this.copyButton.type = "button";
+        this.copyButton.textContent = "Copy";
+        this.copyButton.addEventListener("click", () => void this.copyMarkdown());
+        markdownInputContainer.append(this.markdownInput, this.copyButton);
+        markdown.append(markdownLabel, markdownInputContainer);
         this.container.append(form, preview, markdown);
         this.updatePreview();
     }
-    addInput(form, labelText, name, type, value) {
+    addInput(parent, labelText, name, type, value) {
         const container = document.createElement("div");
         container.classList.add("input-container");
         const input = document.createElement("input");
@@ -503,7 +516,7 @@ class StaticBadgeGeneratorController extends AbstractBaseController {
         label.htmlFor = input.id;
         label.textContent = labelText;
         container.append(label, input);
-        form.appendChild(container);
+        parent.appendChild(container);
         return input;
     }
     schedulePreview() {
@@ -521,7 +534,8 @@ class StaticBadgeGeneratorController extends AbstractBaseController {
         const url = this.staticBadgeURL();
         this.preview.src = url;
         this.preview.alt = [title, text].filter(Boolean).join(": ") || "Static badge";
-        this.markdown.textContent = `![${this.markdownAlt(title)}](${url})`;
+        this.markdownInput.value = `![${this.markdownAlt(title)}](${url})`;
+        this.copyButton.textContent = "Copy";
     }
     staticBadgeURL() {
         const params = new URLSearchParams({
@@ -533,6 +547,15 @@ class StaticBadgeGeneratorController extends AbstractBaseController {
     }
     markdownAlt(title) {
         return (title || "Badge").replace(/[\\[\]]/g, "\\$&");
+    }
+    async copyMarkdown() {
+        try {
+            await navigator.clipboard.writeText(this.markdownInput.value);
+            this.copyButton.textContent = "Copied!";
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
 }
 

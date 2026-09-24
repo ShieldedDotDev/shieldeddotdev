@@ -420,49 +420,74 @@ button.primary:hover, .home--app .primary.github-login:hover {
     grid-template-columns: 1fr;
   }
 }
+.home--app .static-badge-generator--controller input:focus, .home--app .static-badge-generator--controller input:active, .home--app .static-badge-generator--controller button:focus, .home--app .static-badge-generator--controller button:active {
+  box-shadow: rgba(92, 114, 166, 0.6) 0 0 0 3px;
+  outline: none;
+}
+.home--app .static-badge-generator--controller input:active, .home--app .static-badge-generator--controller button:active {
+  box-shadow: rgba(92, 114, 166, 0.9) 0 0 0 3px;
+}
+.home--app .static-badge-generator--controller input[type=color] {
+  padding: 0;
+}
 .home--app .static-badge-generator--controller > form {
   grid-area: inputs;
+}
+.home--app .static-badge-generator--controller > form > .main-inputs {
   padding: 1em;
 }
-.home--app .static-badge-generator--controller > form > .input-container {
+.home--app .static-badge-generator--controller > form > .main-inputs > .input-container {
   margin-bottom: 0.75em;
 }
-.home--app .static-badge-generator--controller > form > .input-container > label {
+.home--app .static-badge-generator--controller > form > .main-inputs > .input-container > label {
   display: block;
   margin-bottom: 0.4em;
   font-size: 14px;
   font-weight: 600;
 }
-.home--app .static-badge-generator--controller > form > .input-container > input {
+.home--app .static-badge-generator--controller > form > .main-inputs > .input-container > input {
   width: 100%;
 }
-.home--app .static-badge-generator--controller > form > .input-container > input[type=color] {
+.home--app .static-badge-generator--controller > form > .main-inputs > .input-container > input[type=color] {
   width: 5em;
-  padding: 0;
 }
-.home--app .static-badge-generator--controller > .preview {
+.home--app .static-badge-generator--controller > .shield-container {
   grid-area: preview;
   display: flex;
   justify-content: center;
   align-items: center;
+  max-width: 100%;
+  overflow: auto;
   min-height: 8em;
-  padding: 1em;
+  padding: 0.5em;
   background: rgba(229.6, 229.6, 229.6, 0.25);
 }
-.home--app .static-badge-generator--controller > .preview > img {
+.home--app .static-badge-generator--controller > .shield-container > img {
   max-width: 100%;
 }
-.home--app .static-badge-generator--controller > .markdown {
+.home--app .static-badge-generator--controller > .fancy-inputs {
   grid-area: markdown;
   border-top: 1px solid #d1d9e0;
   padding: 1em;
 }
-.home--app .static-badge-generator--controller > .markdown > h4 {
+.home--app .static-badge-generator--controller > .fancy-inputs > label {
+  display: block;
   margin-bottom: 0.5em;
+  font-size: 14px;
   font-weight: 600;
 }
-.home--app .static-badge-generator--controller > .markdown > pre {
-  margin: 0;
+.home--app .static-badge-generator--controller > .fancy-inputs > .markdown-input--controller {
+  display: flex;
+}
+.home--app .static-badge-generator--controller > .fancy-inputs > .markdown-input--controller > input {
+  flex-grow: 1;
+}
+.home--app .static-badge-generator--controller > .fancy-inputs > .markdown-input--controller > button {
+  border-left: 0;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border-radius: 0 0.4em 0.4em 0;
+  white-space: nowrap;
 }
 .home--app .github-login {
   display: inline-block;
