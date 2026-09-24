@@ -7,25 +7,13 @@ import { EnvApi, EnvInterface } from "./api/env";
 import { isRequestError } from "./api/request";
 import { ShieldInterface, ShieldsApi } from "./api/shields";
 import { CreatedUserAPITokenInterface, UserAPITokenInterface, UserAPITokensApi } from "./api/tokens";
-import {
-	ApiExampleGeneratorInterface,
-	curlExample,
-	gitHubActionExample,
-	jsExample,
-	phpExample,
-} from "./Controllers/ApiExampleController";
+import { ApiExamples } from "./components/ApiExamples";
 import { CopyableInput } from "./components/CopyableInput";
 import { Input } from "./components/Input";
 
 type Page = "dashboard" | "user";
 
 const shieldKeyPattern = /^[a-z0-9-]{3,64}$/;
-const apiExamples: [string, ApiExampleGeneratorInterface][] = [
-	["GitHub Action", gitHubActionExample],
-	["Curl", curlExample],
-	["JS", jsExample],
-	["PHP", phpExample],
-];
 
 export async function Dashboard(elm: HTMLElement | null) {
 	if (elm === null) {
@@ -141,7 +129,6 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 	const saveInFlight = useRef(false);
 	const pendingSave = useRef<ShieldInterface | null>(null);
 	const [imageTick, setImageTick] = useState(Date.now());
-	const [example, setExample] = useState(apiExamples[0]);
 	const [secretCopied, setSecretCopied] = useState(false);
 	const [secretVisible, setSecretVisible] = useState(false);
 
@@ -221,7 +208,6 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 	};
 
 	const markdown = `![${draft.Name}](https://${env.ImgHost}/s/${draft.PublicID})`;
-	const selectedExample = example[1](env, draft.Title, draft.Text, draft.Color, draft.Secret);
 	const shieldKeyInvalid = draft.ShieldKey !== undefined && draft.ShieldKey !== "" && !shieldKeyPattern.test(draft.ShieldKey);
 	const shieldKeyErrorID = `shield-${draft.ShieldID}-key-error`;
 	const secretInputID = `shield-${draft.ShieldID}-secret`;
@@ -240,10 +226,7 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 		</section>
 		<details class="api-example">
 			<summary>API Call Examples</summary>
-			<div class="api-example--controller">
-				<ul>{apiExamples.map((item) => <li key={item[0]} class={item[0] === example[0] ? "selected" : ""} onClick={() => setExample(item)}>{item[0]}</li>)}</ul>
-				<pre><code>{selectedExample}</code></pre>
-			</div>
+			<ApiExamples env={env} title={draft.Title} text={draft.Text} color={draft.Color} token={draft.Secret} />
 		</details>
 		<section class="button-container"><button type="button" class="danger" onClick={deleteShield}><span class="icon">❌</span>Delete</button></section>
 		<section class="fancy-inputs">
