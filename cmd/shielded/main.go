@@ -84,6 +84,7 @@ func main() {
 	wo.Handle("/", templ.Handler(pages.IndexPage(hosts))).Methods(http.MethodGet, http.MethodHead)
 	wo.Handle("/index.html", templ.Handler(pages.IndexPage(hosts))).Methods(http.MethodGet, http.MethodHead)
 	wo.Handle("/dashboard", templ.Handler(pages.DashboardPage(hosts))).Methods(http.MethodGet, http.MethodHead)
+	wo.Handle("/api.html", templ.Handler(pages.ApiDocsPage(hosts))).Methods(http.MethodGet, http.MethodHead)
 	wo.Handle("/privacy.html", templ.Handler(pages.PrivacyPage(hosts))).Methods(http.MethodGet, http.MethodHead)
 
 	uuu, err := uuid.NewV4()

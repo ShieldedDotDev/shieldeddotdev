@@ -1,0 +1,59 @@
+package pages
+
+templ ApiDocsPage(hosts Hosts) {
+	<!doctype html>
+	<html>
+		<head>
+			@Head(hosts)
+		</head>
+		<body class="home--app">
+			@Header()
+			<main>
+				<section>
+					<article>
+						<h1 id="api-docs">API Docs</h1>
+						<p>Use the Shielded.dev API to update README badges from your build, release, or deployment process.</p>
+
+						<h2 id="update-a-shield">Update a shield</h2>
+						<p><code>POST https://{ hosts.ApiHost }/</code></p>
+						<p>Send form fields and an <code>Authorization</code> header. A request updates only the non-empty fields it includes.</p>
+						<pre><code>curl --request POST "https://{ hosts.ApiHost }/" \&#10;-H 'Authorization: token &lt;your-shield-token&gt;' \&#10;--data-urlencode 'title=Build' \&#10;--data-urlencode 'text=passing' \&#10;--data-urlencode 'color=00aa55'</code></pre>
+						<p>A successful update returns <code>200 OK</code> and JSON containing the stable public badge URL:</p>
+						<pre><code>&#123;"ShieldURL":"https://{ hosts.ImgHost }/s/abc123","ShieldKey":""&#125;</code></pre>
+
+						<h3 id="authentication">Authentication</h3>
+						<p>Every update needs <code>Authorization: token &lt;token&gt;</code>. The dashboard gives each shield a private update token. Use it to update that one shield and do not send <code>shield_key</code>.</p>
+						<p>You can also create a user token from the <a href="/dashboard#/user">dashboard</a>. User tokens start with <code>sdu_</code>, can update more than one shield, and must include a non-empty <code>shield_key</code> form field.</p>
+						<pre><code>curl --request POST "https://{ hosts.ApiHost }/" \&#10;-H 'Authorization: token sdu_&lt;your-user-token&gt;' \&#10;--data-urlencode 'shield_key=main-build' \&#10;--data-urlencode 'text=passing'</code></pre>
+						<p>A shield key contains 3 to 64 lowercase letters, digits, or hyphens. If that key does not yet exist for the token owner, the request creates a shield and returns <code>201 Created</code>.</p>
+
+						<h3 id="request-fields">Request fields</h3>
+						<ul>
+							<li><code>title</code> — optional badge label.</li>
+							<li><code>text</code> — optional badge value.</li>
+							<li><code>color</code> — optional named badge color or a 3- or 6-digit hexadecimal color, with or without <code>#</code>.</li>
+							<li><code>shield_key</code> — required only with an <code>sdu_</code> user token; do not use it with a per-shield token.</li>
+						</ul>
+						<p>Other form fields are rejected. Invalid input returns <code>400 Bad Request</code>; an unknown user token returns <code>401 Unauthorized</code>, and an unknown per-shield token returns <code>404 Not Found</code>.</p>
+
+						<h2 id="public-badge-urls">Public badge URLs</h2>
+						<p>Embed a stable public badge in a README with its public ID:</p>
+						<pre><code>![Build](https://{ hosts.ImgHost }/s/&lt;public-id&gt;)</code></pre>
+						<p>Shields with a key also have a readable public address based on the owner login and shield key:</p>
+						<pre><code>![Build](https://{ hosts.ImgHost }/u/&lt;owner-login&gt;/&lt;shield-key&gt;)</code></pre>
+						<p>Both URLs return SVG and always reflect the current shield values.</p>
+
+						<h2 id="temporary-badges">Temporary badges</h2>
+						<p>Create an SVG without saving a shield by passing values in the query string:</p>
+						<pre><code>https://{ hosts.ImgHost }/s?title=Build&amp;text=passing&amp;color=green</code></pre>
+						<p><code>title</code> and <code>text</code> are optional. The color defaults to <code>green</code>; it accepts the same color formats as the update API. Temporary badges are cached for 30 days.</p>
+
+						<h2 id="keep-tokens-private">Keep tokens private</h2>
+						<p>Update tokens can change a shield. Store them in your CI or deployment secret store, never in a README, repository, or public log. Badge titles and values are public.</p>
+					</article>
+				</section>
+			</main>
+			@Footer()
+		</body>
+	</html>
+}
