@@ -87,75 +87,30 @@ class UserAPITokensApi {
     }
 }
 
-class AbstractBaseController {
-    constructor(container, name) {
-        this.container = container;
-        this.name = name;
-        this.container.classList.add(`${this.name}--controller`);
-    }
-    attach(elm) {
-        elm.appendChild(this.container);
-    }
-    detach(elm) {
-        try {
-            elm.removeChild(this.container);
-        }
-        catch (_a) {
-            return false;
-        }
-        return true;
-    }
-    getContainer() {
-        return this.container;
-    }
-    getName() {
-        return this.name;
-    }
+const apiExamples = [
+    ["GitHub Action", gitHubActionExample],
+    ["Curl", curlExample],
+    ["JS", jsExample],
+    ["PHP", phpExample],
+];
+function ApiExamples({ env, title = "Shielded.dev", text = "Rocks", color = "0011aa", token = "<secret>" }) {
+    const [selectedExample, setSelectedExample] = d(apiExamples[0]);
+    const example = selectedExample[1](env, title, text, color, token);
+    return u$1("div", { class: "api-example--controller", children: [u$1("ul", { "aria-label": "API example format", children: apiExamples.map((item) => u$1("li", { children: u$1("button", { type: "button", "aria-pressed": item[0] === selectedExample[0], onClick: () => setSelectedExample(item), children: item[0] }) }, item[0])) }), u$1("pre", { children: u$1("code", { children: example }) })] });
 }
-
-class ApiExampleController extends AbstractBaseController {
-    constructor(env, shield = null) {
-        super(document.createElement("div"), "api-example");
-        this.env = env;
-        this.shield = shield;
-        this.preElm = document.createElement('pre');
-        this.codeElm = document.createElement('code');
-        this.examplesElm = document.createElement('ul');
-        this.examples = [
-            ['GitHub Action', gitHubActionExample, document.createElement('li')],
-            ['Curl', curlExample, document.createElement('li')],
-            ['JS', jsExample, document.createElement('li')],
-            ['PHP', phpExample, document.createElement('li')],
-        ];
-        this.container.appendChild(this.examplesElm);
-        for (const example of this.examples) {
-            this.examplesElm.appendChild(example[2]);
-            example[2].textContent = example[0];
-            example[2].addEventListener('click', () => this.selectExample(example));
-        }
-        this.selectExample(this.examples[0]);
-        this.container.appendChild(this.preElm);
-        this.preElm.appendChild(this.codeElm);
-    }
-    selectExample(example) {
-        var _a, _b, _c, _d, _e, _f, _g, _h;
-        for (const ex of this.examples) {
-            ex[2].classList.remove('selected');
-        }
-        this.codeElm.textContent = example[1](this.env, (_b = (_a = this.shield) === null || _a === void 0 ? void 0 : _a.Title) !== null && _b !== void 0 ? _b : 'Shielded.dev', (_d = (_c = this.shield) === null || _c === void 0 ? void 0 : _c.Text) !== null && _d !== void 0 ? _d : 'Rocks', (_f = (_e = this.shield) === null || _e === void 0 ? void 0 : _e.Color) !== null && _f !== void 0 ? _f : '0011aa', (_h = (_g = this.shield) === null || _g === void 0 ? void 0 : _g.Secret) !== null && _h !== void 0 ? _h : '<secret>');
-        example[2].classList.add('selected');
-    }
+function mountApiExamples(elm, env) {
+    R(u$1(ApiExamples, { env: env }), elm);
 }
 function curlExample(env, title, text, color, token) {
     return `curl -X "POST" "https://${env.ApiHost}" \\
-	-H 'Authorization: token ${addslashes_single_quotes(token)}' \\
+	-H 'Authorization: token ${addslashesSingleQuotes(token)}' \\
 	-H 'Content-Type: application/x-www-form-urlencoded; charset=utf-8' \\
-	--data-urlencode 'title=${addslashes_single_quotes(title)}' \\
-	--data-urlencode 'text=${addslashes_single_quotes(text)}' \\
-	--data-urlencode 'color=${addslashes_single_quotes(color)}'`;
+	--data-urlencode 'title=${addslashesSingleQuotes(title)}' \\
+	--data-urlencode 'text=${addslashesSingleQuotes(text)}' \\
+	--data-urlencode 'color=${addslashesSingleQuotes(color)}'`;
 }
-function addslashes_single_quotes(str) {
-    return `${str}`.replace(/\\/g, '\\$&').replace(/'/g, "\\'");
+function addslashesSingleQuotes(value) {
+    return `${value}`.replace(/\\/g, "\\$&").replace(/'/g, "\\'");
 }
 function phpExample(env, title, text, color, token) {
     return `<?php
@@ -172,7 +127,7 @@ curl_setopt_array($ch, [
 		'color' => ${JSON.stringify(color)},
 	],
 	CURLOPT_HTTPHEADER     => [
-		${JSON.stringify('Authorization: token ' + token)},
+		${JSON.stringify("Authorization: token " + token)},
 	],
 ]);
 
@@ -192,7 +147,7 @@ fetch('https://${env.ApiHost}', {
 	method: 'POST',
 	headers: {
 		'Content-Type': 'application/x-www-form-urlencoded',
-		'Authorization': ${JSON.stringify('token ' + token)},
+		'Authorization': ${JSON.stringify("token " + token)},
 	},
 	body: params
 })
@@ -226,13 +181,30 @@ jobs:
           color: ${JSON.stringify(color)}`;
 }
 
+function CopyableInput({ label, value, id: suppliedID }) {
+    const generatedID = g();
+    const id = suppliedID || generatedID;
+    const [copied, setCopied] = d(false);
+    h(() => setCopied(false), [value]);
+    const copy = async () => {
+        try {
+            await navigator.clipboard.writeText(value);
+            setCopied(true);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
+    return u$1(S, { children: [u$1("label", { for: id, children: label }), u$1("div", { class: "markdown-input--controller", children: [u$1("input", { id: id, value: value, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: copy, children: copied ? "Copied!" : "Copy" })] })] });
+}
+
+function Input({ label, ...attributes }) {
+    const generatedID = g();
+    const id = attributes.id || generatedID;
+    return u$1("div", { class: "input-container", children: [u$1("label", { for: id, children: label }), u$1("input", { ...attributes, id: id })] });
+}
+
 const shieldKeyPattern = /^[a-z0-9-]{3,64}$/;
-const apiExamples = [
-    ["GitHub Action", gitHubActionExample],
-    ["Curl", curlExample],
-    ["JS", jsExample],
-    ["PHP", phpExample],
-];
 async function Dashboard(elm) {
     if (elm === null) {
         return;
@@ -312,8 +284,6 @@ function ShieldForm({ shield, env, onSave, onDelete }) {
     const saveInFlight = A(false);
     const pendingSave = A(null);
     const [imageTick, setImageTick] = d(Date.now());
-    const [example, setExample] = d(apiExamples[0]);
-    const [markdownCopied, setMarkdownCopied] = d(false);
     const [secretCopied, setSecretCopied] = d(false);
     const [secretVisible, setSecretVisible] = d(false);
     h(() => () => {
@@ -383,17 +353,10 @@ function ShieldForm({ shield, env, onSave, onDelete }) {
         await onDelete(draftRef.current);
     };
     const markdown = `![${draft.Name}](https://${env.ImgHost}/s/${draft.PublicID})`;
-    const selectedExample = example[1](env, draft.Title, draft.Text, draft.Color, draft.Secret);
     const shieldKeyInvalid = draft.ShieldKey !== undefined && draft.ShieldKey !== "" && !shieldKeyPattern.test(draft.ShieldKey);
     const shieldKeyErrorID = `shield-${draft.ShieldID}-key-error`;
-    const markdownInputID = `shield-${draft.ShieldID}-markdown`;
     const secretInputID = `shield-${draft.ShieldID}-secret`;
-    return u$1("form", { class: "shield--controller", onInput: handleInput, children: [u$1("section", { class: "name-input", children: [u$1(Input, { label: "Shield Name", name: "Name", value: draft.Name }), u$1(Input, { label: "Shield key", name: "ShieldKey", value: draft.ShieldKey || "", pattern: "[a-z0-9\\\\-]{3,64}", title: "Optional: 3-64 lowercase letters, digits, or hyphens", placeholder: "e.g. production-status", autoComplete: "off", spellcheck: false, "aria-invalid": shieldKeyInvalid, "aria-describedby": shieldKeyInvalid ? shieldKeyErrorID : undefined }), shieldKeyInvalid && u$1("p", { id: shieldKeyErrorID, class: "input-error", role: "alert", children: "Shield key must be 3-64 lowercase letters, digits, or hyphens." })] }), u$1("section", { class: "shield-container", children: u$1("img", { src: `https://${env.ImgHost}/s/${draft.PublicID}?break=${imageTick}`, alt: `${draft.Title}: ${draft.Text}` }) }), u$1("section", { class: "main-inputs", children: [u$1(Input, { label: "Title", name: "Title", value: draft.Title }), u$1(Input, { label: "Text", name: "Text", value: draft.Text }), u$1(Input, { label: "Color", name: "Color", value: `#${draft.Color.replace(/^#/, "")}`, type: "color", title: "Must be a hex color code" })] }), u$1("details", { class: "api-example", children: [u$1("summary", { children: "API Call Examples" }), u$1("div", { class: "api-example--controller", children: [u$1("ul", { children: apiExamples.map((item) => u$1("li", { class: item[0] === example[0] ? "selected" : "", onClick: () => setExample(item), children: item[0] }, item[0])) }), u$1("pre", { children: u$1("code", { children: selectedExample }) })] })] }), u$1("section", { class: "button-container", children: u$1("button", { type: "button", class: "danger", onClick: deleteShield, children: [u$1("span", { class: "icon", children: "\u274C" }), "Delete"] }) }), u$1("section", { class: "fancy-inputs", children: [u$1("label", { for: markdownInputID, children: "Markdown" }), u$1("div", { class: "markdown-input--controller", children: [u$1("input", { id: markdownInputID, value: markdown, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(markdown, setMarkdownCopied), children: markdownCopied ? "Copied!" : "Copy" })] }), u$1("label", { for: secretInputID, children: "This shield's API token" }), u$1("div", { class: "secret-input--controller", children: [u$1("input", { id: secretInputID, type: secretVisible ? "text" : "password", value: draft.Secret, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(draft.Secret, setSecretCopied), children: secretCopied ? "Copied!" : "Copy" }), u$1("button", { type: "button", onClick: () => setSecretVisible(!secretVisible), children: secretVisible ? "Hide" : "Reveal" })] })] })] });
-}
-function Input({ label, ...attributes }) {
-    const generatedID = g();
-    const id = attributes.id || generatedID;
-    return u$1("div", { class: "input-container", children: [u$1("label", { for: id, children: label }), u$1("input", { ...attributes, id: id })] });
+    return u$1("form", { class: "shield--controller", onInput: handleInput, children: [u$1("section", { class: "name-input", children: [u$1(Input, { label: "Shield Name", name: "Name", value: draft.Name }), u$1(Input, { label: "Shield key", name: "ShieldKey", value: draft.ShieldKey || "", pattern: "[a-z0-9\\\\-]{3,64}", title: "Optional: 3-64 lowercase letters, digits, or hyphens", placeholder: "e.g. production-status", autoComplete: "off", spellcheck: false, "aria-invalid": shieldKeyInvalid, "aria-describedby": shieldKeyInvalid ? shieldKeyErrorID : undefined }), shieldKeyInvalid && u$1("p", { id: shieldKeyErrorID, class: "input-error", role: "alert", children: "Shield key must be 3-64 lowercase letters, digits, or hyphens." })] }), u$1("section", { class: "shield-container", children: u$1("img", { src: `https://${env.ImgHost}/s/${draft.PublicID}?break=${imageTick}`, alt: `${draft.Title}: ${draft.Text}` }) }), u$1("section", { class: "main-inputs", children: [u$1(Input, { label: "Title", name: "Title", value: draft.Title }), u$1(Input, { label: "Text", name: "Text", value: draft.Text }), u$1(Input, { label: "Color", name: "Color", value: `#${draft.Color.replace(/^#/, "")}`, type: "color", title: "Must be a hex color code" })] }), u$1("details", { class: "api-example", children: [u$1("summary", { children: "API Call Examples" }), u$1(ApiExamples, { env: env, title: draft.Title, text: draft.Text, color: draft.Color, token: draft.Secret })] }), u$1("section", { class: "button-container", children: u$1("button", { type: "button", class: "danger", onClick: deleteShield, children: [u$1("span", { class: "icon", children: "\u274C" }), "Delete"] }) }), u$1("section", { class: "fancy-inputs", children: [u$1(CopyableInput, { label: "Markdown", value: markdown }), u$1("label", { for: secretInputID, children: "This shield's API token" }), u$1("div", { class: "secret-input--controller", children: [u$1("input", { id: secretInputID, type: secretVisible ? "text" : "password", value: draft.Secret, readOnly: true, onClick: (event) => event.currentTarget.select() }), u$1("button", { type: "button", onClick: () => copy(draft.Secret, setSecretCopied), children: secretCopied ? "Copied!" : "Copy" }), u$1("button", { type: "button", onClick: () => setSecretVisible(!secretVisible), children: secretVisible ? "Hide" : "Reveal" })] })] })] });
 }
 function APITokens() {
     const api = A(new UserAPITokensApi()).current;
@@ -465,11 +428,43 @@ async function copy(value, setCopied) {
     }
 }
 
-async function Home(apiExampleElm) {
+const defaultOptions = {
+    title: "Build",
+    text: "passing",
+    color: "#00aa55",
+};
+function StaticBadgeGenerator({ env }) {
+    const [options, setOptions] = d(defaultOptions);
+    const [previewOptions, setPreviewOptions] = d(defaultOptions);
+    h(() => {
+        const updateTimeout = window.setTimeout(() => setPreviewOptions(options), 400);
+        return () => window.clearTimeout(updateTimeout);
+    }, [options]);
+    const badgeURL = staticBadgeURL(env, options);
+    const previewURL = staticBadgeURL(env, previewOptions);
+    const markdown = `![${markdownAlt(options.title)}](${badgeURL})`;
+    return u$1("div", { class: "static-badge-generator--controller", children: [u$1("form", { onSubmit: (event) => event.preventDefault(), children: u$1("section", { class: "main-inputs", children: [u$1(Input, { label: "Title", name: "title", value: options.title, onInput: (event) => setOptions((current) => ({ ...current, title: event.currentTarget.value })) }), u$1(Input, { label: "Text", name: "text", value: options.text, onInput: (event) => setOptions((current) => ({ ...current, text: event.currentTarget.value })) }), u$1(Input, { label: "Color", name: "color", type: "color", value: options.color, title: "Must be a hex color code", onInput: (event) => setOptions((current) => ({ ...current, color: event.currentTarget.value })) })] }) }), u$1("section", { class: "shield-container", children: u$1("img", { src: previewURL, alt: [options.title, options.text].filter(Boolean).join(": ") || "Static badge" }) }), u$1("section", { class: "fancy-inputs", children: u$1(CopyableInput, { label: "Markdown", value: markdown }) })] });
+}
+function mountStaticBadgeGenerator(elm, env) {
+    R(u$1(StaticBadgeGenerator, { env: env }), elm);
+}
+function staticBadgeURL(env, options) {
+    const params = new URLSearchParams({
+        title: options.title,
+        text: options.text,
+        color: options.color.replace(/^#/, ""),
+    });
+    return `https://${env.ImgHost}/s?${params}`;
+}
+function markdownAlt(title) {
+    return (title || "Badge").replace(/[\\[\]]/g, "\\$&");
+}
+
+async function Home(apiExampleElm, staticBadgeGeneratorElm) {
     const envApi = new EnvApi();
     const env = await envApi.getEnv();
-    const apiExample = new ApiExampleController(env);
-    apiExample.attach(apiExampleElm);
+    mountApiExamples(apiExampleElm, env);
+    mountStaticBadgeGenerator(staticBadgeGeneratorElm, env);
 }
 
 export { Dashboard, Home };

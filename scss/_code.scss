@@ -76,24 +76,33 @@ code {
 			border-left: none;
 		}
 
+		> button {
+			display: block;
+			width: 100%;
+			padding: 1em;
+			border: 0;
+			border-radius: 0;
+			background: white;
+			color: inherit;
+			font: inherit;
+			cursor: pointer;
 
-		padding: 1em;
-		cursor: pointer;
-		background: white;
+			&:hover {
+				background: color.mix(variables.$hot, white, 50%);
+			}
 
-		&:hover {
-			border-left: none;
+			&:focus-visible {
+				position: relative;
+				z-index: 1;
+				outline: 2px solid variables.$controlActiveBorder;
+				outline-offset: -2px;
+			}
 
-			background: color.mix(variables.$hot, white, 50%);
-		}
-
-		&.selected {
-			border-left: none;
-
-			cursor: default;
-			box-shadow: none;
-			background: variables.$hot;
-			color: variables.$darkBgText;
+			&[aria-pressed="true"] {
+				cursor: default;
+				background: variables.$hot;
+				color: variables.$darkBgText;
+			}
 		}
 	}
 }
