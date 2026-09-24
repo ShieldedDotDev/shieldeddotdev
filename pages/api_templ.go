@@ -123,7 +123,7 @@ func ApiDocsPage(hosts Hosts) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "/u/&lt;owner-login&gt;/&lt;shield-key&gt;)</code></pre><p>Both URLs return SVG and always reflect the current shield values.</p></article></section><section><article class=\"api-docs-section\"><h2 id=\"temporary-badges\">Temporary badges</h2><p>Create an SVG without saving a shield by passing values in the query string:</p><pre><code>https://")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "/u/&lt;owner-login&gt;/&lt;shield-key&gt;)</code></pre><p>Both URLs return SVG and always reflect the current shield values.</p></article></section><section><article class=\"api-docs-section\"><h2 id=\"static-badge-generator\">Static Badge Generator</h2><p>If you just need a small, non-changing badge for your README, Shielded.dev has a simple service for that too. Set its values directly in the URL—no account or saved shield required.</p><pre><code>https://")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -136,7 +136,7 @@ func ApiDocsPage(hosts Hosts) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "/s?title=Build&amp;text=passing&amp;color=green</code></pre><p><code>title</code> and <code>text</code> are optional. The color defaults to <code>green</code>; it accepts the same color formats as the update API. Temporary badges are cached for 30 days.</p></article></section><section><article class=\"api-docs-section\"><h2 id=\"keep-tokens-private\">Keep tokens private</h2><p>Update tokens can change a shield. Store them in your CI or deployment secret store, never in a README, repository, or public log. Badge titles and values are public.</p></article></section></main>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "/s?title=Build&amp;text=passing&amp;color=green</code></pre><p><code>title</code> and <code>text</code> are optional. The color defaults to <code>green</code>; it accepts the same color formats as the update API. Static badges are cached for 30 days.</p></article></section><section><article class=\"api-docs-section\"><h2 id=\"keep-tokens-private\">Keep tokens private</h2><p>Update tokens can change a shield. Store them in your CI or deployment secret store, never in a README, repository, or public log. Badge titles and values are public.</p></article></section></main>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
