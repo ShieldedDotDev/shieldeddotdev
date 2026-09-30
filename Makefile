@@ -71,5 +71,5 @@ debug: clean $(STATIC_SOURCES) $(STATIC_DIR)/main.js
 $(STATIC_DIR)/style/style.css: $(shell find scss -name "*.scss")
 	npx sass scss:static/style
 
-$(STATIC_DIR)/main.js: $(shell find ts -name "*.ts") rollup.config.mjs tsconfig.json
+$(STATIC_DIR)/main.js: $(shell find ts \( -name "*.ts" -o -name "*.tsx" \)) rollup.config.mjs tsconfig.json
 	npx rollup --config rollup.config.mjs

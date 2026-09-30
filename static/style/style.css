@@ -348,6 +348,9 @@ button.primary:hover, .home--app .primary.github-login:hover {
 .home--app article.api-examples {
   text-align: left;
 }
+.home--app article.static-badge-generator {
+  text-align: left;
+}
 .home--app article.api-docs-section {
   background: rgba(229.6, 229.6, 229.6, 0.25);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.065);
@@ -402,6 +405,89 @@ button.primary:hover, .home--app .primary.github-login:hover {
 }
 .home--app article.home-core > .getting-started > p:last-child {
   margin-bottom: 0;
+}
+.home--app .static-badge-generator--controller {
+  display: grid;
+  grid-template-areas: "inputs preview" "markdown markdown";
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid #5c72a6;
+  border-radius: 5px;
+  overflow: hidden;
+}
+@media screen and (max-width: 799px) {
+  .home--app .static-badge-generator--controller {
+    grid-template-areas: "inputs" "preview" "markdown";
+    grid-template-columns: 1fr;
+  }
+}
+.home--app .static-badge-generator--controller input:focus, .home--app .static-badge-generator--controller input:active, .home--app .static-badge-generator--controller button:focus, .home--app .static-badge-generator--controller button:active {
+  box-shadow: rgba(92, 114, 166, 0.6) 0 0 0 3px;
+  outline: none;
+}
+.home--app .static-badge-generator--controller input:active, .home--app .static-badge-generator--controller button:active {
+  box-shadow: rgba(92, 114, 166, 0.9) 0 0 0 3px;
+}
+.home--app .static-badge-generator--controller input[type=color] {
+  padding: 0;
+}
+.home--app .static-badge-generator--controller > form {
+  grid-area: inputs;
+}
+.home--app .static-badge-generator--controller > form > .main-inputs {
+  padding: 1em;
+}
+.home--app .static-badge-generator--controller > form > .main-inputs > .input-container {
+  margin-bottom: 0.75em;
+}
+.home--app .static-badge-generator--controller > form > .main-inputs > .input-container > label {
+  display: block;
+  margin-bottom: 0.4em;
+  font-size: 14px;
+  font-weight: 600;
+}
+.home--app .static-badge-generator--controller > form > .main-inputs > .input-container > input {
+  width: 100%;
+}
+.home--app .static-badge-generator--controller > form > .main-inputs > .input-container > input[type=color] {
+  width: 5em;
+}
+.home--app .static-badge-generator--controller > .shield-container {
+  grid-area: preview;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  overflow: auto;
+  min-height: 8em;
+  padding: 0.5em;
+  background: rgba(229.6, 229.6, 229.6, 0.25);
+}
+.home--app .static-badge-generator--controller > .shield-container > img {
+  max-width: 100%;
+}
+.home--app .static-badge-generator--controller > .fancy-inputs {
+  grid-area: markdown;
+  border-top: 1px solid #d1d9e0;
+  padding: 1em;
+}
+.home--app .static-badge-generator--controller > .fancy-inputs > label {
+  display: block;
+  margin-bottom: 0.5em;
+  font-size: 14px;
+  font-weight: 600;
+}
+.home--app .static-badge-generator--controller > .fancy-inputs > .markdown-input--controller {
+  display: flex;
+}
+.home--app .static-badge-generator--controller > .fancy-inputs > .markdown-input--controller > input {
+  flex-grow: 1;
+}
+.home--app .static-badge-generator--controller > .fancy-inputs > .markdown-input--controller > button {
+  border-left: 0;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border-radius: 0 0.4em 0.4em 0;
+  white-space: nowrap;
 }
 .home--app .github-login {
   display: inline-block;
@@ -699,21 +785,31 @@ code {
   border-left: none;
 }
 
-.api-example--controller li {
+.api-example--controller li > button {
+  display: block;
+  width: 100%;
   padding: 1em;
-  cursor: pointer;
+  border: 0;
+  border-radius: 0;
   background: white;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
 }
 
-.api-example--controller li:hover {
-  border-left: none;
+.api-example--controller li > button:hover {
   background: rgb(173.5, 184.5, 210.5);
 }
 
-.api-example--controller li.selected {
-  border-left: none;
+.api-example--controller li > button:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid #006cd6;
+  outline-offset: -2px;
+}
+
+.api-example--controller li > button[aria-pressed=true] {
   cursor: default;
-  box-shadow: none;
   background: #5c72a6;
   color: white;
 }
