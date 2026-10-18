@@ -4,7 +4,7 @@ go 1.26.2
 
 require (
 	github.com/caddyserver/certmagic v0.25.4
-	github.com/go-sql-driver/mysql v1.10.0
+	github.com/go-sql-driver/mysql v1.10.1
 	github.com/gofrs/uuid v4.4.0+incompatible
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
