@@ -24,6 +24,6 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "preact": "^10.29.8"
+    "preact": "^11.1.0"
   }
 }
