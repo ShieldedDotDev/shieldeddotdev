@@ -1,5 +1,5 @@
 import { render } from "preact";
-import type { JSX } from "preact";
+import type { TargetedEvent } from "preact";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 import { AuthedApi } from "./api/authed";
@@ -175,7 +175,7 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 		saveTimeout.current = setTimeout(flushSave, 500);
 	};
 
-	const handleInput = (event: JSX.TargetedEvent<HTMLFormElement, Event>) => {
+	const handleInput = (event: TargetedEvent<HTMLFormElement, Event>) => {
 		const input = event.target as HTMLInputElement;
 		let next: ShieldInterface;
 		switch (input.name) {
@@ -232,7 +232,7 @@ function ShieldForm({ shield, env, onSave, onDelete }: ShieldFormProps) {
 		<section class="fancy-inputs">
 			<CopyableInput label="Markdown" value={markdown} />
 			<label for={secretInputID}>This shield's API token</label>
-			<div class="secret-input--controller"><input id={secretInputID} type={secretVisible ? "text" : "password"} value={draft.Secret} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(draft.Secret, setSecretCopied)}>{secretCopied ? "Copied!" : "Copy"}</button><button type="button" onClick={() => setSecretVisible(!secretVisible)}>{secretVisible ? "Hide" : "Reveal"}</button></div>
+			<div class="secret-input--controller"><input id={secretInputID} {...(secretVisible ? { type: "text" as const } : { type: "password" as const })} value={draft.Secret} readOnly onClick={(event) => event.currentTarget.select()} /><button type="button" onClick={() => copy(draft.Secret, setSecretCopied)}>{secretCopied ? "Copied!" : "Copy"}</button><button type="button" onClick={() => setSecretVisible(!secretVisible)}>{secretVisible ? "Hide" : "Reveal"}</button></div>
 		</section>
 	</form>;
 }
@@ -252,7 +252,7 @@ function APITokens() {
 			.catch((requestError: unknown) => setError(errorMessage(requestError)));
 	}, [api]);
 
-	const createToken = async (event: JSX.TargetedEvent<HTMLFormElement, SubmitEvent>) => {
+	const createToken = async (event: TargetedEvent<HTMLFormElement, SubmitEvent>) => {
 		event.preventDefault();
 		const trimmedDescription = description.trim();
 		if (trimmedDescription === "") {
