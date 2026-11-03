@@ -86,7 +86,7 @@ button, .home--app .github-login {
   transition: background-color cubic-bezier(0, 0.5, 0, 1) 0.4s;
 }
 button:hover, .home--app .github-login:hover {
-  background-color: rgb(226.25, 226.25, 226.25);
+  background-color: rgb(88.7254901961%, 88.7254901961%, 88.7254901961%);
 }
 button:active, .home--app .github-login:active {
   background-color: #bfcae4;
@@ -109,7 +109,7 @@ button.primary, .home--app .primary.github-login {
   border: 1px solid #2a2;
 }
 button.primary:hover, .home--app .primary.github-login:hover {
-  background-color: rgb(44.0454545455, 117.4545454545, 58.7272727273);
+  background-color: rgb(17.2727272727%, 46.0606060606%, 23.0303030303%);
 }
 
 .home--app .github-login {
@@ -303,7 +303,7 @@ button.primary:hover, .home--app .primary.github-login:hover {
 }
 .dashboard--controller .shield--controller .api-example > summary:hover {
   text-decoration: underline;
-  background: rgb(173.5, 184.5, 210.5);
+  background: rgb(68.0392156863%, 72.3529411765%, 82.5490196078%);
 }
 .dashboard--controller .shield--controller > img {
   float: right;
@@ -327,7 +327,7 @@ button.primary:hover, .home--app .primary.github-login:hover {
   text-decoration: none;
 }
 #dashboard .dashboard-navigation > a:hover, #dashboard .dashboard-navigation > a:focus-visible {
-  background: rgb(173.5, 184.5, 210.5);
+  background: rgb(68.0392156863%, 72.3529411765%, 82.5490196078%);
 }
 #dashboard .dashboard-navigation > a[aria-current=page] {
   position: relative;
@@ -352,7 +352,7 @@ button.primary:hover, .home--app .primary.github-login:hover {
   text-align: left;
 }
 .home--app article.api-docs-section {
-  background: rgba(229.6, 229.6, 229.6, 0.25);
+  background: rgba(90.0392156863%, 90.0392156863%, 90.0392156863%, 0.25);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.065);
   padding: 1.5em;
 }
@@ -460,7 +460,7 @@ button.primary:hover, .home--app .primary.github-login:hover {
   overflow: auto;
   min-height: 8em;
   padding: 0.5em;
-  background: rgba(229.6, 229.6, 229.6, 0.25);
+  background: rgba(90.0392156863%, 90.0392156863%, 90.0392156863%, 0.25);
 }
 .home--app .static-badge-generator--controller > .shield-container > img {
   max-width: 100%;
@@ -503,7 +503,7 @@ button.primary:hover, .home--app .primary.github-login:hover {
   color: #fff;
 }
 .home--app .github-login:hover {
-  background-color: rgb(44.0454545455, 117.4545454545, 58.7272727273);
+  background-color: rgb(17.2727272727%, 46.0606060606%, 23.0303030303%);
 }
 
 strong {
@@ -650,7 +650,7 @@ p {
 }
 
 ::selection {
-  background: rgb(223.9523809524, 228.1428571429, 238.0476190476);
+  background: rgb(87.8244631186%, 89.4677871148%, 93.3520074697%);
   color: white;
   text-shadow: none;
 }
@@ -682,7 +682,7 @@ button {
 }
 
 button:hover {
-  background-color: rgb(226.25, 226.25, 226.25);
+  background-color: rgb(88.7254901961%, 88.7254901961%, 88.7254901961%);
 }
 
 button:active {
@@ -711,7 +711,7 @@ button.primary {
 }
 
 button.primary:hover {
-  background-color: rgb(44.0454545455, 117.4545454545, 58.7272727273);
+  background-color: rgb(17.2727272727%, 46.0606060606%, 23.0303030303%);
 }
 
 .home--app .api-example--controller {
@@ -746,7 +746,7 @@ pre > code {
 }
 
 code {
-  background: rgb(241.96, 243.72, 247.88);
+  background: rgb(94.8862745098%, 95.5764705882%, 97.2078431373%);
   color: #2a2a2a;
   padding: 0.08em 0.25em;
   border-radius: 0.2em;
@@ -798,7 +798,7 @@ code {
 }
 
 .api-example--controller li > button:hover {
-  background: rgb(173.5, 184.5, 210.5);
+  background: rgb(68.0392156863%, 72.3529411765%, 82.5490196078%);
 }
 
 .api-example--controller li > button:focus-visible {
